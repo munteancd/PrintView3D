@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "printview3d"
+version = "0.3.0"
+description = "Lightweight viewer for STL, 3MF and G-code files with one-click hand-off to your slicer"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = ["PySide6>=6.6,<7", "pyvista>=0.43", "pyvistaqt>=0.11", "numpy>=1.24"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+]
+
+[project.gui-scripts]
+printview3d = "printview3d.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+printview3d = ["resources/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

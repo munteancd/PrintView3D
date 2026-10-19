@@ -1,0 +1,64 @@
+name: Build Windows app
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-build.txt
+
+      - name: Run tests
+        run: |
+          python tests/make_samples.py
+          python -m pytest -q tests
+
+      - name: Build with PyInstaller
+        run: pyinstaller --noconfirm --clean printview3d.spec
+
+      - name: Smoke test (render a sample to an image)
+        # CI machines have no real GPU; never let this step hang or fail the build.
+        continue-on-error: true
+        timeout-minutes: 3
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath "dist\PrintView3D\PrintView3D.exe" -ArgumentList 'tests\data\cylinder.gcode','--screenshot','smoke.png' -PassThru
+          if (-not $p.WaitForExit(90000)) { $p.Kill(); Write-Warning "Smoke test timed out (no GPU on CI)" }
+          if (Test-Path smoke.png) { Write-Host "Smoke test OK" } else { Write-Warning "No image produced (CI has no OpenGL)" }
+
+      - name: Package
+        shell: pwsh
+        run: |
+          Copy-Item install_windows.bat, uninstall_windows.bat, LICENSE dist\PrintView3D\
+          Copy-Item -Recurse examples dist\PrintView3D\examples
+          Compress-Archive -Path dist\PrintView3D\* -DestinationPath PrintView3D-windows.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PrintView3D-windows
+          path: PrintView3D-windows.zip
+
+      - name: Publish release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: PrintView3D-windows.zip
+          generate_release_notes: true
