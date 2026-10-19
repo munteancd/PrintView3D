@@ -58,10 +58,46 @@ jobs:
           Copy-Item -Recurse examples dist\PrintView3D\examples
           Compress-Archive -Path dist\PrintView3D\* -DestinationPath PrintView3D-windows.zip
 
+      - name: Build the installer (Inno Setup)
+        shell: pwsh
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress | Out-Null }
+          $v = (Select-String -Path src\printview3d\__init__.py -Pattern '__version__ = "(.+?)"').Matches[0].Groups[1].Value
+          & $iscc /Q "/DAppVersion=$v" packaging\windows\PrintView3D.iss
+          if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed" }
+          Copy-Item dist\PrintView3D-Setup.exe .
+          Get-Item PrintView3D-Setup.exe | Format-List Name, Length
+
+      - name: Test the installer (silent install, check, uninstall)
+        shell: pwsh
+        run: |
+          $dir = "$env:LOCALAPPDATA\Programs\PrintView3D"
+          $p = Start-Process .\PrintView3D-Setup.exe -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/TASKS=fileassoc','/LOG=install.log' -PassThru -Wait
+          if ($p.ExitCode -ne 0) { Get-Content install.log; throw "Install failed ($($p.ExitCode))" }
+          if (-not (Test-Path "$dir\PrintView3D.exe")) { throw "PrintView3D.exe not installed" }
+          $ver = (Get-Item "$dir\PrintView3D.exe").VersionInfo.ProductVersion
+          Write-Host "Installed version: $ver"
+          if (-not (Test-Path "HKCU:\Software\Classes\Applications\PrintView3D.exe")) { throw "Open-with registration missing" }
+          $lnk = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\PrintView3D.lnk"
+          if (-not (Test-Path $lnk)) { throw "Start menu shortcut missing" }
+          $un = Get-ChildItem "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall" | Where-Object { $_.PSChildName -like '*f46ac51f*' }
+          if (-not $un) { throw "Not listed in Apps & features" }
+          $p = Start-Process "$dir\unins000.exe" -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART' -PassThru -Wait
+          # The uninstaller hands over to a copy of itself; wait until it is done.
+          for ($i = 0; $i -lt 60 -and (Test-Path "$dir\PrintView3D.exe"); $i++) { Start-Sleep -Seconds 1 }
+          Start-Sleep -Seconds 2
+          if (Test-Path "$dir\PrintView3D.exe") { throw "Uninstall left the program behind" }
+          if (Test-Path "HKCU:\Software\Classes\Applications\PrintView3D.exe") { throw "Uninstall left the registration behind" }
+          if (Test-Path $lnk) { throw "Uninstall left the shortcut behind" }
+          Write-Host "Installer test OK"
+
       - uses: actions/upload-artifact@v4
         with:
           name: PrintView3D-windows
-          path: PrintView3D-windows.zip
+          path: |
+            PrintView3D-windows.zip
+            PrintView3D-Setup.exe
 
   linux:
     # Built on an older Ubuntu so the AppImage also runs on older distributions.
@@ -138,7 +174,8 @@ jobs:
 
           | System | File | How to install |
           |---|---|---|
-          | **Windows 10/11** | `PrintView3D-windows.zip` | Extract, run **install_windows.bat** |
+          | **Windows 10/11** | `PrintView3D-Setup.exe` | Double-click and follow the steps (no admin rights needed) |
+          | Windows, portable | `PrintView3D-windows.zip` | Extract and run `PrintView3D.exe`, nothing is installed |
           | **Linux** (x86-64) | `PrintView3D-x86_64.AppImage` | Make it executable and run it ([details]({repo}#linux)) |
           | **macOS** | not built yet | [Ask for a Mac build]({repo}/issues/new?template=mac_build.md) |
 
@@ -171,5 +208,6 @@ jobs:
           name: PrintView3D ${{ steps.version.outputs.version }}
           body_path: release_notes.md
           files: |
+            PrintView3D-Setup.exe
             PrintView3D-windows.zip
             PrintView3D-x86_64.AppImage

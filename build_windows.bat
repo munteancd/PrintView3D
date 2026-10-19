@@ -43,10 +43,21 @@ echo [3/4] Building translations and running tests ...
 echo [4/4] Building PrintView3D.exe ...
 ".venv\Scripts\pyinstaller.exe" --noconfirm --clean printview3d.spec || goto :fail
 
+REM Optional: the installer, if Inno Setup 6 is installed (https://jrsoftware.org/isinfo.php)
+set "ISCC=%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe"
+if not exist "%ISCC%" goto :noinstaller
+echo [+] Building the installer ...
+for /f "tokens=2 delims==" %%v in ('findstr /b "__version__" src\printview3d\__init__.py') do set "APPVER=%%~v"
+set "APPVER=%APPVER: =%"
+set "APPVER=%APPVER:"=%"
+"%ISCC%" /Q "/DAppVersion=%APPVER%" packaging\windows\PrintView3D.iss || goto :fail
+:noinstaller
+
 echo.
 echo ============================================================
 echo  Done!  dist\PrintView3D\PrintView3D.exe
-echo  Run install_windows.bat to install it for your user account.
+if exist "dist\PrintView3D-Setup.exe" echo  Installer: dist\PrintView3D-Setup.exe
+echo  Run install_windows.bat (or the installer) to install it for your user account.
 echo ============================================================
 pause
 exit /b 0

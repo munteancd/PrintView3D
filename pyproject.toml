@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "printview3d"
-version = "0.5.0"
+version = "0.8.0"
 description = "Lightweight viewer for STL, 3MF and G-code files with one-click hand-off to your slicer"
 readme = "README.md"
 license = { text = "MIT" }
