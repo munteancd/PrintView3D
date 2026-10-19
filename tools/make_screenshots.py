@@ -32,6 +32,8 @@ def main():
     import make_demo
 
     theme.apply_theme(app, "dark")
+    from printview3d import i18n as _i18n
+    _i18n.apply_language(app, "en")          # number format as the real program has it (17,751.69)
     import subprocess
     subprocess.run([sys.executable, os.path.join(ROOT, "tools", "i18n.py"), "compile"], check=True)
     tmp = tempfile.mkdtemp()
@@ -124,13 +126,32 @@ def main():
     w.slicer_menu.close()
 
     # 6) Settings
-    d = SettingsDialog(settings, w, {"GPU": "(your graphics card)"})
+    d = SettingsDialog(settings, w, {"GPU": "(your graphics card)"}, page="slicer")
     d.show()
     for _ in range(5):
         app.processEvents()
     d.grab().save(os.path.join(DOCS, "screenshot-settings.png"))
     print("saved screenshot-settings.png")
     d.close()
+
+    # 6b) Settings -> Updates with a (pretend) newer version on GitHub
+    from printview3d import __version__
+    from printview3d import updates as up
+    nums = [int(x) for x in __version__.split(".")]
+    nums[1] += 1
+    settings.set("update_check", True)
+    settings.set("update_last_check", __import__("time").time())
+    settings.set("update_latest", {"version": f"{nums[0]}.{nums[1]}.0", "notes": "", "page_url": up.RELEASES_PAGE})
+    d = SettingsDialog(settings, w, {}, page="updates")
+    d.show()
+    for _ in range(5):
+        app.processEvents()
+    d.grab().save(os.path.join(DOCS, "screenshot-updates.png"))
+    print("saved screenshot-updates.png")
+    d.close()
+    w.refresh_update_badge()
+    settings.set("update_latest", {})
+    w.refresh_update_badge()
 
     # 7) Arabic (right-to-left) for the Translations section
     from printview3d import i18n
