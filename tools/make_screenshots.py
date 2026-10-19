@@ -146,12 +146,12 @@ def main():
     for _ in range(5):
         app.processEvents()
 
-    # 8) The same G-code in the Gray and Light themes, plus a side-by-side strip
+    # 8) The same G-code in the Gray, Graphite and Light themes, plus a 2 x 2 overview
     w.load_sync(os.path.join(EX, "demo_vase.gcode"))
     w.set_layer(int(w.gcode.n_layers * 0.6))
     w._redraw_gcode()
     camera(-20, -8, 1.25)
-    for name in ("gray", "light"):
+    for name in ("gray", "graphite", "light"):
         w.apply_theme(name)
         for _ in range(5):
             app.processEvents()
@@ -159,13 +159,29 @@ def main():
     w.apply_theme("dark")
     from PIL import Image
     tiles = [Image.open(os.path.join(DOCS, f)) for f in
-             ("screenshot-gcode.png", "screenshot-theme-gray.png", "screenshot-theme-light.png")]
-    tw = 640
+             ("screenshot-gcode.png", "screenshot-theme-gray.png",
+              "screenshot-theme-graphite.png", "screenshot-theme-light.png")]
+    tw = 720
     tiles = [t.resize((tw, int(t.height * tw / t.width))) for t in tiles]
-    strip = Image.new("RGB", (tw * 3 + 20, tiles[0].height), "#888888")
+    th = tiles[0].height
+    grid = Image.new("RGB", (tw * 2 + 10, th * 2 + 10), "#888888")
     for i, t in enumerate(tiles):
-        strip.paste(t, (i * (tw + 10), 0))
-    strip.save(os.path.join(DOCS, "screenshot-themes.png"))
+        grid.paste(t, ((i % 2) * (tw + 10), (i // 2) * (th + 10)))
+    grid.save(os.path.join(DOCS, "screenshot-themes.png"))
+
+    # 9) The theme menu (toolbar icon)
+    w.theme_menu.popup(w.theme_btn.mapToGlobal(QPoint(0, w.theme_btn.height())))
+    for _ in range(5):
+        app.processEvents()
+    r = w.theme_menu.geometry()
+    b = w.theme_btn.mapToGlobal(QPoint(0, 0))
+    screen = app.primaryScreen().grabWindow(0)
+    left = max(0, r.left() - 420)
+    right = max(r.right(), b.x() + w.theme_btn.width()) + 10
+    screen.copy(left, max(0, b.y() - 8), right - left,
+                r.bottom() - b.y() + 20).save(os.path.join(DOCS, "screenshot-theme-menu.png"))
+    print("saved screenshot-theme-menu.png")
+    w.theme_menu.close()
     print("saved screenshot-themes.png")
     w.close()
 

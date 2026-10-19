@@ -8,7 +8,7 @@ from typing import Optional
 
 import numpy as np
 from PySide6.QtCore import QEvent, QObject, QSize, Qt, QTimer, Signal
-from PySide6.QtGui import QAction, QColor, QGuiApplication, QIcon, QKeySequence, QPixmap, QShortcut
+from PySide6.QtGui import QAction, QActionGroup, QColor, QGuiApplication, QIcon, QKeySequence, QPixmap, QShortcut
 from PySide6.QtWidgets import (
     QApplication, QCheckBox, QFileDialog, QFormLayout, QGroupBox, QHBoxLayout, QLabel,
     QMainWindow, QMenu, QMessageBox, QProgressBar, QPushButton, QScrollArea,
@@ -131,7 +131,27 @@ class MainWindow(QMainWindow):
         """Switch theme now: windows, then the 3D view."""
         theme.apply_theme(QApplication.instance(), choice)
         self.scene.set_colors(theme.colors())
+        self._update_theme_button()
         self.plotter.render()
+
+    def choose_theme(self, choice: str):
+        """From the toolbar menu or Ctrl+T: switch and remember."""
+        self.settings.set("theme", choice)
+        self.apply_theme(choice)
+
+    def next_theme(self):
+        self.choose_theme(theme.next_theme(theme.current()))
+
+    def _update_theme_button(self):
+        if not hasattr(self, "theme_btn"):
+            return
+        self.theme_btn.setIcon(theme.theme_icon())
+        for key, a in self.theme_actions.items():
+            a.setText(tr(theme.THEME_NAMES[key]))
+            a.setChecked(key == theme.setting())
+        self.act_next_theme.setText(tr("Next theme") + "\tCtrl+T")
+        self.theme_btn.setToolTip(tr("Theme: {name} (Ctrl+T: next theme)").format(
+            name=tr(theme.THEME_NAMES[theme.current()])))
 
     def _system_theme_changed(self, *_):
         if theme.setting() == "auto":
@@ -188,6 +208,26 @@ class MainWindow(QMainWindow):
         self.act_about = QAction(self, triggered=self.show_about)
         for a in (self.act_screenshot, self.act_settings, self.act_about):
             tb.addAction(a)
+
+        # Theme: icon at the end of the toolbar; its menu lists every theme.
+        self.theme_menu = QMenu(self)
+        self.theme_group = QActionGroup(self)
+        self.theme_actions = {}
+        for key in theme.THEME_NAMES:
+            a = QAction(self, checkable=True)
+            a.triggered.connect(lambda _=False, k=key: self.choose_theme(k))
+            self.theme_group.addAction(a)
+            self.theme_menu.addAction(a)
+            self.theme_actions[key] = a
+        self.theme_menu.addSeparator()
+        self.act_next_theme = QAction(self, triggered=self.next_theme)
+        self.theme_menu.addAction(self.act_next_theme)
+        self.theme_btn = QToolButton()
+        self.theme_btn.setObjectName("themeButton")
+        self.theme_btn.setIconSize(QSize(18, 18))
+        self.theme_btn.setMenu(self.theme_menu)
+        self.theme_btn.setPopupMode(QToolButton.InstantPopup)
+        tb.addWidget(self.theme_btn)
 
     def _build_central(self):
         from pyvistaqt import QtInteractor
@@ -349,6 +389,7 @@ class MainWindow(QMainWindow):
 
     def _build_shortcuts(self):
         QShortcut(QKeySequence("Ctrl+P"), self, activated=self.open_in_slicer)
+        QShortcut(QKeySequence("Ctrl+T"), self, activated=self.next_theme)
         for act, key, _ in self.view_actions:
             QShortcut(QKeySequence(key), self, activated=act.trigger)
         QShortcut(QKeySequence(Qt.Key_Up), self, activated=lambda: self.step_layer(1))
@@ -373,6 +414,7 @@ class MainWindow(QMainWindow):
         self.act_screenshot.setText(tr("Screenshot"))
         self.act_settings.setText(tr("Settings"))
         self.act_about.setText(tr("About"))
+        self._update_theme_button()
 
         self.welcome_sub.setText(tr("Drop an STL, 3MF or G-code file here, or open one."))
         self.welcome_open.setText(tr("Open file…"))

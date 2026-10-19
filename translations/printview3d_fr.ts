@@ -213,419 +213,430 @@
         <translation type="unfinished">Plateau {n}</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="364"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="152"/>
+        <source>Next theme</source>
+        <translation type="unfinished">Thème suivant</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py" line="153"/>
+        <source>Theme: {name} (Ctrl+T: next theme)</source>
+        <extracomment>Tooltip of the theme icon. {name} is the current theme (Dark, Gray...).</extracomment>
+        <translation type="unfinished">Thème : {name} (Ctrl+T : thème suivant)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py" line="405"/>
         <source>Open…</source>
         <translation type="unfinished">Ouvrir…</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="365"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="406"/>
         <source>Recent</source>
         <extracomment>Toolbar menu with recently opened files.</extracomment>
         <translation type="unfinished">Récents</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="366"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="407"/>
         <source>Fit</source>
         <extracomment>Toolbar button: zoom the 3D view so the whole model fits.</extracomment>
         <translation type="unfinished">Ajuster</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="366"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="407"/>
         <source>Iso</source>
         <extracomment>Toolbar button: isometric camera view (seen from a corner, slightly above).</extracomment>
         <translation type="unfinished">Iso</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="366"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="407"/>
         <source>Top</source>
         <extracomment>Toolbar button: camera view from above.</extracomment>
         <translation type="unfinished">Dessus</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="367"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="408"/>
         <source>Front</source>
         <extracomment>Toolbar button: camera view from the front.</extracomment>
         <translation type="unfinished">Face</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="367"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="408"/>
         <source>Right</source>
         <extracomment>Toolbar button: camera view from the right side (not &apos;correct&apos;).</extracomment>
         <translation type="unfinished">Droite</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="370"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="411"/>
         <source>{view} view ({key})</source>
         <extracomment>Tooltip. {view} is a translated view name (Top, Front...), {key} a keyboard key.</extracomment>
         <translation type="unfinished">Vue {view} ({key})</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="371"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="412"/>
         <source>Plate</source>
         <extracomment>Toolbar toggle: show or hide the printer&apos;s build plate / bed grid.</extracomment>
         <translation type="unfinished">Plateau</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="372"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="413"/>
         <source>Show / hide the build plate grid</source>
         <translation type="unfinished">Afficher / masquer la grille du plateau</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="373"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="414"/>
         <source>Screenshot</source>
         <translation type="unfinished">Capture d&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="374"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="415"/>
         <location filename="../src/printview3d/ui/settings_dialog.py" line="26"/>
         <source>Settings</source>
         <translation type="unfinished">Paramètres</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="375"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="416"/>
         <source>About</source>
         <translation type="unfinished">À propos</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="377"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="419"/>
         <source>Drop an STL, 3MF or G-code file here, or open one.</source>
         <translation type="unfinished">Déposez un fichier STL, 3MF ou G-code ici, ou ouvrez-en un.</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="378"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="420"/>
         <source>Open file…</source>
         <translation type="unfinished">Ouvrir un fichier…</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="380"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="422"/>
         <source>Details</source>
         <translation type="unfinished">Détails</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="381"/>
-        <location filename="../src/printview3d/ui/main_window.py" line="695"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="423"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="737"/>
         <source>Project</source>
         <translation type="unfinished">Projet</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="381"/>
-        <location filename="../src/printview3d/ui/main_window.py" line="606"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="423"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="648"/>
         <source>Sliced plates</source>
         <translation type="unfinished">Plateaux tranchés</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="382"/>
-        <location filename="../src/printview3d/ui/main_window.py" line="689"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="424"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="731"/>
         <source>Layers</source>
         <translation type="unfinished">Couches</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="383"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="425"/>
         <source>Features</source>
         <translation type="unfinished">Éléments</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="384"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="426"/>
         <source>Go to layer</source>
         <translation type="unfinished">Aller à la couche</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="385"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="427"/>
         <source>Show only this layer</source>
         <translation type="unfinished">Afficher uniquement cette couche</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="386"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="428"/>
         <source>Tip: ↑ / ↓ arrow keys move through layers</source>
         <translation type="unfinished">Astuce : les flèches ↑ / ↓ permettent de parcourir les couches</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="389"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="431"/>
         <source>Previous layer</source>
         <translation type="unfinished">Couche précédente</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="390"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="432"/>
         <source>Next layer</source>
         <translation type="unfinished">Couche suivante</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="481"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="523"/>
         <source>Sliced toolpaths · {plate}</source>
         <translation type="unfinished">Trajectoires tranchées · {plate}</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="482"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="524"/>
         <location filename="../src/printview3d/ui/main_window.py" line="48"/>
         <source>G-code</source>
         <translation type="unfinished">G-code</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="483"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="525"/>
         <source>{kind} · {size} MB</source>
         <extracomment>Under the file name. {kind} is STL, 3MF or G-code; {size} the file size.</extracomment>
         <translation type="unfinished">{kind} · {size} Mo</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="492"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="534"/>
         <source>Open 3D file</source>
         <translation type="unfinished">Ouvrir un fichier 3D</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="499"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="541"/>
         <source>File not found</source>
         <translation type="unfinished">Fichier introuvable</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="500"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="542"/>
         <source>The file no longer exists:</source>
         <translation type="unfinished">Le fichier n&apos;existe plus :</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="504"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="546"/>
         <source>Unsupported file</source>
         <translation type="unfinished">Fichier non pris en charge</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="505"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="547"/>
         <source>PrintView3D can open STL, 3MF and G-code files.</source>
         <translation type="unfinished">PrintView3D peut ouvrir les fichiers STL, 3MF et G-code.</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="509"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="551"/>
         <source>Loading {name}…</source>
         <translation type="unfinished">Chargement de {name}…</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="539"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="581"/>
         <source>Could not open file</source>
         <translation type="unfinished">Impossible d&apos;ouvrir le fichier</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="572"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="614"/>
         <source>Opened {path}</source>
         <translation type="unfinished">{path} ouvert</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="585"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="627"/>
         <source>Size (X×Y×Z)</source>
         <translation type="unfinished">Taille (X×Y×Z)</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="585"/>
-        <location filename="../src/printview3d/ui/main_window.py" line="687"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="627"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="729"/>
         <source>{x} × {y} × {z} mm</source>
         <translation type="unfinished">{x} × {y} × {z} mm</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="587"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="629"/>
         <source>Triangles</source>
         <translation type="unfinished">Triangles</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="591"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="633"/>
         <source>Volume</source>
         <translation type="unfinished">Volume</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="591"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="633"/>
         <source>{v} cm³</source>
         <translation type="unfinished">{v} cm³</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="597"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="639"/>
         <source>{name}  ({n} triangles)</source>
         <translation type="unfinished">{name}  ({n} triangles)</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="602"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="644"/>
         <source>Objects ({n})</source>
         <translation type="unfinished">Objets ({n})</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="607"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="649"/>
         <source>This project contains sliced G-code.</source>
         <translation type="unfinished">Ce projet contient du G-code tranché.</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="612"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="654"/>
         <source>Show toolpaths — {plate}</source>
         <translation type="unfinished">Afficher les trajectoires — {plate}</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="630"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="672"/>
         <source>Reading sliced G-code from project…</source>
         <translation type="unfinished">Lecture du G-code tranché du projet…</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="666"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="708"/>
         <source>No printable moves found in this G-code.</source>
         <translation type="unfinished">Aucun mouvement d&apos;impression trouvé dans ce G-code.</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="687"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="729"/>
         <source>Print size</source>
         <translation type="unfinished">Taille d&apos;impression</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="696"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="738"/>
         <source>Back to 3D model</source>
         <translation type="unfinished">Retour au modèle 3D</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="715"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="757"/>
         <source>All</source>
         <extracomment>Button: show all print feature types.</extracomment>
         <translation type="unfinished">Tout</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="717"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="759"/>
         <source>None</source>
         <extracomment>Button: hide all print feature types.</extracomment>
         <translation type="unfinished">Aucun</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="762"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="804"/>
         <source>&lt;b&gt;Layer {n}&lt;/b&gt; of {total}  ·  Z = {z} mm</source>
         <extracomment>Keep &lt;b&gt;...&lt;/b&gt; around the layer number.</extracomment>
         <translation type="unfinished">&lt;b&gt;Couche {n}&lt;/b&gt; sur {total}  ·  Z = {z} mm</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="795"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="837"/>
         <location filename="../src/printview3d/ui/settings_dialog.py" line="254"/>
         <source>custom slicer</source>
         <translation type="unfinished">trancheur personnalisé</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="802"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="844"/>
         <source>Open this file in {slicer} (Ctrl+P). Use the arrow to pick another slicer.</source>
         <translation type="unfinished">Ouvrir ce fichier dans {slicer} (Ctrl+P). La flèche permet de choisir un autre trancheur.</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="805"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="847"/>
         <source>Open in slicer</source>
         <translation type="unfinished">Ouvrir dans le trancheur</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="806"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="848"/>
         <source>No slicer found yet — choose one in Settings (Ctrl+P)</source>
         <translation type="unfinished">Aucun trancheur trouvé — choisissez-en un dans les Paramètres (Ctrl+P)</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="817"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="859"/>
         <source>No slicers found</source>
         <translation type="unfinished">Aucun trancheur trouvé</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="820"/>
-        <location filename="../src/printview3d/ui/main_window.py" line="801"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="862"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="843"/>
         <source>Open in {slicer}</source>
         <translation type="unfinished">Ouvrir dans {slicer}</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="822"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="864"/>
         <source>(default)</source>
         <translation type="unfinished">(par défaut)</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="825"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="867"/>
         <source>Choose default slicer…</source>
         <translation type="unfinished">Choisir le trancheur par défaut…</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="832"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="874"/>
         <source>No slicer found</source>
         <translation type="unfinished">Aucun trancheur trouvé</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="833"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="875"/>
         <source>No supported slicer was found on this computer.</source>
         <translation type="unfinished">Aucun trancheur pris en charge n&apos;a été trouvé sur cet ordinateur.</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="834"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="876"/>
         <source>Open Settings to choose your slicer program?</source>
         <translation type="unfinished">Ouvrir les Paramètres pour choisir votre trancheur ?</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="840"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="882"/>
         <source>{slicer} not found</source>
         <translation type="unfinished">{slicer} introuvable</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="841"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="883"/>
         <location filename="../src/printview3d/ui/settings_dialog.py" line="275"/>
         <source>{slicer} could not be found automatically.</source>
         <translation type="unfinished">{slicer} n&apos;a pas pu être trouvé automatiquement.</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="842"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="884"/>
         <source>Do you want to locate its program file yourself?</source>
         <translation type="unfinished">Voulez-vous indiquer vous-même le fichier du programme ?</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="845"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="887"/>
         <location filename="../src/printview3d/ui/settings_dialog.py" line="261"/>
         <source>Locate {slicer}</source>
         <translation type="unfinished">Localiser {slicer}</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="862"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="904"/>
         <source>Could not start {slicer}</source>
         <translation type="unfinished">Impossible de démarrer {slicer}</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="865"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="907"/>
         <source>Opening {file} in {slicer}…</source>
         <translation type="unfinished">Ouverture de {file} dans {slicer}…</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="872"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="914"/>
         <source>Save screenshot</source>
         <translation type="unfinished">Enregistrer la capture</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="873"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="915"/>
         <source>PNG image</source>
         <translation type="unfinished">Image PNG</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="876"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="918"/>
         <source>Saved {path}</source>
         <translation type="unfinished">{path} enregistré</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="888"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="930"/>
         <source>About {app}</source>
         <translation type="unfinished">À propos de {app}</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="890"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="932"/>
         <source>A lightweight viewer for STL, 3MF and G-code files, with one-click hand-off to your slicer (Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura and others).</source>
         <translation type="unfinished">Une visionneuse légère pour les fichiers STL, 3MF et G-code, qui envoie le fichier en un clic à votre trancheur (Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura et d&apos;autres).</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="893"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="935"/>
         <source>Open source under the MIT License.</source>
         <translation type="unfinished">Open source sous licence MIT.</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="894"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="936"/>
         <source>Built with Python, Qt (PySide6) and PyVista / VTK.</source>
         <translation type="unfinished">Réalisé avec Python, Qt (PySide6) et PyVista / VTK.</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="903"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="945"/>
         <source>No recent files</source>
         <translation type="unfinished">Aucun fichier récent</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="906"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="948"/>
         <source>Recent files</source>
         <translation type="unfinished">Fichiers récents</translation>
     </message>
     <message>
-        <location filename="../src/printview3d/ui/main_window.py" line="922"/>
+        <location filename="../src/printview3d/ui/main_window.py" line="964"/>
         <source>Clear list</source>
         <translation type="unfinished">Vider la liste</translation>
     </message>
@@ -929,6 +940,12 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/theme.py" line="27"/>
+        <source>Graphite</source>
+        <extracomment>Colour theme name: a warm, dark brownish charcoal.</extracomment>
+        <translation type="unfinished">Graphite</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/theme.py" line="28"/>
         <source>Light</source>
         <extracomment>Colour theme name: light colours (not &apos;not heavy&apos;).</extracomment>
         <translation type="unfinished">Clair</translation>

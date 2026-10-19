@@ -67,6 +67,8 @@ NOTES = {
     "Dark": "Colour theme name.",
     "Gray": "Colour theme name.",
     "Light": "Colour theme name: light colours (not 'not heavy').",
+    "Graphite": "Colour theme name: a warm, dark brownish charcoal.",
+    "Theme: {name} (Ctrl+T: next theme)": "Tooltip of the theme icon. {name} is the current theme (Dark, Gray...).",
     "Plate {n}": "A build plate inside a slicer project; {n} is its number.",
 }
 
