@@ -1,4 +1,4 @@
-"""Settings dialog: default slicer, default-app registration, viewer and graphics options."""
+"""Settings dialog: language, default slicer, default-app registration, viewer and graphics."""
 
 from __future__ import annotations
 
@@ -7,49 +7,84 @@ import sys
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGroupBox,
-    QHBoxLayout, QLabel, QLineEdit, QMessageBox, QPushButton, QVBoxLayout,
+    QApplication, QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout,
+    QFrame, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QMessageBox, QPushButton, QScrollArea,
+    QVBoxLayout, QWidget,
 )
 
-from .. import file_assoc, gpu
+from .. import file_assoc, gpu, i18n
 from .. import slicer as sl
+from ..i18n import tr
+from .labels import assoc_status
 
 
 class SettingsDialog(QDialog):
     def __init__(self, settings, parent=None, gpu_info=None):
         super().__init__(parent)
         self.settings = settings
-        self.setWindowTitle("Settings")
+        self.setWindowTitle(tr("Settings"))
         self.setWindowFlag(Qt.WindowContextHelpButtonHint, False)
         self.setMinimumWidth(560)
-        root = QVBoxLayout(self)
+        outer = QVBoxLayout(self)
+        # The settings scroll when the screen is small (laptops with display scaling).
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        content = QWidget()
+        root = QVBoxLayout(content)
+        root.setContentsMargins(0, 0, 6, 0)
+        scroll.setWidget(content)
+        outer.addWidget(scroll, 1)
+
+        # ---------------- Language ----------------
+        g0 = QGroupBox(tr("Language"))
+        l0 = QFormLayout(g0)
+        self.lang_combo = QComboBox()
+        self.lang_combo.addItem(tr("Automatic (system language)"), "auto")
+        completion = i18n.completion()
+        for code, name in i18n.LANGUAGES.items():
+            label = name
+            if code != "en" and completion.get(code, 0) < 50:
+                label += "  " + tr("(incomplete)")
+            self.lang_combo.addItem(label, code)
+        self.lang_combo.setCurrentIndex(max(0, self.lang_combo.findData(settings.get("language", "en"))))
+        k0 = QLabel(tr("Language"))
+        k0.setObjectName("formKey")
+        l0.addRow(k0, self.lang_combo)
+        help_lbl = QLabel(tr("Missing or wrong translation? You can help translate PrintView3D — "
+                             "see \"Translations\" on the project page."))
+        help_lbl.setObjectName("muted")
+        help_lbl.setWordWrap(True)
+        l0.addRow(help_lbl)
+        root.addWidget(g0)
 
         # ---------------- Slicer ----------------
         self._paths = dict(settings.get("slicer_paths") or {})
         self._custom = dict(settings.get("custom_slicer") or {})
         self._installed = sl.detect_installed(self._paths)
-        g1 = QGroupBox("Slicer")
+        g1 = QGroupBox(tr("Slicer"))
         l1 = QVBoxLayout(g1)
         form = QFormLayout()
         self.slicer_combo = QComboBox()
         for s_ in sl.SLICERS:
-            tag = "installed" if s_.id in self._installed else "not found"
+            tag = tr("installed") if s_.id in self._installed else tr("not found")
             self.slicer_combo.addItem(f"{s_.name}   ({tag})", s_.id)
-        self.slicer_combo.addItem("Custom program…", sl.CUSTOM)
-        k = QLabel("Default slicer")
+        self.slicer_combo.addItem(tr("Custom program…"), sl.CUSTOM)
+        k = QLabel(tr("Default slicer"))
         k.setObjectName("formKey")
         form.addRow(k, self.slicer_combo)
         self.custom_name = QLineEdit(self._custom.get("name", ""))
-        self.custom_name.setPlaceholderText("Name shown on the button, e.g. SuperSlicer")
-        self.custom_name_label = QLabel("Name")
+        self.custom_name.setPlaceholderText(tr("Name shown on the button, e.g. SuperSlicer"))
+        self.custom_name_label = QLabel(tr("Name"))
         self.custom_name_label.setObjectName("formKey")
         form.addRow(self.custom_name_label, self.custom_name)
         l1.addLayout(form)
         row = QHBoxLayout()
         self.slicer_edit = QLineEdit()
-        browse = QPushButton("Browse…")
+        browse = QPushButton(tr("Browse…"))
         browse.clicked.connect(self._browse)
-        self.detect_btn = QPushButton("Detect")
+        self.detect_btn = QPushButton(tr("Detect"))
         self.detect_btn.clicked.connect(self._detect)
         row.addWidget(self.slicer_edit, 1)
         row.addWidget(browse)
@@ -69,15 +104,15 @@ class SettingsDialog(QDialog):
         self.slicer_edit.textChanged.connect(self._update_slicer_status)
 
         # ---------------- File associations ----------------
-        g2 = QGroupBox("Default program for 3D files")
+        g2 = QGroupBox(tr("Default program for 3D files"))
         l2 = QVBoxLayout(g2)
         if file_assoc.needs_confirmation():
-            info_text = ("Register PrintView3D so it can open .stl, .3mf and .gcode files when you "
-                         "double-click them. Windows then asks you to confirm it as the default app — "
-                         "that last step is done by Windows itself and can be changed back at any time.")
+            info_text = tr("Register PrintView3D so it can open .stl, .3mf and .gcode files when you "
+                           "double-click them. Windows then asks you to confirm it as the default app — "
+                           "that last step is done by Windows itself and can be changed back at any time.")
         else:
-            info_text = ("Add PrintView3D to your applications menu and to \"Open With\", and make it "
-                         "the default app for .stl, .3mf and .gcode files. Remove registration undoes it.")
+            info_text = tr("Add PrintView3D to your applications menu and to \"Open with\", and make it "
+                           "the default app for .stl, .3mf and .gcode files. Remove registration undoes it.")
         info = QLabel(info_text)
         info.setWordWrap(True)
         info.setObjectName("muted")
@@ -93,11 +128,11 @@ class SettingsDialog(QDialog):
             key.setObjectName("formKey")
             self.assoc_form.addRow(key, lab)
         btns = QHBoxLayout()
-        self.reg_btn = QPushButton("Register && choose as default…" if file_assoc.needs_confirmation()
-                                   else "Register && make default")
+        self.reg_btn = QPushButton(tr("Register && choose as default…") if file_assoc.needs_confirmation()
+                                   else tr("Register && make default"))
         self.reg_btn.setObjectName("primary")
         self.reg_btn.clicked.connect(self._register)
-        self.unreg_btn = QPushButton("Remove registration")
+        self.unreg_btn = QPushButton(tr("Remove registration"))
         self.unreg_btn.clicked.connect(self._unregister)
         btns.addWidget(self.reg_btn)
         btns.addWidget(self.unreg_btn)
@@ -110,51 +145,64 @@ class SettingsDialog(QDialog):
         root.addWidget(g2)
 
         # ---------------- Viewer ----------------
-        g3 = QGroupBox("Viewer")
+        g3 = QGroupBox(tr("Viewer"))
         l3 = QVBoxLayout(g3)
-        self.travel_cb = QCheckBox("Show travel moves when opening G-code")
+        self.travel_cb = QCheckBox(tr("Show travel moves when opening G-code"))
         self.travel_cb.setChecked(bool(settings.get("show_travel")))
-        self.bed_cb = QCheckBox("Show build plate grid")
+        self.bed_cb = QCheckBox(tr("Show build plate grid"))
         self.bed_cb.setChecked(bool(settings.get("show_bed", True)))
         l3.addWidget(self.travel_cb)
         l3.addWidget(self.bed_cb)
         root.addWidget(g3)
 
         # ---------------- Graphics ----------------
-        g4 = QGroupBox("Graphics")
+        g4 = QGroupBox(tr("Graphics"))
         l4 = QVBoxLayout(g4)
-        gpu_name = (gpu_info or {}).get("GPU", "unknown")
-        self.gpu_label = QLabel(f"Drawing with: <b>{gpu_name}</b>")
+        gpu_name = (gpu_info or {}).get("GPU") or tr("unknown")
+        self.gpu_label = QLabel(tr("Drawing with: {gpu}").format(gpu=f"<b>{gpu_name}</b>"))
         self.gpu_label.setWordWrap(True)
         l4.addWidget(self.gpu_label)
-        self.gpu_cb = QCheckBox("Use the high-performance graphics card (recommended on laptops)")
+        self.gpu_cb = QCheckBox(tr("Use the high-performance graphics card (recommended on laptops)"))
         self.gpu_cb.setEnabled(gpu.is_supported())
         self.gpu_cb.setChecked(gpu.high_performance_enabled())
         self.gpu_cb.setVisible(sys.platform == "win32")
         l4.addWidget(self.gpu_cb)
         if gpu.is_supported():
-            hint = "Takes effect after restarting PrintView3D."
+            hint = tr("Takes effect after restarting PrintView3D.")
         elif sys.platform == "win32":
-            hint = "Available in the installed PrintView3D.exe."
+            hint = tr("Available in the installed PrintView3D.exe.")
         else:
-            hint = ("On laptops with two graphics chips, start PrintView3D from the applications menu "
-                    "(after Register below) — the menu entry asks for the dedicated GPU — or use your "
-                    "desktop's \"Launch using Dedicated Graphics Card\" option.")
+            hint = tr("On laptops with two graphics chips, start PrintView3D from the applications menu "
+                      "(after Register below) — the menu entry asks for the dedicated GPU — or use your "
+                      "desktop's \"Launch using Dedicated Graphics Card\" option.")
         if gpu.looks_integrated(gpu_name):
-            hint = ("This looks like the built-in (slower) graphics. Tick the box and restart "
-                    "for smoother rotation. " + hint)
+            hint = tr("This looks like the built-in (slower) graphics. Tick the box and restart "
+                      "for smoother rotation.") + " " + hint
         self.gpu_hint = QLabel(hint)
         self.gpu_hint.setWordWrap(True)
         self.gpu_hint.setObjectName("muted")
         l4.addWidget(self.gpu_hint)
         root.addWidget(g4)
 
+        root.addStretch(1)
         bb = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         bb.accepted.connect(self._save)
         bb.rejected.connect(self.reject)
-        root.addWidget(bb)
+        outer.addWidget(bb)
 
         self._update_assoc_status()
+        self._initial_size(content)
+
+    def _initial_size(self, content):
+        """As tall as the content needs, but never taller than 90 % of the screen."""
+        width = 620
+        content.setFixedWidth(width - 40)            # lets wrapped labels compute their height
+        need = content.sizeHint().height() + 70
+        content.setMinimumWidth(0)
+        content.setMaximumWidth(16777215)
+        screen = (self.parent().screen() if self.parent() is not None else QApplication.primaryScreen())
+        avail = screen.availableGeometry().height() if screen is not None else 900
+        self.resize(width, min(need, int(avail * 0.9)))
 
     # ---------------------------------------------------------------- slicer
     def _store_slicer_fields(self):
@@ -176,10 +224,10 @@ class SettingsDialog(QDialog):
         self.slicer_edit.blockSignals(True)
         if is_custom:
             self.slicer_edit.setText(self._custom.get("path", ""))
-            self.slicer_edit.setPlaceholderText("Path to the slicer program")
+            self.slicer_edit.setPlaceholderText(tr("Path to the slicer program"))
         else:
             self.slicer_edit.setText(self._paths.get(sid) or self._installed.get(sid, ""))
-            self.slicer_edit.setPlaceholderText("Not found automatically — use Browse… to select it")
+            self.slicer_edit.setPlaceholderText(tr("Not found automatically — use Browse… to select it"))
         self.slicer_edit.blockSignals(False)
         self._update_slicer_status()
 
@@ -188,11 +236,17 @@ class SettingsDialog(QDialog):
         self._current_id = self.slicer_combo.currentData()
         self._load_slicer_fields()
 
+    def _display_name(self, sid: str) -> str:
+        if sid == sl.CUSTOM:
+            return self.custom_name.text().strip() or tr("custom slicer")
+        return sl.slicer_name(sid)
+
     def _browse(self):
         start = (os.path.dirname(self.slicer_edit.text()) or os.environ.get("ProgramFiles", "")
                  or os.path.expanduser("~"))
-        name = sl.slicer_name(self._current_id, self.custom_name.text())
-        path, _ = QFileDialog.getOpenFileName(self, f"Locate {name}", start, sl.program_file_filter())
+        path, _ = QFileDialog.getOpenFileName(
+            self, tr("Locate {slicer}").format(slicer=self._display_name(self._current_id)),
+            start, sl.program_file_filter())
         if path:
             self.slicer_edit.setText(os.path.normpath(path))
 
@@ -203,20 +257,21 @@ class SettingsDialog(QDialog):
             self._installed[sid] = found
             self.slicer_edit.setText(found)
         else:
-            QMessageBox.information(self, "Not found",
-                                    f"{sl.slicer_name(sid)} could not be found automatically.\n"
-                                    "Use Browse… to select its program file.")
+            QMessageBox.information(
+                self, tr("Not found"),
+                tr("{slicer} could not be found automatically.").format(slicer=self._display_name(sid))
+                + "\n" + tr("Use Browse… to select its program file."))
 
     def _update_slicer_status(self):
         txt = self.slicer_edit.text().strip()
         if not txt:
-            self.slicer_status.setText("No program selected.")
+            self.slicer_status.setText(tr("No program selected."))
         elif not os.path.isfile(txt):
-            self.slicer_status.setText("✖ This file does not exist")
+            self.slicer_status.setText("✖ " + tr("This file does not exist"))
         elif self._current_id != sl.CUSTOM and txt == self._installed.get(self._current_id):
-            self.slicer_status.setText("✔ Detected automatically")
+            self.slicer_status.setText("✔ " + tr("Detected automatically"))
         else:
-            self.slicer_status.setText("✔ Found")
+            self.slicer_status.setText("✔ " + tr("Found"))
 
     # --------------------------------------------------------- associations
     def _update_assoc_status(self):
@@ -225,44 +280,44 @@ class SettingsDialog(QDialog):
         self.unreg_btn.setEnabled(supported and file_assoc.is_registered())
         if not supported:
             for lab in self.assoc_labels.values():
-                lab.setText("Not available")
-            self.assoc_note.setText("File associations are available on Windows and Linux.")
+                lab.setText(tr("Not available"))
+            self.assoc_note.setText(tr("File associations are available on Windows and Linux."))
             return
         for ext, st in file_assoc.status().items():
-            self.assoc_labels[ext].setText(st)
+            self.assoc_labels[ext].setText(assoc_status(st))
         notes = []
         if not file_assoc.is_frozen():
-            notes.append("You are running from source: registration will point to this Python "
-                         "installation. For everyday use, register from the built PrintView3D program.")
+            notes.append(tr("You are running from source: registration will point to this Python "
+                            "installation. For everyday use, register from the built PrintView3D program."))
         else:
             reg_cmd = file_assoc.registered_command()
             if reg_cmd and file_assoc.this_program().lower() not in reg_cmd.lower():
-                notes.append("The registration points to a different copy of PrintView3D. "
-                             "Click Register again to point it to this one.")
+                notes.append(tr("The registration points to a different copy of PrintView3D. "
+                                "Click Register again to point it to this one."))
         self.assoc_note.setText("\n".join(notes))
 
     def _register(self):
         if file_assoc.needs_confirmation():
             QMessageBox.information(
-                self, "Almost done",
-                "PrintView3D will be added to \"Open with\".\n\n"
-                "Windows Settings opens next. Set PrintView3D as the default for "
-                ".stl, .3mf and .gcode there (click each file type and choose PrintView3D).")
+                self, tr("Almost done"),
+                tr("PrintView3D will be added to \"Open with\".") + "\n\n"
+                + tr("Windows Settings opens next. Set PrintView3D as the default for "
+                     ".stl, .3mf and .gcode there (click each file type and choose PrintView3D)."))
         try:
             file_assoc.make_default()
         except OSError as e:
-            QMessageBox.warning(self, "Registration failed", str(e))
+            QMessageBox.warning(self, tr("Registration failed"), str(e))
             return
         self._update_assoc_status()
         if not file_assoc.needs_confirmation():
             QMessageBox.information(
-                self, "Done",
-                "PrintView3D is now in your applications menu and opens .stl, .3mf and .gcode "
-                "files when you double-click them.")
+                self, tr("Done"),
+                tr("PrintView3D is now in your applications menu and opens .stl, .3mf and .gcode "
+                   "files when you double-click them."))
 
     def _unregister(self):
-        if QMessageBox.question(self, "Remove registration",
-                                "Remove PrintView3D from \"Open with\" and default apps?") != QMessageBox.Yes:
+        if QMessageBox.question(self, tr("Remove registration"),
+                                tr("Remove PrintView3D from \"Open with\" and default apps?")) != QMessageBox.Yes:
             return
         file_assoc.unregister()
         self._update_assoc_status()
@@ -272,7 +327,7 @@ class SettingsDialog(QDialog):
         self._store_slicer_fields()
         sid = self._current_id
         if sid == sl.CUSTOM and not os.path.isfile(self._custom.get("path", "")):
-            QMessageBox.warning(self, "Custom slicer", "Select the program file of your slicer first.")
+            QMessageBox.warning(self, tr("Custom slicer"), tr("Select the program file of your slicer first."))
             return
         self.settings.set("slicer_id", sid)
         self.settings.set("slicer_paths", self._paths)
@@ -282,8 +337,13 @@ class SettingsDialog(QDialog):
         if gpu.is_supported() and self.gpu_cb.isChecked() != gpu.high_performance_enabled():
             try:
                 gpu.set_high_performance(self.gpu_cb.isChecked())
-                QMessageBox.information(self, "Restart needed",
-                                        "Restart PrintView3D to switch graphics card.")
+                QMessageBox.information(self, tr("Restart needed"),
+                                        tr("Restart PrintView3D to switch graphics card."))
             except OSError as e:
-                QMessageBox.warning(self, "Could not change graphics setting", str(e))
+                QMessageBox.warning(self, tr("Could not change graphics setting"), str(e))
+        lang = self.lang_combo.currentData()
+        if lang != self.settings.get("language", "en"):
+            self.settings.set("language", lang)
+            # Takes effect immediately: every window re-sets its texts.
+            i18n.apply_language(QApplication.instance(), lang)
         self.accept()

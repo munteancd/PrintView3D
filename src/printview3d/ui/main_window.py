@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (
 from .. import APP_NAME, __version__
 from .. import slicer as sl
 from ..gpu import renderer_info
-from ..i18n import count, num, tr
+from ..i18n import count, ltr, num, tr
 from ..loaders import (
     FEATURES, GcodeData, ModelData, SUPPORTED_EXTENSIONS, file_kind, load_file,
     parse_gcode_text, read_embedded_gcode,
@@ -211,6 +211,7 @@ class MainWindow(QMainWindow):
 
         # ---- viewer page ----
         splitter = QSplitter(Qt.Horizontal)
+        self.splitter = splitter
         self.plotter = QtInteractor(splitter, auto_update=False)
         try:
             for key in ("q", "b", "C", "v", "Up", "Down", "plus", "minus"):
@@ -276,7 +277,12 @@ class MainWindow(QMainWindow):
         ll = QVBoxLayout(self.layers_box)
         self.layer_info = QLabel()
         ll.addWidget(self.layer_info)
-        srow = QHBoxLayout()
+        # The layer slider always runs left-to-right (layer 1 on the left), also in
+        # right-to-left languages, matching the Western layer numbers.
+        srow_widget = QWidget()
+        srow_widget.setLayoutDirection(Qt.LeftToRight)
+        srow = QHBoxLayout(srow_widget)
+        srow.setContentsMargins(0, 0, 0, 0)
         self.layer_down = QPushButton()
         self.layer_down.setFixedWidth(34)
         self.layer_down.clicked.connect(lambda: self.step_layer(-1))
@@ -288,7 +294,7 @@ class MainWindow(QMainWindow):
         srow.addWidget(self.layer_down)
         srow.addWidget(self.layer_slider, 1)
         srow.addWidget(self.layer_up)
-        ll.addLayout(srow)
+        ll.addWidget(srow_widget)
         row2 = QHBoxLayout()
         self.layer_spin = QSpinBox()
         self.layer_spin.valueChanged.connect(lambda v: self.layer_slider.setValue(v - 1))
@@ -360,10 +366,8 @@ class MainWindow(QMainWindow):
         self.goto_label.setText(tr("Go to layer"))
         self.only_layer_cb.setText(tr("Show only this layer"))
         self.layer_hint.setText(tr("Tip: ↑ / ↓ arrow keys move through layers"))
-        # Arrows point the way the slider moves (mirrored in right-to-left languages).
-        rtl = self.layoutDirection() == Qt.RightToLeft
-        self.layer_down.setText("▶" if rtl else "◀")
-        self.layer_up.setText("◀" if rtl else "▶")
+        self.layer_down.setText("◀")
+        self.layer_up.setText("▶")
         self.layer_down.setToolTip(tr("Previous layer"))
         self.layer_up.setToolTip(tr("Next layer"))
 
@@ -379,6 +383,11 @@ class MainWindow(QMainWindow):
     def _on_language_changed(self):
         self.retranslate_ui()
         self._refresh_panel()
+        # A splitter does not re-place its panes on its own when the direction changes
+        # (Arabic puts the information panel on the left).
+        sizes = self.splitter.sizes()
+        self.splitter.refresh()
+        self.splitter.setSizes(sizes)
 
     # ========================================================= side panel
     @staticmethod
@@ -387,6 +396,7 @@ class MainWindow(QMainWindow):
             item = layout.takeAt(0)
             w = item.widget()
             if w is not None:
+                w.hide()            # hide now; Qt deletes it later
                 w.deleteLater()
             elif item.layout() is not None:
                 MainWindow._clear_layout(item.layout())
@@ -554,8 +564,8 @@ class MainWindow(QMainWindow):
         actors = getattr(self, "_model_actors", [])
         b = m.bounds()
         if b:
-            self._add_detail(tr("Size (X×Y×Z)"), tr("{x} × {y} × {z} mm").format(
-                x=num(b[1] - b[0]), y=num(b[3] - b[2]), z=num(b[5] - b[4])))
+            self._add_detail(tr("Size (X×Y×Z)"), ltr(tr("{x} × {y} × {z} mm").format(
+                x=num(b[1] - b[0]), y=num(b[3] - b[2]), z=num(b[5] - b[4]))))
         self._add_detail(tr("Triangles"), count(m.n_triangles))
         if len(m.parts) == 1:
             vol = self._mesh_volume(m.parts[0])
@@ -656,8 +666,8 @@ class MainWindow(QMainWindow):
 
         b = g.extrusion_bounds
         if b:
-            self._add_detail(tr("Print size"), tr("{x} × {y} × {z} mm").format(
-                x=num(b[1] - b[0], 1), y=num(b[3] - b[2], 1), z=num(b[5])))
+            self._add_detail(tr("Print size"), ltr(tr("{x} × {y} × {z} mm").format(
+                x=num(b[1] - b[0], 1), y=num(b[3] - b[2], 1), z=num(b[5]))))
         self._add_detail(tr("Layers"), count(g.n_layers))
         for key in GCODE_META_ORDER:
             if key in g.meta:

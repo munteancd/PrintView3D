@@ -36,6 +36,7 @@ file to Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura and others w
 | **G-code** | Toolpaths coloured by type (walls, infill, top/bottom, supports, bridges, travel…), a layer slider, "show only this layer", print time, filament use and the slicer's preview picture. |
 | **Open in your slicer** | One click (or `Ctrl+P`) opens the current file in your slicer. Installed slicers are found automatically. |
 | **Default app** | Optional: make PrintView3D open `.stl`, `.3mf` and `.gcode` files when you double-click them. Fully reversible. |
+| **Your language** | English, العربية (Arabic, right-to-left), Nederlands, Deutsch, Français and Español; switch any time in Settings, no restart needed. [Help translate](#translations). |
 | **Comfortable to use** | Slicer-style camera, drag & drop, recent files, screenshots, dark theme. |
 
 <table>
@@ -198,6 +199,12 @@ is not in the list, choose **Custom program…**, give it a name and select its 
 The green button is renamed to match ("Open in OrcaSlicer"). The small **▾** arrow next to it lists
 your other installed slicers, for opening a file in one of them just once.
 
+### Language
+
+**Settings → Language** switches the whole program immediately, including file dialogs and
+standard buttons. English is the default; *Automatic* follows your system language. Arabic uses a
+right-to-left layout; measurements always use Western digits (0.20 mm).
+
 ### Smoother rotation on laptops
 
 Many laptops have two graphics chips and run programs on the slower one by default.
@@ -359,6 +366,25 @@ PrintView3D.exe --unregister                       remove file associations
 ```
 
 ---
+
+## Translations
+
+| Language | Status |
+|---|---|
+| English | Source language |
+| العربية Arabic | Complete, being reviewed |
+| Nederlands | Complete, needs review by a native speaker |
+| Deutsch | Complete, needs review by a native speaker |
+| Français | Complete, needs review by a native speaker |
+| Español | Complete, needs review by a native speaker |
+
+**Speak one of these languages? Or want PrintView3D in yours?** Your help is very welcome:
+spotting one wrong word already helps. See [CONTRIBUTING.md → Translations](CONTRIBUTING.md#translations).
+Untranslated texts simply appear in English, so a language can be added step by step.
+
+![PrintView3D in Arabic, right-to-left](docs/screenshot-arabic.png)
+
+<!-- After Weblate approval, add the badge here (see docs/WEBLATE.md, step 7). -->
 
 ## Contributing
 

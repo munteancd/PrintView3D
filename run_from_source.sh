@@ -6,4 +6,5 @@ if [[ ! -x .venv/bin/python ]]; then
     echo "Run ./build_linux.sh first to set up the environment."
     exit 1
 fi
+.venv/bin/python tools/i18n.py compile >/dev/null
 PYTHONPATH="$PWD/src" exec .venv/bin/python -m printview3d "$@"

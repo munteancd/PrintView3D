@@ -4,7 +4,7 @@ The loaders and helper modules work with plain English keys (they must not
 depend on Qt). The UI shows them through these tables: tr(FEATURE_LABELS[key]).
 """
 
-from ..i18n import tr, tr_noop
+from ..i18n import localize_number_text, tr, tr_noop
 
 # G-code feature types (keys from loaders.gcode.FEATURES)
 FEATURE_LABELS = {
@@ -68,6 +68,7 @@ def meta_label(key: str) -> str:
 
 
 def meta_value(value: str) -> str:
+    value = localize_number_text(value)
     for word, src in VALUE_WORDS.items():
         if word in value:
             value = value.replace(word, tr(src))

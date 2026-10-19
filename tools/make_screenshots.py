@@ -32,6 +32,8 @@ def main():
     import make_demo
 
     apply_dark_theme(app)
+    import subprocess
+    subprocess.run([sys.executable, os.path.join(ROOT, "tools", "i18n.py"), "compile"], check=True)
     tmp = tempfile.mkdtemp()
     # Stand-in slicer programs so the slicer menu has something to show.
     bindir = os.path.join(tmp, "bin")
@@ -124,10 +126,23 @@ def main():
     # 6) Settings
     d = SettingsDialog(settings, w, {"GPU": "(your graphics card)"})
     d.show()
-    app.processEvents()
+    for _ in range(5):
+        app.processEvents()
     d.grab().save(os.path.join(DOCS, "screenshot-settings.png"))
     print("saved screenshot-settings.png")
     d.close()
+
+    # 7) Arabic (right-to-left) for the Translations section
+    from printview3d import i18n
+    i18n.apply_language(app, "ar")
+    for _ in range(5):
+        app.processEvents()
+    w.load_sync(os.path.join(EX, "demo_vase.gcode"))
+    w.set_layer(int(w.gcode.n_layers * 0.6))
+    w._redraw_gcode()
+    camera(-20, -8, 1.25)
+    shot("screenshot-arabic.png")
+    i18n.apply_language(app, "en")
     w.close()
 
 

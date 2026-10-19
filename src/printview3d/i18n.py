@@ -21,6 +21,7 @@ event to every window, and the windows re-set their texts.
 from __future__ import annotations
 
 import os
+import re
 from typing import Optional
 
 from PySide6.QtCore import QCoreApplication, QLibraryInfo, QLocale, Qt, QTranslator
@@ -75,6 +76,16 @@ def resolve(setting: str) -> str:
     return setting if setting in LANGUAGES else "en"
 
 
+def completion() -> dict[str, int]:
+    """Percentage translated per language (written by tools/i18n.py compile)."""
+    import json
+    try:
+        with open(os.path.join(_TRANSLATIONS_DIR, "status.json"), encoding="utf-8") as f:
+            return {k: int(v) for k, v in json.load(f).items()}
+    except (OSError, ValueError):
+        return {}
+
+
 def available_qm(code: str) -> Optional[str]:
     path = os.path.join(_TRANSLATIONS_DIR, f"printview3d_{code}.qm")
     return path if os.path.isfile(path) else None
@@ -102,24 +113,38 @@ def apply_language(app, setting: str = "auto") -> str:
             app.installTranslator(qt_tr)
             _installed.append(qt_tr)
 
-    QLocale.setDefault(QLocale(code))
-    app.setLayoutDirection(Qt.RightToLeft if code in RIGHT_TO_LEFT else Qt.LeftToRight)
+    # Number format for all widgets (spin boxes too). Arabic keeps Western digits.
+    if code in WESTERN_DIGITS:
+        QLocale.setDefault(QLocale(QLocale.English, QLocale.UnitedStates))
+    else:
+        QLocale.setDefault(QLocale(code))
+    if hasattr(app, "setLayoutDirection"):          # GUI apps only
+        app.setLayoutDirection(Qt.RightToLeft if code in RIGHT_TO_LEFT else Qt.LeftToRight)
     _current = code
     return code
 
 
 # --------------------------------------------------------------- numbers
-def _number_locale() -> QLocale:
-    if _current in WESTERN_DIGITS:
-        return QLocale(QLocale.English, QLocale.UnitedStates)
-    return QLocale()
-
-
 def num(value: float, decimals: int = 2) -> str:
     """A decimal number in the user's format (e.g. 0,20 in Dutch)."""
-    return _number_locale().toString(float(value), "f", decimals)
+    return QLocale().toString(float(value), "f", decimals)
 
 
 def count(value: int) -> str:
     """A whole number with thousands separators (e.g. 12.345 in German)."""
-    return _number_locale().toString(int(value))
+    return QLocale().toString(int(value))
+
+
+def localize_number_text(text: str) -> str:
+    """'0.2' or '52.95' read from a file -> '0,2' / '52,95' where that is the custom."""
+    t = text.strip()
+    if re.fullmatch(r"-?\d+(\.\d+)?", t):
+        decimals = len(t.split(".")[1]) if "." in t else 0
+        return num(float(t), decimals) if decimals else count(int(t))
+    return text
+
+
+def ltr(text: str) -> str:
+    """Keep a measurement like '69.3 × 69.5 × 70.00 mm' in reading order inside
+    right-to-left text (Unicode left-to-right isolate)."""
+    return "\u2066" + text + "\u2069" if _current in RIGHT_TO_LEFT else text
