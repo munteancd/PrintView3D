@@ -5,6 +5,7 @@ Usage:
     PrintView3D.exe file --screenshot out.png    render a file to an image and exit
     PrintView3D.exe file --send-to-slicer [ID]   open file in the default (or given) slicer and exit
     PrintView3D.exe --lang ar                    start in a given language (en, ar, nl, de, fr, es)
+    PrintView3D.exe --theme light                start with a colour theme (auto, dark, gray, light)
     PrintView3D.exe --register                   add to "Open with" / applications menu and exit
     PrintView3D.exe --unregister                 remove file associations and exit
 """
@@ -48,6 +49,8 @@ def main(argv: list[str] | None = None) -> int:
                         help="open FILE in the default slicer (or the given one, e.g. orcaslicer) and exit")
     parser.add_argument("--lang", metavar="CODE",
                         help="show the interface in this language for this run (en, ar, nl, de, fr, es)")
+    parser.add_argument("--theme", choices=["auto", "dark", "gray", "light"],
+                        help="colour theme for this run")
     parser.add_argument("--register", action="store_true",
                         help='add PrintView3D to "Open with" (and the Linux applications menu) and exit')
     args, _unknown = parser.parse_known_args(argv if argv is not None else sys.argv[1:])
@@ -85,19 +88,19 @@ def main(argv: list[str] | None = None) -> int:
 
     from . import APP_NAME
     from .ui.main_window import MainWindow
-    from .ui.theme import apply_dark_theme
+    from .ui import theme
 
     app = QApplication.instance() or QApplication(sys.argv[:1])
     app.setDesktopFileName("printview3d")        # Linux: match the menu entry / taskbar icon
     app.setApplicationName(APP_NAME)
     app.setOrganizationName(APP_NAME)
-    apply_dark_theme(app)
 
     # Language must be set before the window is built.
     from . import i18n
     from .settings import Settings
     settings = Settings()
     i18n.apply_language(app, args.lang or settings.get("language", "en"))
+    theme.apply_theme(app, args.theme or settings.get("theme", "auto"))
 
     win = MainWindow(settings)
 

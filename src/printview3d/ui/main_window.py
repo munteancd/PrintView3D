@@ -8,9 +8,9 @@ from typing import Optional
 
 import numpy as np
 from PySide6.QtCore import QEvent, QObject, QSize, Qt, QTimer, Signal
-from PySide6.QtGui import QAction, QColor, QIcon, QKeySequence, QPixmap, QShortcut
+from PySide6.QtGui import QAction, QColor, QGuiApplication, QIcon, QKeySequence, QPixmap, QShortcut
 from PySide6.QtWidgets import (
-    QCheckBox, QFileDialog, QFormLayout, QGroupBox, QHBoxLayout, QLabel,
+    QApplication, QCheckBox, QFileDialog, QFormLayout, QGroupBox, QHBoxLayout, QLabel,
     QMainWindow, QMenu, QMessageBox, QProgressBar, QPushButton, QScrollArea,
     QSizePolicy, QSlider, QSpinBox, QSplitter, QStackedWidget, QToolBar,
     QToolButton, QVBoxLayout, QWidget,
@@ -27,6 +27,7 @@ from ..loaders import (
 from ..loaders.gcode import FEATURE_INDEX
 from ..settings import Settings
 from .labels import feature_label, meta_label, meta_value
+from . import theme
 from .scene import Scene
 from .settings_dialog import SettingsDialog
 
@@ -118,6 +119,23 @@ class MainWindow(QMainWindow):
         self._retranslate_timer.timeout.connect(self._on_language_changed)
 
         self.retranslate_ui()
+
+        # "Automatic" theme: follow the system when it switches dark/light.
+        try:
+            QGuiApplication.styleHints().colorSchemeChanged.connect(self._system_theme_changed)
+        except AttributeError:      # Qt older than 6.5
+            pass
+
+    # ================================================================ theme
+    def apply_theme(self, choice: str):
+        """Switch theme now: windows, then the 3D view."""
+        theme.apply_theme(QApplication.instance(), choice)
+        self.scene.set_colors(theme.colors())
+        self.plotter.render()
+
+    def _system_theme_changed(self, *_):
+        if theme.setting() == "auto":
+            self.apply_theme("auto")
 
     # =================================================================== UI
     def _build_toolbar(self):
@@ -258,7 +276,7 @@ class MainWindow(QMainWindow):
 
         self.thumb_label = QLabel()
         self.thumb_label.setAlignment(Qt.AlignCenter)
-        self.thumb_label.setStyleSheet("background:#15181c; border-radius:6px; padding:6px;")
+        self.thumb_label.setObjectName("thumbnail")
         L.addWidget(self.thumb_label)
 
         self.details_box = QGroupBox()
@@ -896,8 +914,7 @@ class MainWindow(QMainWindow):
                 b = QPushButton(os.path.basename(p))
                 b.setToolTip(p)
                 b.setFlat(True)
-                b.setStyleSheet("QPushButton { color: #7cc7c4; border: none; background: transparent; }"
-                                "QPushButton:hover { text-decoration: underline; }")
+                b.setObjectName("link")
                 b.clicked.connect(lambda _=False, path=p: self.load(path))
                 self.welcome_recent.addWidget(b)
         if recent:

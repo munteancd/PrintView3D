@@ -12,7 +12,8 @@ import os
 import sys
 
 DEFAULTS = {
-    "language": "en",           # "auto" = system language; otherwise a code from i18n.LANGUAGES
+    "language": "en",
+    "theme": "auto",            # "auto" = follow the system; or "dark", "gray", "light"           # "auto" = system language; otherwise a code from i18n.LANGUAGES
     "slicer_id": "",            # default slicer; empty = first installed one
     "slicer_paths": {},         # {slicer_id: exe} picked manually in Settings
     "custom_slicer": {},        # {"name": ..., "path": ...} for any other program
@@ -45,6 +46,9 @@ class Settings:
             with open(self.path, "r", encoding="utf-8") as f:
                 stored = json.load(f)
             if isinstance(stored, dict):
+                # People who used PrintView3D before themes existed keep the
+                # dark look they know; new installs follow the system.
+                stored.setdefault("theme", "dark")
                 self.data.update(stored)
         except (OSError, ValueError):
             pass

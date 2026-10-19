@@ -63,6 +63,10 @@ NOTES = {
     "Ironing": "3D printing term: smoothing the top surface with the hot nozzle.",
     "Travel moves": "3D printing term: nozzle movements without printing.",
     "<b>Layer {n}</b> of {total}  ·  Z = {z} mm": "Keep <b>...</b> around the layer number.",
+    "Theme": "Settings: the colour theme of the program (dark, gray, light).",
+    "Dark": "Colour theme name.",
+    "Gray": "Colour theme name.",
+    "Light": "Colour theme name: light colours (not 'not heavy').",
     "Plate {n}": "A build plate inside a slicer project; {n} is its number.",
 }
 
