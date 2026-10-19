@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.0
+- **Linux support**: a single-file AppImage that runs on most distributions (Ubuntu 22.04+,
+  Debian 12+, Fedora 36+, Mint, Arch, …), built and tested automatically.
+- Slicers on Linux are found automatically as AppImages (`~/Applications`, `~/Downloads`, `/opt`…),
+  Flatpaks, Snaps, distribution packages and menu entries.
+- Linux desktop integration: applications-menu entry, "Open With" and default app for STL, 3MF and
+  G-code (Settings → Register & make default), with a hint to use the dedicated GPU.
+- Wayland desktops are supported (PrintView3D runs through XWayland automatically).
+- Slicers started from PrintView3D get a clean environment, so the packaged app's own libraries
+  can't interfere with them.
+- New command-line options `--register` and `--send-to-slicer [id]`; settings follow the XDG /
+  macOS conventions.
+- macOS: code is ready; a Mac build is available on request.
+
 ## 0.3.0
 - Choose your slicer: Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, UltiMaker Cura,
   Elegoo Slicer, Anycubic Slicer Next, or any other program (Custom). Installed slicers are

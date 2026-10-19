@@ -684,12 +684,12 @@ class MainWindow(QMainWindow):
             r = QMessageBox.question(
                 self, f"{name} not found",
                 f"{name} could not be found automatically.\n\n"
-                f"Do you want to locate its program file (.exe) yourself?")
+                f"Do you want to locate its program file yourself?")
             if r != QMessageBox.Yes:
                 return
             path, _ = QFileDialog.getOpenFileName(self, f"Locate {name}",
                                                   os.environ.get("ProgramFiles", ""),
-                                                  "Programs (*.exe);;All files (*)")
+                                                  sl.program_file_filter())
             if not path:
                 return
             exe = os.path.normpath(path)

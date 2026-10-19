@@ -71,11 +71,14 @@ class SettingsDialog(QDialog):
         # ---------------- File associations ----------------
         g2 = QGroupBox("Default program for 3D files")
         l2 = QVBoxLayout(g2)
-        info = QLabel(
-            "Register PrintView3D so it can open .stl, .3mf and .gcode files when you double-click "
-            "them. Windows then asks you to confirm it as the default app — that last step is done "
-            "by Windows itself and can be changed back at any time."
-        )
+        if file_assoc.needs_confirmation():
+            info_text = ("Register PrintView3D so it can open .stl, .3mf and .gcode files when you "
+                         "double-click them. Windows then asks you to confirm it as the default app — "
+                         "that last step is done by Windows itself and can be changed back at any time.")
+        else:
+            info_text = ("Add PrintView3D to your applications menu and to \"Open With\", and make it "
+                         "the default app for .stl, .3mf and .gcode files. Remove registration undoes it.")
+        info = QLabel(info_text)
         info.setWordWrap(True)
         info.setObjectName("muted")
         l2.addWidget(info)
@@ -90,7 +93,8 @@ class SettingsDialog(QDialog):
             key.setObjectName("formKey")
             self.assoc_form.addRow(key, lab)
         btns = QHBoxLayout()
-        self.reg_btn = QPushButton("Register && choose as default…")
+        self.reg_btn = QPushButton("Register && choose as default…" if file_assoc.needs_confirmation()
+                                   else "Register && make default")
         self.reg_btn.setObjectName("primary")
         self.reg_btn.clicked.connect(self._register)
         self.unreg_btn = QPushButton("Remove registration")
@@ -126,9 +130,16 @@ class SettingsDialog(QDialog):
         self.gpu_cb = QCheckBox("Use the high-performance graphics card (recommended on laptops)")
         self.gpu_cb.setEnabled(gpu.is_supported())
         self.gpu_cb.setChecked(gpu.high_performance_enabled())
+        self.gpu_cb.setVisible(sys.platform == "win32")
         l4.addWidget(self.gpu_cb)
-        hint = ("Takes effect after restarting PrintView3D." if gpu.is_supported()
-                else "Available in the installed PrintView3D.exe on Windows.")
+        if gpu.is_supported():
+            hint = "Takes effect after restarting PrintView3D."
+        elif sys.platform == "win32":
+            hint = "Available in the installed PrintView3D.exe."
+        else:
+            hint = ("On laptops with two graphics chips, start PrintView3D from the applications menu "
+                    "(after Register below) — the menu entry asks for the dedicated GPU — or use your "
+                    "desktop's \"Launch using Dedicated Graphics Card\" option.")
         if gpu.looks_integrated(gpu_name):
             hint = ("This looks like the built-in (slower) graphics. Tick the box and restart "
                     "for smoother rotation. " + hint)
@@ -165,7 +176,7 @@ class SettingsDialog(QDialog):
         self.slicer_edit.blockSignals(True)
         if is_custom:
             self.slicer_edit.setText(self._custom.get("path", ""))
-            self.slicer_edit.setPlaceholderText("Path to the slicer program (.exe)")
+            self.slicer_edit.setPlaceholderText("Path to the slicer program")
         else:
             self.slicer_edit.setText(self._paths.get(sid) or self._installed.get(sid, ""))
             self.slicer_edit.setPlaceholderText("Not found automatically — use Browse… to select it")
@@ -178,10 +189,10 @@ class SettingsDialog(QDialog):
         self._load_slicer_fields()
 
     def _browse(self):
-        start = os.path.dirname(self.slicer_edit.text()) or os.environ.get("ProgramFiles", "")
+        start = (os.path.dirname(self.slicer_edit.text()) or os.environ.get("ProgramFiles", "")
+                 or os.path.expanduser("~"))
         name = sl.slicer_name(self._current_id, self.custom_name.text())
-        path, _ = QFileDialog.getOpenFileName(self, f"Locate {name}", start,
-                                              "Programs (*.exe);;All files (*)")
+        path, _ = QFileDialog.getOpenFileName(self, f"Locate {name}", start, sl.program_file_filter())
         if path:
             self.slicer_edit.setText(os.path.normpath(path))
 
@@ -214,35 +225,40 @@ class SettingsDialog(QDialog):
         self.unreg_btn.setEnabled(supported and file_assoc.is_registered())
         if not supported:
             for lab in self.assoc_labels.values():
-                lab.setText("Windows only")
-            self.assoc_note.setText("File associations are only available on Windows.")
+                lab.setText("Not available")
+            self.assoc_note.setText("File associations are available on Windows and Linux.")
             return
         for ext, st in file_assoc.status().items():
             self.assoc_labels[ext].setText(st)
         notes = []
         if not file_assoc.is_frozen():
             notes.append("You are running from source: registration will point to this Python "
-                         "installation. For everyday use, register from the built PrintView3D.exe.")
+                         "installation. For everyday use, register from the built PrintView3D program.")
         else:
             reg_cmd = file_assoc.registered_command()
-            if reg_cmd and sys.executable.lower() not in reg_cmd.lower():
+            if reg_cmd and file_assoc.this_program().lower() not in reg_cmd.lower():
                 notes.append("The registration points to a different copy of PrintView3D. "
                              "Click Register again to point it to this one.")
         self.assoc_note.setText("\n".join(notes))
 
     def _register(self):
+        if file_assoc.needs_confirmation():
+            QMessageBox.information(
+                self, "Almost done",
+                "PrintView3D will be added to \"Open with\".\n\n"
+                "Windows Settings opens next. Set PrintView3D as the default for "
+                ".stl, .3mf and .gcode there (click each file type and choose PrintView3D).")
         try:
-            file_assoc.register()
+            file_assoc.make_default()
         except OSError as e:
             QMessageBox.warning(self, "Registration failed", str(e))
             return
         self._update_assoc_status()
-        QMessageBox.information(
-            self, "Almost done",
-            "PrintView3D is now available in \"Open with\".\n\n"
-            "Windows Settings will open next. Set PrintView3D as the default for "
-            ".stl, .3mf and .gcode there (click each file type and choose PrintView3D).")
-        file_assoc.open_default_apps_settings()
+        if not file_assoc.needs_confirmation():
+            QMessageBox.information(
+                self, "Done",
+                "PrintView3D is now in your applications menu and opens .stl, .3mf and .gcode "
+                "files when you double-click them.")
 
     def _unregister(self):
         if QMessageBox.question(self, "Remove registration",

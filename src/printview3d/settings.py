@@ -1,7 +1,8 @@
 """Small JSON settings store.
 
 Windows:  %APPDATA%\\PrintView3D\\settings.json
-Others:   ~/.config/printview3d/settings.json
+Linux:    ~/.config/printview3d/settings.json  (or $XDG_CONFIG_HOME)
+macOS:    ~/Library/Application Support/PrintView3D/settings.json
 """
 
 from __future__ import annotations
@@ -26,7 +27,10 @@ def settings_dir() -> str:
     if sys.platform == "win32":
         base = os.environ.get("APPDATA") or os.path.expanduser("~")
         return os.path.join(base, "PrintView3D")
-    return os.path.join(os.path.expanduser("~"), ".config", "printview3d")
+    if sys.platform == "darwin":
+        return os.path.join(os.path.expanduser("~"), "Library", "Application Support", "PrintView3D")
+    base = os.environ.get("XDG_CONFIG_HOME") or os.path.join(os.path.expanduser("~"), ".config")
+    return os.path.join(base, "printview3d")
 
 
 class Settings:

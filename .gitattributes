@@ -5,3 +5,5 @@
 *.3mf binary
 *.ico binary
 *.png binary
+*.sh text eol=lf
+packaging/linux/AppRun text eol=lf

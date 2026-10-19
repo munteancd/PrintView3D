@@ -5,13 +5,15 @@
 <h1 align="center">PrintView3D</h1>
 
 <p align="center">
-  A fast, free Windows viewer for <b>STL</b>, <b>3MF</b> and <b>G-code</b> files,<br>
+  A fast, free viewer for <b>STL</b>, <b>3MF</b> and <b>G-code</b> files on <b>Windows</b> and <b>Linux</b>,<br>
   with a one-click button that opens the file in <b>your slicer</b>.
 </p>
 
 <p align="center">
-  <a href="../../releases/latest"><b>⬇ Download for Windows</b></a> ·
-  <a href="#install">Install</a> ·
+  <a href="../../releases/latest"><b>⬇ Download</b></a> ·
+  <a href="#windows">Windows</a> ·
+  <a href="#linux">Linux</a> ·
+  <a href="#macos">macOS</a> ·
   <a href="#using-printview3d">How to use</a> ·
   <a href="#build-it-yourself">Build it yourself</a> ·
   <a href="CHANGELOG.md">What's new</a>
@@ -19,7 +21,7 @@
 
 ![PrintView3D showing a sliced vase with the layer slider at 60 %](docs/screenshot-gcode.png)
 
-Microsoft retired its **3D Viewer** app. PrintView3D replaces it, and is made for people who 3D-print:
+Microsoft retired its **3D Viewer** app, and Linux never had a good one. PrintView3D fills the gap, made for people who 3D-print:
 it shows models *and* sliced G-code, tells you the size, print time and filament use, and sends the
 file to Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura and others with one click.
 
@@ -59,7 +61,17 @@ Any other slicer works too: choose it as **Custom** in Settings.
 
 ## Install
 
-You do **not** need Python or anything else to use PrintView3D.
+You do **not** need Python or anything else to use PrintView3D. Pick your system:
+
+| System | Download | |
+|---|---|---|
+| **Windows 10 / 11** | `PrintView3D-windows.zip` | [Instructions](#windows) |
+| **Linux** (64-bit, x86-64) | `PrintView3D-x86_64.AppImage` | [Instructions](#linux) |
+| **macOS** | on request | [Read this](#macos) |
+
+All downloads are on the **[latest release](../../releases/latest)** page.
+
+### Windows
 
 1. Go to the **[latest release](../../releases/latest)** and download **`PrintView3D-windows.zip`**.
 2. Right-click the zip → **Extract All…** and extract it to a folder of your choice.
@@ -76,7 +88,7 @@ You do **not** need Python or anything else to use PrintView3D.
 **Portable use:** you can also just run `PrintView3D.exe` straight from the extracted folder without
 installing.
 
-### Make it the default program for 3D files (optional)
+#### Make it the default program for 3D files (optional)
 
 1. In PrintView3D, click **Settings**.
 2. Under *Default program for 3D files*, click **Register & choose as default…**.
@@ -85,10 +97,67 @@ installing.
 Windows requires you to confirm this last step yourself; no program is allowed to do it silently.
 **Remove registration** in the same place undoes everything.
 
-### Uninstall
+#### Uninstall
 
 Double-click **`uninstall_windows.bat`** (in the extracted folder). It removes the file associations,
 shortcuts and the program. It asks before deleting your settings.
+
+### Linux
+
+PrintView3D for Linux is a single **AppImage** file: it contains everything it needs and runs on
+most distributions without installing packages: Ubuntu 22.04 or newer, Linux Mint 21+, Debian 12+,
+Fedora 36+, openSUSE Tumbleweed, Arch, Manjaro, Pop!_OS, elementary OS, Zorin OS and others.
+
+1. Download **`PrintView3D-x86_64.AppImage`** from the **[latest release](../../releases/latest)**.
+2. Make it executable: right-click it → **Properties → Permissions → Allow executing file as
+   program**, or in a terminal:
+   ```bash
+   chmod +x PrintView3D-x86_64.AppImage
+   ```
+3. Double-click it, or run `./PrintView3D-x86_64.AppImage`.
+
+**Add it to your applications menu** (optional, recommended): in PrintView3D open **Settings** and
+click **Register & make default**. PrintView3D then appears in your applications menu and in
+"Open With", and opens `.stl`, `.3mf` and `.gcode` files on double-click. On Linux this takes effect
+immediately; **Remove registration** undoes it.
+
+Tip: keep the AppImage in a fixed place such as `~/Applications` before registering, because the
+menu entry points to wherever the file is. Or let the script do it all:
+
+```bash
+./install_linux.sh PrintView3D-x86_64.AppImage     # copies to ~/Applications + adds the menu entry
+./uninstall_linux.sh                               # removes it again
+```
+
+(The two scripts are in the [source code](../../archive/refs/heads/main.zip).)
+
+**Slicers on Linux** are found automatically when installed as an AppImage (in `~/Applications`,
+`~/Downloads`, `~/Desktop`, `~/bin`, `/opt`…), as a **Flatpak** or **Snap**, from your
+distribution's packages, or in `/opt`. Otherwise choose it once with **Browse…** in Settings.
+
+<details>
+<summary><b>Linux troubleshooting</b></summary>
+
+| Problem | Fix |
+|---|---|
+| Nothing happens / "AppImages require FUSE" | Install FUSE: `sudo apt install libfuse2` (Ubuntu/Debian), `sudo dnf install fuse fuse-libs` (Fedora). Or run it without FUSE: `./PrintView3D-x86_64.AppImage --appimage-extract-and-run` |
+| `GLIBC_2.35 not found` | Your distribution is older than Ubuntu 22.04 / Debian 12. Build from source instead (below). |
+| Window opens but the 3D view stays black | Make sure your graphics driver is installed (Mesa or the NVIDIA driver). In a virtual machine, enable 3D acceleration. |
+| Wayland desktop | Supported. PrintView3D automatically runs through XWayland, because the 3D view needs it. |
+| Slow rotation on a laptop with two GPUs | Start PrintView3D from the applications menu after **Register** (the menu entry asks for the dedicated GPU), or use your desktop's *Launch using Dedicated Graphics Card* option. |
+
+</details>
+
+### macOS
+
+The code already runs on macOS, but there is **no ready-made Mac download yet**, because nobody has
+tried it on a real Mac so far. **Would you like to use PrintView3D on your Mac? We can build a Mac
+version for you.** [Open a Mac build request](../../issues/new?template=mac_build.md) and tell us your
+Mac model and macOS version. Your feedback is what makes an official Mac release possible.
+
+Comfortable with a terminal? You can try running it from source on macOS: install Python 3.12 from
+python.org, run `./build_linux.sh --no-appimage` once to set everything up, then
+`./run_from_source.sh`. This is not tested on a Mac yet, so please tell us how it goes.
 
 ---
 
@@ -154,6 +223,8 @@ gives you the newest one.
 | 3.13, 3.14 | ✅ Yes |
 | 3.15 and newer | ❌ Not yet (no VTK version for it) |
 
+#### Windows
+
 **Already have Python?** Check which versions you have: open *Command Prompt* and type `py --list`.
 
 **Install Python 3.12**, using one of these:
@@ -166,8 +237,21 @@ gives you the newest one.
   find the latest **Python 3.12.x** release and download the *Windows installer (64-bit)*.
   During setup, tick **"Add python.exe to PATH"** *only if* you have no other Python installed.
 
+#### Linux
+
+Check with `python3 --version`. If it says 3.15 or newer, install 3.12 next to it:
+
+| Distribution | Command |
+|---|---|
+| Ubuntu / Mint / Pop!_OS | `sudo apt install python3.12 python3.12-venv` (on older Ubuntu first: `sudo add-apt-repository ppa:deadsnakes/ppa`) |
+| Debian | `sudo apt install python3 python3-venv` (Debian 12/13 ship a supported version) |
+| Fedora | `sudo dnf install python3.12` |
+| Arch / Manjaro | `yay -S python312`, or use [pyenv](https://github.com/pyenv/pyenv) |
+
+You also need `curl` and `git` (usually already installed).
+
 > You can keep several Python versions side by side; they don't interfere with each other. The
-> build script automatically picks a supported one (3.12 first), so an existing newer Python is not
+> build scripts automatically pick a supported one (3.12 first), so an existing newer Python is not
 > a problem.
 
 ### Step 2: Get the code
@@ -180,8 +264,17 @@ git clone https://github.com/sevagjb/PrintView3D.git
 
 ### Step 3: Build
 
-Double-click **`build_windows.bat`** in the project folder (or run it from a terminal).
-The first build takes a few minutes; later builds are faster. Then run **`install_windows.bat`**.
+**Windows:** double-click **`build_windows.bat`** in the project folder (or run it from a terminal).
+Then run **`install_windows.bat`**.
+
+**Linux:** in a terminal, in the project folder:
+
+```bash
+./build_linux.sh          # makes dist/PrintView3D-x86_64.AppImage
+./install_linux.sh        # optional: copy to ~/Applications + add to the applications menu
+```
+
+The first build takes a few minutes (it downloads about 300 MB of libraries); later builds are faster.
 
 ### What the build script does
 
@@ -191,11 +284,12 @@ flowchart LR
     B --> C["Install libraries<br/>(Qt, VTK, PyVista, NumPy)"]
     C --> D["Run the tests"]
     D --> E["PyInstaller packs everything<br/>into dist/PrintView3D"]
-    E --> F["install_windows.bat<br/>copies it to your user folder"]
+    E --> F["Windows: zip folder<br/>Linux: AppImage"]
 ```
 
-1. **Find Python.** It asks the Windows `py` launcher for 3.12, then 3.13, 3.14, 3.11, 3.10, and
-   uses the first one it finds. If none is installed, it stops and tells you what to install.
+1. **Find Python.** It looks for 3.12, then 3.13, 3.14, 3.11, 3.10 (Windows: through the `py`
+   launcher; Linux: `python3.12`, `python3.13`, …) and uses the first one it finds. If none is
+   installed, it stops and tells you what to install.
 2. **Create `.venv`.** A private folder with its own copy of the libraries, so nothing is installed
    into your system Python and nothing else on your PC is affected. Delete `.venv` to start fresh.
 3. **Install libraries** listed in `requirements.txt` (the app) and `requirements-build.txt`
@@ -205,6 +299,9 @@ flowchart LR
    `dist\PrintView3D\PrintView3D.exe` plus an `_internal` folder. That folder is the finished
    program and runs on any Windows 10/11 PC without Python. It is large (several hundred MB),
    mainly because of the VTK 3D engine.
+6. **Linux only: AppImage.** `build_linux.sh` downloads
+   [appimagetool](https://github.com/AppImage/appimagetool) once and packs `dist/PrintView3D/` into
+   the single file `dist/PrintView3D-x86_64.AppImage`. (`--no-appimage` skips this step.)
 
 ### Troubleshooting the build
 
@@ -212,6 +309,8 @@ flowchart LR
 |---|---|
 | `No supported Python version was found` | Install Python 3.12 (Step 1). |
 | `Python was not found` / `'py' is not recognized` | Install Python from python.org or with winget (Step 1); both include the `py` launcher. |
+| Linux: `Could not create a virtual environment` | Install the venv module, e.g. `sudo apt install python3.12-venv`. |
+| Linux: `qt.qpa.plugin: Could not load the Qt platform plugin "xcb"` when running from source | Install Qt's X11 helper: `sudo apt install libxcb-cursor0` (Fedora: `xcb-util-cursor`). The AppImage already includes it. |
 | Build fails while installing `vtk` | You are on an unsupported Python. Delete the `.venv` folder, install 3.12, run the build again. |
 | Tests fail | Please [open an issue](../../issues) and paste the output. |
 | Windows Defender deletes or blocks the `.exe` | A known false alarm with PyInstaller programs. Allow it in *Windows Security → Protection history*. |
@@ -219,7 +318,7 @@ flowchart LR
 ### Developing
 
 ```bat
-run_from_source.bat                    :: start from the source code, no packaging
+run_from_source.bat                    :: start from the source code, no packaging (Linux: ./run_from_source.sh)
 .venv\Scripts\python -m pytest -q      :: run the tests
 .venv\Scripts\python tools\make_demo.py         :: regenerate examples\
 .venv\Scripts\python tools\make_screenshots.py  :: regenerate the README pictures
@@ -231,18 +330,20 @@ src/printview3d/
   loaders/gcode.py    G-code reader (layers, feature types, print info, thumbnails)
   loaders/mesh.py     STL and 3MF readers
   slicer.py           list of slicers, detection and launching
-  file_assoc.py       Windows "Open with" / default-app registration (current user only)
+  file_assoc.py       "Open with" / default app (assoc_windows.py: registry, assoc_linux.py: freedesktop)
   gpu.py              graphics-card info and high-performance GPU setting
   settings.py         settings file: %APPDATA%\PrintView3D\settings.json
   ui/                 window, 3D scene, camera controls, settings dialog, theme
 tests/                automated tests and sample files
 tools/                demo-file and screenshot generators
-printview3d.spec      PyInstaller recipe
+packaging/linux/      AppImage launcher and menu entry
+printview3d.spec      PyInstaller recipe (Windows and Linux)
 ```
 
 **Automatic builds:** every push builds and tests the Windows program on GitHub
 ([Actions](../../actions)). When the version number in `src/printview3d/__init__.py` changes,
-it also publishes a new [release](../../releases) with `PrintView3D-windows.zip` attached.
+it also publishes a new [release](../../releases) with the Windows zip and the Linux AppImage
+attached.
 
 ### Command line
 
@@ -250,7 +351,11 @@ it also publishes a new [release](../../releases) with `PrintView3D-windows.zip`
 PrintView3D.exe model.stl                          open a file
 PrintView3D.exe part.gcode --screenshot out.png    save a picture and exit
                      [--layer 25] [--view iso|top|front|right]
+PrintView3D.exe model.stl --send-to-slicer         open the file in your default slicer and exit
+PrintView3D.exe model.stl --send-to-slicer orcaslicer   ...or in a specific one
+PrintView3D.exe --register                         add to "Open with" (Linux: also the applications menu)
 PrintView3D.exe --unregister                       remove file associations
+(on Linux use ./PrintView3D-x86_64.AppImage instead of PrintView3D.exe)
 ```
 
 ---
@@ -263,8 +368,8 @@ Is your slicer missing? It is usually a single entry in `SLICERS` in
 
 ## Notes and limits
 
-- Windows 10 and 11. The code also runs on Linux/macOS from source, but only Windows is packaged
-  and tested.
+- Windows 10/11 and Linux (x86-64) are packaged and tested. macOS runs from source; a packaged Mac
+  version is [available on request](#macos). ARM Linux (Raspberry Pi etc.) is not packaged yet.
 - A 3MF *project* saved in one brand of slicer may lose its printer/print settings when opened in a
   different brand. The model itself loads fine; that's how the slicers behave.
 - Binary G-code (`.bgcode`) is not supported yet.

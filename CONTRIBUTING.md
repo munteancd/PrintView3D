@@ -22,14 +22,28 @@ Slicer("my_slicer", "My Slicer",
        (r"MySlicer*", r"Programs\MySlicer*")),  # install folders (Program Files / LocalAppData)
 ```
 
+`linux_bins` are command names on the PATH; `linux_match` is the text that identifies the slicer
+in AppImage / Flatpak / Snap names, compared lowercase without spaces, `-` and `_`
+(e.g. `"myslicer"` matches `My_Slicer-1.2.AppImage` and `com.example.MySlicer`):
+
+```python
+       linux_bins=("my-slicer",), linux_match=("myslicer",)),
+```
+
 Then add a test in `tests/test_slicer.py` if the detection has anything special.
 
 ## Development setup
 
 1. Install Python 3.12 (see the README: newer versions may not be supported by VTK yet).
-2. Run `build_windows.bat` once; it creates `.venv` with everything installed.
-3. `run_from_source.bat` starts the app from the source code.
-4. `.venv\Scripts\python -m pytest -q` runs the tests. Please keep them passing.
+2. Run the build script once; it creates `.venv` with everything installed:
+   `build_windows.bat` on Windows, `./build_linux.sh --no-appimage` on Linux.
+3. Start the app from the source code: `run_from_source.bat` / `./run_from_source.sh`.
+4. Run the tests: `.venv\Scripts\python -m pytest -q` (Windows) or `.venv/bin/python -m pytest -q`
+   (Linux). Please keep them passing; GitHub runs them on both systems for every pull request.
+
+Platform-specific code lives in a few small modules: `assoc_windows.py` / `assoc_linux.py`
+(file associations), `gpu.py` (Windows GPU preference) and the detection functions in `slicer.py`.
+Everything else is shared.
 
 Keep code readable: small functions, comments that explain *why*, no new heavy dependencies
 without discussion.
@@ -39,5 +53,6 @@ without discussion.
 1. Update the version in `src/printview3d/__init__.py`, `pyproject.toml`, `version_info.txt`
    and add an entry to `CHANGELOG.md`.
 2. Commit and push to `main`.
-3. GitHub Actions builds the program and, because the version is new, publishes release
-   `v0.4.0` with `PrintView3D-windows.zip` and the changelog entry. (Pushing a `v*` tag works too.)
+3. GitHub Actions builds the Windows and Linux programs and, because the version is new, publishes
+   release `v0.4.0` with `PrintView3D-windows.zip`, `PrintView3D-x86_64.AppImage` and the changelog
+   entry. (Pushing a `v*` tag works too.)

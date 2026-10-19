@@ -1,0 +1,4 @@
+#!/bin/sh
+# Entry point of the PrintView3D AppImage: start the packaged program.
+HERE="$(dirname "$(readlink -f "$0")")"
+exec "$HERE/usr/lib/printview3d/PrintView3D" "$@"

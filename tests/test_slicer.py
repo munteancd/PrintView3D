@@ -38,6 +38,9 @@ def isolate_from_this_pc(monkeypatch):
     """
     monkeypatch.setattr(sl, "_registry_candidates", lambda s: [])
     monkeypatch.setattr(sl, "_folder_candidates", lambda s: [])
+    real_linux, real_desktop = sl._linux_candidates, sl._desktop_candidates
+    monkeypatch.setattr(sl, "_linux_candidates", lambda s, d=None: real_linux(s, d) if d is not None else [])
+    monkeypatch.setattr(sl, "_desktop_candidates", lambda s, d=None: real_desktop(s, d) if d is not None else [])
 
 
 @pytest.fixture
@@ -118,3 +121,71 @@ def test_folder_scan_finds_renamed_exe(tmp_path):
     _fake_exe(folder, "unins000.exe")
     exe = _fake_exe(folder, "ElegooSlicer-v1.exe")
     assert sl._exe_in_folder(sl.BY_ID["elegoo_slicer"], folder) == [exe]
+
+
+# ---------------------------------------------------------------- Linux bits
+linux_only = pytest.mark.skipif(sys.platform == "win32", reason="Linux file layout / permissions")
+
+
+@linux_only
+def test_linux_appimage_flatpak_and_opt(tmp_path):
+    apps, flat, opt = tmp_path / "Applications", tmp_path / "flatpak", tmp_path / "opt"
+    for d in (apps, flat, opt / "OrcaSlicer"):
+        d.mkdir(parents=True)
+    creality = _fake_exe(str(apps), "CrealityPrint_Ubuntu2404_V6.2.1.AppImage")
+    _fake_exe(str(apps), "Bambu_Studio_linux_ubuntu-24.04_v02.02.00.AppImage")
+    plain = apps / "OrcaSlicer_notes.txt"                 # not executable, not an AppImage
+    plain.write_text("x")
+    cura = _fake_exe(str(flat), "com.ultimaker.cura")
+    orca_opt = _fake_exe(str(opt / "OrcaSlicer"), "orca-slicer")
+    dirs = [str(apps), str(flat), str(opt)]
+    assert sl._linux_candidates(sl.BY_ID["creality_print"], dirs) == [creality]
+    assert sl._linux_candidates(sl.BY_ID["cura"], dirs) == [cura]
+    assert sl._linux_candidates(sl.BY_ID["orcaslicer"], dirs) == [orca_opt]
+    assert len(sl._linux_candidates(sl.BY_ID["bambu_studio"], dirs)) == 1
+    assert sl._linux_candidates(sl.BY_ID["prusaslicer"], dirs) == []
+
+
+@linux_only
+def test_linux_skips_gcode_viewer(tmp_path):
+    d = str(tmp_path)
+    _fake_exe(d, "PrusaSlicer-gcodeviewer-2.8.AppImage")
+    real = _fake_exe(d, "PrusaSlicer-2.8.1+linux-x64-GTK3.AppImage")
+    assert sl._linux_candidates(sl.BY_ID["prusaslicer"], [d]) == [real]
+
+
+@linux_only
+def test_linux_desktop_entries(tmp_path):
+    exe = _fake_exe(str(tmp_path), "orca-slicer-bin")
+    apps = tmp_path / "applications"
+    apps.mkdir()
+    (apps / "orca-slicer.desktop").write_text(f'[Desktop Entry]\nName=OrcaSlicer\nExec="{exe}" %U\n')
+    (apps / "flatpak-thing.desktop").write_text("[Desktop Entry]\nName=OrcaSlicer\nExec=flatpak run x %U\n")
+    assert sl._desktop_candidates(sl.BY_ID["orcaslicer"], [str(apps)]) == [exe]
+
+
+@linux_only
+def test_newest_version_wins(tmp_path):
+    d = str(tmp_path)
+    _fake_exe(d, "OrcaSlicer_Linux_V2.1.0.AppImage")
+    new = _fake_exe(d, "OrcaSlicer_Linux_V2.3.1.AppImage")
+    cands = sl._linux_candidates(sl.BY_ID["orcaslicer"], [d])
+    assert sorted(cands, key=sl._version_key, reverse=True)[0] == new
+
+
+def test_clean_environment(monkeypatch):
+    env = {"LD_LIBRARY_PATH": "/tmp/_MEI123", "LD_LIBRARY_PATH_ORIG": "/usr/lib/custom",
+           "APPIMAGE": "/home/u/PrintView3D.AppImage", "APPDIR": "/tmp/.mount_X",
+           "QT_PLUGIN_PATH": "/tmp/.mount_X/usr/plugins", "QT_QPA_PLATFORM": "xcb",
+           "PRINTVIEW3D_SET_QPA": "1", "HOME": "/home/u", "QT_API": "pyside6"}
+    out = sl.clean_environment(env)
+    assert out["LD_LIBRARY_PATH"] == "/usr/lib/custom"
+    for gone in ("APPIMAGE", "APPDIR", "QT_PLUGIN_PATH", "QT_QPA_PLATFORM", "QT_API",
+                 "LD_LIBRARY_PATH_ORIG", "PRINTVIEW3D_SET_QPA"):
+        assert gone not in out
+    assert out["HOME"] == "/home/u"
+
+
+def test_user_choice_of_qt_platform_is_kept():
+    out = sl.clean_environment({"QT_QPA_PLATFORM": "wayland"})
+    assert out["QT_QPA_PLATFORM"] == "wayland"
