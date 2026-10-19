@@ -1,4 +1,4 @@
-"""Settings dialog: language, default slicer, default-app registration, viewer and graphics."""
+"""Settings dialog: language, theme, default slicer, default-app registration, viewer and graphics."""
 
 from __future__ import annotations
 
@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
 from .. import file_assoc, gpu, i18n
 from .. import slicer as sl
 from ..i18n import tr
+from . import theme
 from .labels import assoc_status
 
 
@@ -58,6 +59,18 @@ class SettingsDialog(QDialog):
         help_lbl.setWordWrap(True)
         l0.addRow(help_lbl)
         root.addWidget(g0)
+
+        # ---------------- Appearance ----------------
+        ga = QGroupBox(tr("Appearance"))
+        la = QFormLayout(ga)
+        self.theme_combo = QComboBox()
+        for key, name in theme.THEME_NAMES.items():
+            self.theme_combo.addItem(tr(name), key)
+        self.theme_combo.setCurrentIndex(max(0, self.theme_combo.findData(settings.get("theme", "auto"))))
+        ka = QLabel(tr("Theme"))
+        ka.setObjectName("formKey")
+        la.addRow(ka, self.theme_combo)
+        root.addWidget(ga)
 
         # ---------------- Slicer ----------------
         self._paths = dict(settings.get("slicer_paths") or {})
@@ -346,4 +359,12 @@ class SettingsDialog(QDialog):
             self.settings.set("language", lang)
             # Takes effect immediately: every window re-sets its texts.
             i18n.apply_language(QApplication.instance(), lang)
+        choice = self.theme_combo.currentData()
+        if choice != self.settings.get("theme", "auto"):
+            self.settings.set("theme", choice)
+            parent = self.parent()
+            if hasattr(parent, "apply_theme"):
+                parent.apply_theme(choice)          # windows and the 3D view
+            else:
+                theme.apply_theme(QApplication.instance(), choice)
         self.accept()

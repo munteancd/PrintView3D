@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0
+- **Themes**: Automatic (follows the system's dark/light setting, also while running), Dark,
+  Gray and Light. Choose in Settings → Appearance; the switch is immediate.
+- The 3D view follows the theme (background, build plate, grid, axis labels). G-code feature and
+  model colours stay the same in every theme, and the light backgrounds are light gray so white
+  and yellow toolpaths stay visible.
+- New installs use *Automatic*; existing installs keep the dark look until you change it.
+- New command-line option `--theme` (e.g. `--theme light`).
+
 ## 0.5.0
 - **Languages**: English, Arabic, Dutch, German, French and Spanish. Choose in Settings →
   Language; the switch is immediate (no restart), and an open file keeps its view, layer and filters.

@@ -37,7 +37,8 @@ file to Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura and others w
 | **Open in your slicer** | One click (or `Ctrl+P`) opens the current file in your slicer. Installed slicers are found automatically. |
 | **Default app** | Optional: make PrintView3D open `.stl`, `.3mf` and `.gcode` files when you double-click them. Fully reversible. |
 | **Your language** | English, العربية (Arabic, right-to-left), Nederlands, Deutsch, Français and Español; switch any time in Settings, no restart needed. [Help translate](#translations). |
-| **Comfortable to use** | Slicer-style camera, drag & drop, recent files, screenshots, dark theme. |
+| **Themes** | Automatic (follows your system), Dark, Gray or Light, for the window and the 3D view. Toolpath colours stay the same in every theme. |
+| **Comfortable to use** | Slicer-style camera, drag & drop, recent files, screenshots. |
 
 <table>
 <tr>
@@ -205,6 +206,15 @@ your other installed slicers, for opening a file in one of them just once.
 standard buttons. English is the default; *Automatic* follows your system language. Arabic uses a
 right-to-left layout; measurements always use Western digits (0.20 mm).
 
+### Themes
+
+**Settings → Appearance → Theme**: *Automatic* follows the dark/light setting of Windows or your
+Linux desktop (and switches along when that changes), or choose **Dark**, **Gray** or **Light**.
+The switch is immediate; the 3D background, plate and grid change with it, while G-code and
+model colours stay the same so they always match your slicer.
+
+![The same G-code in the Dark, Gray and Light themes](docs/screenshot-themes.png)
+
 ### Smoother rotation on laptops
 
 Many laptops have two graphics chips and run programs on the slower one by default.
@@ -360,6 +370,8 @@ PrintView3D.exe part.gcode --screenshot out.png    save a picture and exit
                      [--layer 25] [--view iso|top|front|right]
 PrintView3D.exe model.stl --send-to-slicer         open the file in your default slicer and exit
 PrintView3D.exe model.stl --send-to-slicer orcaslicer   ...or in a specific one
+PrintView3D.exe --lang ar                          start in a language (en, ar, nl, de, fr, es)
+PrintView3D.exe --theme light                      start with a theme (auto, dark, gray, light)
 PrintView3D.exe --register                         add to "Open with" (Linux: also the applications menu)
 PrintView3D.exe --unregister                       remove file associations
 (on Linux use ./PrintView3D-x86_64.AppImage instead of PrintView3D.exe)

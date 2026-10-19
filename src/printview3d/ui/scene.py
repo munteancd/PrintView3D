@@ -10,13 +10,8 @@ import pyvista as pv
 
 from ..loaders import FEATURES, GcodeData, ModelData
 from ..loaders.gcode import TRAVEL
+from . import theme
 
-BACKGROUND_BOTTOM = "#16191d"
-BACKGROUND_TOP = "#2a2f37"
-PLATE_COLOR = "#22262c"
-GRID_MINOR = "#363b43"
-GRID_MAJOR = "#535a64"
-PLATE_EDGE = "#7a828d"
 MODEL_COLORS = ["#4aa3df", "#f59f4c", "#69c66b", "#b98cff", "#ff6b6b", "#ffd166", "#3cc8c8", "#e88fc7"]
 
 
@@ -44,7 +39,8 @@ def _lines_polydata(a: np.ndarray, b: np.ndarray) -> pv.PolyData:
 class Scene:
     def __init__(self, plotter):
         self.p = plotter
-        self.p.set_background(BACKGROUND_BOTTOM, top=BACKGROUND_TOP)
+        self.c = theme.colors()
+        self.p.set_background(self.c["bg_bottom"], top=self.c["bg_top"])
         try:
             self.p.enable_anti_aliasing("fxaa")
         except Exception:
@@ -60,10 +56,45 @@ class Scene:
         self.gcode: Optional[GcodeData] = None
         self._bed_actor_names: list[str] = []
         self._bed_z = 0.0
+        self._real_bed = True
         self._bed_from_below = None
         self._view = "iso"
         # Check before every frame whether the camera is under the plate.
         self.p.renderer.AddObserver("StartEvent", self._update_plate_side)
+        self._color_axes()
+
+    # ------------------------------------------------------------------ theme
+    _BED_COLOR_KEYS = {"bed_plate": "plate", "bed_minor": "grid_minor", "bed_major": "grid_major"}
+
+    def set_colors(self, c: dict):
+        """Recolour background, plate and grid for a new theme (models and
+        toolpaths keep their colours)."""
+        self.c = c
+        self.p.set_background(c["bg_bottom"], top=c["bg_top"])
+        for name, key in self._BED_COLOR_KEYS.items():
+            a = self.p.actors.get(name)
+            if a is not None:
+                a.GetProperty().SetColor(*(v / 255 for v in _hex_to_rgb(c[key])))
+        a = self.p.actors.get("bed_edge")
+        if a is not None:
+            key = "plate_edge" if self._real_bed else "grid_major"
+            a.GetProperty().SetColor(*(v / 255 for v in _hex_to_rgb(c[key])))
+        self._color_axes()
+
+    def _color_axes(self):
+        """The small X/Y/Z marker in the corner: labels readable on any background."""
+        axes = getattr(self.p.renderer, "axes_actor", None)
+        if axes is None:
+            return
+        rgb = tuple(v / 255 for v in _hex_to_rgb(self.c["axes_label"]))
+        try:
+            for cap in (axes.GetXAxisCaptionActor2D(), axes.GetYAxisCaptionActor2D(),
+                        axes.GetZAxisCaptionActor2D()):
+                prop = cap.GetCaptionTextProperty()
+                prop.SetColor(*rgb)
+                prop.SetShadow(False)
+        except AttributeError:
+            pass
 
     # ------------------------------------------------------------------ basics
     def clear(self):
@@ -92,7 +123,7 @@ class Scene:
 
         plate = pv.Plane(center=((xmin + xmax) / 2, (ymin + ymax) / 2, z - 0.05),
                          direction=(0, 0, 1), i_size=w, j_size=h, i_resolution=1, j_resolution=1)
-        self.p.add_mesh(plate, color=PLATE_COLOR, name="bed_plate", lighting=False,
+        self.p.add_mesh(plate, color=self.c["plate"], name="bed_plate", lighting=False,
                         pickable=False, reset_camera=False)
 
         step = 10.0
@@ -116,17 +147,18 @@ class Scene:
             add_line((xmin, y, gz), (xmax, y, gz), int(round(y / step)) % major_every == 0)
 
         if minor_a:
-            self.p.add_mesh(_lines_polydata(np.array(minor_a), np.array(minor_b)), color=GRID_MINOR,
+            self.p.add_mesh(_lines_polydata(np.array(minor_a), np.array(minor_b)), color=self.c["grid_minor"],
                             line_width=1, name="bed_minor", lighting=False, pickable=False, reset_camera=False)
         if major_a:
-            self.p.add_mesh(_lines_polydata(np.array(major_a), np.array(major_b)), color=GRID_MAJOR,
+            self.p.add_mesh(_lines_polydata(np.array(major_a), np.array(major_b)), color=self.c["grid_major"],
                             line_width=1, name="bed_major", lighting=False, pickable=False, reset_camera=False)
         edge_a = np.array([(xmin, ymin, gz), (xmax, ymin, gz), (xmax, ymax, gz), (xmin, ymax, gz)])
         edge_b = np.roll(edge_a, -1, axis=0)
-        self.p.add_mesh(_lines_polydata(edge_a, edge_b), color=PLATE_EDGE if has_real_bed else GRID_MAJOR,
+        self.p.add_mesh(_lines_polydata(edge_a, edge_b), color=self.c["plate_edge"] if has_real_bed else self.c["grid_major"],
                         line_width=2, name="bed_edge", lighting=False, pickable=False, reset_camera=False)
         self._bed_actor_names = ["bed_plate", "bed_minor", "bed_major", "bed_edge"]
         self._bed_z = z
+        self._real_bed = has_real_bed
         self._bed_from_below = None
         self.set_bed_visible(self.bed_visible)
 

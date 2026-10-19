@@ -28,10 +28,10 @@ def main():
     from printview3d.settings import Settings
     from printview3d.ui.main_window import MainWindow
     from printview3d.ui.settings_dialog import SettingsDialog
-    from printview3d.ui.theme import apply_dark_theme
+    from printview3d.ui import theme
     import make_demo
 
-    apply_dark_theme(app)
+    theme.apply_theme(app, "dark")
     import subprocess
     subprocess.run([sys.executable, os.path.join(ROOT, "tools", "i18n.py"), "compile"], check=True)
     tmp = tempfile.mkdtemp()
@@ -143,6 +143,30 @@ def main():
     camera(-20, -8, 1.25)
     shot("screenshot-arabic.png")
     i18n.apply_language(app, "en")
+    for _ in range(5):
+        app.processEvents()
+
+    # 8) The same G-code in the Gray and Light themes, plus a side-by-side strip
+    w.load_sync(os.path.join(EX, "demo_vase.gcode"))
+    w.set_layer(int(w.gcode.n_layers * 0.6))
+    w._redraw_gcode()
+    camera(-20, -8, 1.25)
+    for name in ("gray", "light"):
+        w.apply_theme(name)
+        for _ in range(5):
+            app.processEvents()
+        shot(f"screenshot-theme-{name}.png")
+    w.apply_theme("dark")
+    from PIL import Image
+    tiles = [Image.open(os.path.join(DOCS, f)) for f in
+             ("screenshot-gcode.png", "screenshot-theme-gray.png", "screenshot-theme-light.png")]
+    tw = 640
+    tiles = [t.resize((tw, int(t.height * tw / t.width))) for t in tiles]
+    strip = Image.new("RGB", (tw * 3 + 20, tiles[0].height), "#888888")
+    for i, t in enumerate(tiles):
+        strip.paste(t, (i * (tw + 10), 0))
+    strip.save(os.path.join(DOCS, "screenshot-themes.png"))
+    print("saved screenshot-themes.png")
     w.close()
 
 
