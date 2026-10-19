@@ -87,9 +87,10 @@ without discussion.
 
 ## Releasing (maintainers)
 
-1. Update the version in `src/printview3d/__init__.py`, `pyproject.toml`, `version_info.txt`
-   and add an entry to `CHANGELOG.md`.
+1. Update the version in `src/printview3d/__init__.py` and `pyproject.toml` (a test checks they
+   match; the Windows file version is generated from it) and add an entry to `CHANGELOG.md`.
 2. Commit and push to `main`.
 3. GitHub Actions builds the Windows and Linux programs and, because the version is new, publishes
-   release `v0.4.0` with `PrintView3D-windows.zip`, `PrintView3D-x86_64.AppImage` and the changelog
-   entry. (Pushing a `v*` tag works too.)
+   the release with `PrintView3D-Setup.exe`, `PrintView3D-windows.zip`,
+   `PrintView3D-x86_64.AppImage` and the changelog entry. The installer is test-installed and
+   uninstalled on the build machine first. (Pushing a `v*` tag works too.)

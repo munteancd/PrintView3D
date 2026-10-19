@@ -163,7 +163,7 @@ def apply_theme(app, choice: str = "auto") -> str:
         QToolButton:hover {{ background: {t['tool_hover']}; }}
         QToolButton:checked {{ background: {t['tool_checked']}; }}
         QToolBar QToolButton {{ border: 1px solid {t['button_border']}; background: {t['button']};
-            padding: 4px 10px; margin: 1px 2px; }}
+            padding: 4px 10px; margin: 1px 2px; font-weight: 600; }}
         QToolBar QToolButton:hover {{ background: {t['button_hover']}; border-color: {t['muted']}; }}
         QToolBar QToolButton:checked {{ background: {t['tool_checked']}; border-color: {ACCENT}; }}
         QToolBar QToolButton#themeButton {{ padding: 4px 6px; }}

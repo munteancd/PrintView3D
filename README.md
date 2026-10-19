@@ -67,7 +67,7 @@ You do **not** need Python or anything else to use PrintView3D. Pick your system
 
 | System | Download | |
 |---|---|---|
-| **Windows 10 / 11** | `PrintView3D-windows.zip` | [Instructions](#windows) |
+| **Windows 10 / 11** | `PrintView3D-Setup.exe` (or the portable `PrintView3D-windows.zip`) | [Instructions](#windows) |
 | **Linux** (64-bit, x86-64) | `PrintView3D-x86_64.AppImage` | [Instructions](#linux) |
 | **macOS** | on request | [Read this](#macos) |
 
@@ -75,20 +75,24 @@ All downloads are on the **[latest release](../../releases/latest)** page.
 
 ### Windows
 
-1. Go to the **[latest release](../../releases/latest)** and download **`PrintView3D-windows.zip`**.
-2. Right-click the zip → **Extract All…** and extract it to a folder of your choice.
-3. Open the extracted folder and double-click **`install_windows.bat`**.
-   - It copies PrintView3D to `%LOCALAPPDATA%\Programs\PrintView3D` (no admin rights needed),
-     adds it to the Start menu, and asks whether you also want a desktop shortcut.
-4. PrintView3D starts. Done.
+1. Go to the **[latest release](../../releases/latest)** and download **`PrintView3D-Setup.exe`**.
+2. Double-click it and click **Next → Install → Finish**.
+   - Installs for your user account only, so **no administrator password** is needed.
+   - Adds PrintView3D to the Start menu (desktop shortcut optional) and to "Open with" for
+     `.stl`, `.3mf` and `.gcode` files.
+3. PrintView3D starts. Done.
 
-> **"Windows protected your PC"?** PrintView3D is not code-signed (signing certificates cost money
-> every year), so Windows SmartScreen may warn the first time. Click **More info → Run anyway**.
-> All the source code is in this repository, and every release is built automatically by
-> [GitHub Actions](../../actions) from that code.
+**Updating:** download the new `PrintView3D-Setup.exe` and run it. It replaces the old version and
+keeps your settings.
 
-**Portable use:** you can also just run `PrintView3D.exe` straight from the extracted folder without
-installing.
+> **"Windows protected your PC"?** Releases are not code-signed yet (free signing through the
+> SignPath Foundation is being applied for, see [Code signing policy](#code-signing-policy)), so
+> Windows SmartScreen may warn the first time. Click **More info → Run anyway**. All the source code
+> is in this repository, and every release is built automatically by [GitHub Actions](../../actions)
+> from that code.
+
+**Portable version:** download `PrintView3D-windows.zip`, extract it and run `PrintView3D.exe`.
+Nothing is installed. (`install_windows.bat` in the zip still works too.)
 
 #### Make it the default program for 3D files (optional)
 
@@ -101,8 +105,9 @@ Windows requires you to confirm this last step yourself; no program is allowed t
 
 #### Uninstall
 
-Double-click **`uninstall_windows.bat`** (in the extracted folder). It removes the file associations,
-shortcuts and the program. It asks before deleting your settings.
+**Windows Settings → Apps → Installed apps → PrintView3D → Uninstall**. This removes the program,
+its shortcuts and file associations, and asks whether to delete your settings too.
+(Portable version: run `uninstall_windows.bat` from the extracted folder.)
 
 ### Linux
 
@@ -290,7 +295,8 @@ git clone https://github.com/sevagjb/PrintView3D.git
 ### Step 3: Build
 
 **Windows:** double-click **`build_windows.bat`** in the project folder (or run it from a terminal).
-Then run **`install_windows.bat`**.
+Then run **`install_windows.bat`**. If [Inno Setup 6](https://jrsoftware.org/isinfo.php) is
+installed, the build also makes the installer `dist\PrintView3D-Setup.exe`.
 
 **Linux:** in a terminal, in the project folder:
 
@@ -419,6 +425,27 @@ Is your slicer missing? It is usually a single entry in `SLICERS` in
 - A 3MF *project* saved in one brand of slicer may lose its printer/print settings when opened in a
   different brand. The model itself loads fine; that's how the slicers behave.
 - Binary G-code (`.bgcode`) is not supported yet.
+
+## Code signing policy
+
+Windows releases are built automatically from this repository by
+[GitHub Actions](.github/workflows/build.yml); no binaries are built or uploaded by hand.
+
+*Status: applying for free code signing for open-source projects. When approved:*
+Free code signing provided by [SignPath.io](https://about.signpath.io/), certificate by
+[SignPath Foundation](https://signpath.org/).
+
+| Role | Members |
+|---|---|
+| Committers and reviewers | [sevagjb](https://github.com/sevagjb) |
+| Approvers | [sevagjb](https://github.com/sevagjb) |
+
+Every signing request is approved by hand by an approver. Contributions from other people are
+reviewed before they are merged.
+
+**Privacy:** this program will not transfer any information to other networked systems unless
+specifically requested by the user or the person installing or operating it. PrintView3D works
+fully offline; it only opens your files and starts the slicer you choose.
 
 ## License
 

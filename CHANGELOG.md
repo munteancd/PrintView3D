@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.0
+- **Windows installer** `PrintView3D-Setup.exe`: Next → Install → Finish, no administrator rights,
+  Start menu (and optional desktop) shortcut, "Open with" for .stl/.3mf/.gcode, listed in
+  Windows Settings → Apps for uninstalling. Running a newer installer updates and keeps settings.
+  The zip stays available as the portable version.
+- Toolbar button text is bold.
+- The Windows file properties now always show the current version.
+- README: "Code signing policy" section (free signing via SignPath Foundation applied for).
+
 ## 0.7.0
 - **Graphite** theme: a warm, dark brownish charcoal that is soft on the eyes.
 - **Theme icon** (◐) at the right end of the toolbar: one click opens the theme menu.
