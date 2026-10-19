@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.9.0
+- **FreeCAD documents (.FCStd)**: open them to look at them. With FreeCAD installed, the model is
+  shown in 3D exactly as FreeCAD displays it: visible bodies and solids, no sketches, hidden
+  objects, datum planes or features inside a PartDesign Body. FreeCAD runs invisibly in the
+  background; the result is cached until the file changes.
+- Without FreeCAD: the file's preview picture, FreeCAD version and visible objects, with a
+  "Download FreeCAD" button.
+- For FreeCAD files the main button is **Open in FreeCAD**; the ▾ arrow sends the visible model
+  to any installed slicer as STL.
+- Settings → FreeCAD: found automatically (Windows, Linux packages, Snap, Flatpak, AppImage) or
+  choose the program yourself.
+- Example file `examples/demo_bracket.FCStd`.
+
 ## 0.8.0
 - **Windows installer** `PrintView3D-Setup.exe`: Next → Install → Finish, no administrator rights,
   Start menu (and optional desktop) shortcut, "Open with" for .stl/.3mf/.gcode, listed in

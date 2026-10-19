@@ -5,7 +5,7 @@
 <h1 align="center">PrintView3D</h1>
 
 <p align="center">
-  A fast, free viewer for <b>STL</b>, <b>3MF</b> and <b>G-code</b> files on <b>Windows</b> and <b>Linux</b>,<br>
+  A fast, free viewer for <b>STL</b>, <b>3MF</b>, <b>G-code</b> and <b>FreeCAD</b> files on <b>Windows</b> and <b>Linux</b>,<br>
   with a one-click button that opens the file in <b>your slicer</b>.
 </p>
 
@@ -34,6 +34,7 @@ file to Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura and others w
 | **STL** | Smooth-shaded model on a build plate, with size, triangle count and volume. |
 | **3MF** | Every object on the plate, including projects from Creality Print, OrcaSlicer and Bambu Studio. Show or hide each object, see the project's printer and filament settings and its thumbnail. If the project is already sliced, view its toolpaths without re-slicing. |
 | **G-code** | Toolpaths coloured by type (walls, infill, top/bottom, supports, bridges, travel…), a layer slider, "show only this layer", print time, filament use and the slicer's preview picture. |
+| **FreeCAD** | Open `.FCStd` documents to look at them: shown in 3D exactly as FreeCAD displays them (visible bodies only), with one click to open in FreeCAD or send to your slicer as STL. Uses your installed FreeCAD; without it you still see the preview picture. [Details](#freecad-files). |
 | **Open in your slicer** | One click (or `Ctrl+P`) opens the current file in your slicer. Installed slicers are found automatically. |
 | **Default app** | Optional: make PrintView3D open `.stl`, `.3mf` and `.gcode` files when you double-click them. Fully reversible. |
 | **Your language** | English, العربية (Arabic, right-to-left), Nederlands, Deutsch, Français and Español; switch any time in Settings, no restart needed. [Help translate](#translations). |
@@ -205,6 +206,31 @@ is not in the list, choose **Custom program…**, give it a name and select its 
 
 The green button is renamed to match ("Open in OrcaSlicer"). The small **▾** arrow next to it lists
 your other installed slicers, for opening a file in one of them just once.
+
+### FreeCAD files
+
+Open a FreeCAD document (`.FCStd`) with **Open** or drag & drop it onto the window
+(PrintView3D does not take over the double-click from FreeCAD).
+It is for looking only; nothing in the file is changed.
+
+- **With FreeCAD installed** (free, [freecad.org](https://www.freecad.org/downloads.php)) the model is
+  shown in 3D as FreeCAD displays it: visible bodies and solids only, without sketches, hidden
+  objects or datum planes. PrintView3D starts FreeCAD invisibly in the background to convert the
+  shapes (a few seconds the first time; then it is remembered until the file changes).
+  The big button becomes **Open in FreeCAD**, and the ▾ arrow sends the visible model to
+  your slicer as an STL.
+- **Without FreeCAD** you see the file's preview picture, the FreeCAD version and the visible
+  objects, with a button to download FreeCAD.
+
+FreeCAD is found automatically in its usual places (Windows installer, Linux packages, Snap,
+Flatpak, AppImage). If yours is elsewhere, choose it in **Settings → FreeCAD**.
+
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshot-freecad.png" alt="A FreeCAD bracket shown in 3D"><br><sub>With FreeCAD installed: the bracket in 3D.</sub></td>
+<td width="50%"><img src="docs/screenshot-freecad-preview.png" alt="The same file without FreeCAD: the preview picture"><br><sub>Without FreeCAD: the preview picture saved in the file.</sub></td>
+</tr>
+</table>
 
 ### Language
 
@@ -425,6 +451,8 @@ Is your slicer missing? It is usually a single entry in `SLICERS` in
 - A 3MF *project* saved in one brand of slicer may lose its printer/print settings when opened in a
   different brand. The model itself loads fine; that's how the slicers behave.
 - Binary G-code (`.bgcode`) is not supported yet.
+- FreeCAD documents need an installed FreeCAD for the 3D view (PrintView3D does not include
+  FreeCAD's geometry engine). Very old or very new FreeCAD versions may not open each other's files.
 
 ## Code signing policy
 

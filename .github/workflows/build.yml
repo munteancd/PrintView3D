@@ -38,6 +38,18 @@ jobs:
           python tests/make_samples.py
           python -m pytest -q tests
 
+      - name: FreeCAD test (installs the real FreeCAD and converts a document with it)
+        # Downloading FreeCAD can fail on the CI side; that must not block a release.
+        continue-on-error: true
+        timeout-minutes: 25
+        shell: pwsh
+        env:
+          PRINTVIEW3D_REAL_FREECAD: "1"
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          choco install freecad -y --no-progress | Select-Object -Last 3
+          python -m pytest -q -s tests/test_freecad.py -k real_freecad
+
       - name: Build with PyInstaller
         run: pyinstaller --noconfirm --clean printview3d.spec
 
