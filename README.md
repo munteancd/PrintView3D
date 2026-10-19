@@ -372,7 +372,7 @@ PrintView3D.exe --unregister                       remove file associations
 | Language | Status |
 |---|---|
 | English | Source language |
-| العربية Arabic | Complete, being reviewed |
+| العربية Arabic | Complete, reviewed by a native speaker |
 | Nederlands | Complete, needs review by a native speaker |
 | Deutsch | Complete, needs review by a native speaker |
 | Français | Complete, needs review by a native speaker |
@@ -384,7 +384,7 @@ Untranslated texts simply appear in English, so a language can be added step by 
 
 ![PrintView3D in Arabic, right-to-left](docs/screenshot-arabic.png)
 
-<!-- After Weblate approval, add the badge here (see docs/WEBLATE.md, step 7). -->
+[![Translation status](https://hosted.weblate.org/widget/printview3d/svg-badge.svg)](https://hosted.weblate.org/engage/printview3d/)
 
 ## Contributing
 
