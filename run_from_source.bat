@@ -7,5 +7,6 @@ if not exist ".venv\Scripts\pythonw.exe" (
     pause
     exit /b 1
 )
+".venv\Scripts\python.exe" tools\i18n.py compile >nul
 set "PYTHONPATH=%~dp0src"
 start "" ".venv\Scripts\pythonw.exe" -m printview3d %*

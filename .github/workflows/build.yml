@@ -30,8 +30,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt -r requirements-build.txt
 
-      - name: Run tests
+      - name: Build translations and run tests
+        env:
+          QT_QPA_PLATFORM: offscreen
         run: |
+          python tools/i18n.py compile
           python tests/make_samples.py
           python -m pytest -q tests
 

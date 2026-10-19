@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.0
+- **Languages**: English, Arabic, Dutch, German, French and Spanish. Choose in Settings →
+  Language; the switch is immediate (no restart), and an open file keeps its view, layer and filters.
+- **Arabic** uses a right-to-left layout. Measurements stay in Western digits and in reading order.
+- Numbers follow the language (e.g. `0,20 mm` in Dutch/German/French/Spanish).
+- Qt's own texts (file dialogs, OK/Cancel) are translated too.
+- New command-line option `--lang` (e.g. `--lang ar`).
+- Translation workflow ready for Weblate: `tools/i18n.py` (update / compile / check / stats / new),
+  notes for translators, tests that keep the files in sync. Guide: `docs/WEBLATE.md`.
+- The non-English translations are first drafts awaiting review by native speakers.
+
 ## 0.4.0
 - **Linux support**: a single-file AppImage that runs on most distributions (Ubuntu 22.04+,
   Debian 12+, Fedora 36+, Mint, Arch, …), built and tested automatically.

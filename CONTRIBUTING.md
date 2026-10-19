@@ -32,6 +32,43 @@ in AppImage / Flatpak / Snap names, compared lowercase without spaces, `-` and `
 
 Then add a test in `tests/test_slicer.py` if the detection has anything special.
 
+## Translations
+
+PrintView3D uses Qt's standard translation files: one file per language in
+[`translations/`](translations) (`printview3d_ar.ts`, `printview3d_de.ts`, …).
+
+**Translating or correcting a translation**
+- *Easiest, once Weblate is connected:* translate in your browser on Hosted Weblate (link in the
+  README). No tools, no GitHub knowledge needed.
+- *Directly:* open the file in **Qt Linguist** (`pyside6-linguist`, comes with PySide6) or any text
+  editor, change the `<translation>` texts, and open a pull request.
+- Keep `{placeholders}` such as `{slicer}` or `{n}` exactly as they are; they are filled in by the
+  program. Keep `<b>…</b>` tags. The tests check both.
+- Texts marked `type="unfinished"` are drafts that still need a native speaker's review. When a
+  translation is correct, remove `type="unfinished"` (in Qt Linguist: mark it as done ✓; on Weblate:
+  approve it).
+- Notes for ambiguous texts (e.g. "Right" means the *right side view*) are shown next to the text.
+
+**A new language**
+```
+python tools/i18n.py new it          # creates translations/printview3d_it.ts
+```
+Translate it, add the language to `LANGUAGES` in `src/printview3d/i18n.py`, and open a pull request.
+Partly translated languages are fine: missing texts show in English.
+
+**For developers: adding texts to the program**
+- Wrap every user-visible text in `tr()`: `label.setText(tr("Show only this layer"))`.
+- Use placeholders, not string concatenation: `tr("Open in {slicer}").format(slicer=name)`, so
+  translators can change the word order.
+- Texts defined in tables/constants: mark them with `tr_noop()` and call `tr()` when displaying them
+  (see `ui/labels.py`).
+- Numbers: use `num()` / `count()` from `printview3d.i18n` (decimal comma in many languages).
+- Afterwards run `python tools/i18n.py update`. The tests fail if you forget, so no text can slip
+  through untranslatable.
+
+Useful commands: `python tools/i18n.py stats` (completion per language), `check`, `compile`.
+Setting up Weblate: [docs/WEBLATE.md](docs/WEBLATE.md).
+
 ## Development setup
 
 1. Install Python 3.12 (see the README: newer versions may not be supported by VTK yet).

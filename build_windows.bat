@@ -35,7 +35,8 @@ echo [2/4] Installing dependencies (first time takes a few minutes) ...
 ".venv\Scripts\python.exe" -m pip install --upgrade pip >nul
 ".venv\Scripts\python.exe" -m pip install -r requirements.txt -r requirements-build.txt || goto :fail
 
-echo [3/4] Running tests ...
+echo [3/4] Building translations and running tests ...
+".venv\Scripts\python.exe" tools\i18n.py compile || goto :fail
 ".venv\Scripts\python.exe" tests\make_samples.py >nul
 ".venv\Scripts\python.exe" -m pytest -q tests || goto :fail
 

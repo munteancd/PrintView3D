@@ -45,9 +45,10 @@ echo "[2/5] Installing dependencies (first time takes a few minutes) ..."
 .venv/bin/python -m pip install --upgrade pip >/dev/null
 .venv/bin/python -m pip install -r requirements.txt -r requirements-build.txt
 
-echo "[3/5] Running tests ..."
+echo "[3/5] Building translations and running tests ..."
+.venv/bin/python tools/i18n.py compile
 .venv/bin/python tests/make_samples.py >/dev/null
-.venv/bin/python -m pytest -q tests
+QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q tests
 
 echo "[4/5] Building the program ..."
 .venv/bin/pyinstaller --noconfirm --clean printview3d.spec

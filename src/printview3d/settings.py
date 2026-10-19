@@ -12,6 +12,7 @@ import os
 import sys
 
 DEFAULTS = {
+    "language": "en",           # "auto" = system language; otherwise a code from i18n.LANGUAGES
     "slicer_id": "",            # default slicer; empty = first installed one
     "slicer_paths": {},         # {slicer_id: exe} picked manually in Settings
     "custom_slicer": {},        # {"name": ..., "path": ...} for any other program
