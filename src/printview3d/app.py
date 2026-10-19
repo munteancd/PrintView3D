@@ -125,6 +125,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     win.show()
+    win.start_update_checks()
     if args.file:
         QTimer.singleShot(50, lambda: win.load(args.file))
     return app.exec()

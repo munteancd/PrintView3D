@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.10.0
+- **Updates**: Settings → Updates shows your version with **Check for updates now**, and an
+  automatic check (at most once a day) that you can switch on or off at any time. PrintView3D asks
+  once whether to check automatically.
+- When a new version exists, the **version in the bottom-right corner** shows a red dot
+  (`● v0.10.0 → 0.11.0`); click it for *What's new*, *Install update* and *Skip this version*.
+- **Windows: one-click update.** PrintView3D downloads the new installer, checks its SHA-256
+  fingerprint, installs it (settings kept) and starts the new version. Linux and the portable zip
+  open the download page.
+- **Settings has a sidebar**: Language · Appearance · Slicer · FreeCAD · Files · Viewer · Updates ·
+  About, one page each. The toolbar's About opens the About page.
+- README: "Updates and privacy" explains exactly what is contacted and sent (only GitHub, only the
+  version question).
+
 ## 0.9.0
 - **FreeCAD documents (.FCStd)**: open them to look at them. With FreeCAD installed, the model is
   shown in 3D exactly as FreeCAD displays it: visible bodies and solids, no sketches, hidden

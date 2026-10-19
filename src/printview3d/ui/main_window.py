@@ -28,7 +28,8 @@ from ..loaders import (
 from ..loaders.gcode import FEATURE_INDEX
 from ..settings import Settings
 from .labels import feature_label, meta_label, meta_value
-from . import theme
+from . import theme, update_ui
+from .. import updates as up
 from .scene import Scene
 from .settings_dialog import SettingsDialog
 
@@ -134,6 +135,7 @@ class MainWindow(QMainWindow):
         theme.apply_theme(QApplication.instance(), choice)
         self.scene.set_colors(theme.colors())
         self._update_theme_button()
+        self.refresh_update_badge()
         self.plotter.render()
 
     def choose_theme(self, choice: str):
@@ -207,7 +209,7 @@ class MainWindow(QMainWindow):
 
         self.act_screenshot = QAction(self, triggered=self.save_screenshot)
         self.act_settings = QAction(self, triggered=self.open_settings)
-        self.act_about = QAction(self, triggered=self.show_about)
+        self.act_about = QAction(self, triggered=lambda: self.open_settings("about"))
         for a in (self.act_screenshot, self.act_settings, self.act_about):
             tb.addAction(a)
 
@@ -443,6 +445,12 @@ class MainWindow(QMainWindow):
         self.progress.setTextVisible(False)
         self.progress.hide()
         sb.addPermanentWidget(self.progress)
+        # Version in the corner; a red dot and the new version when an update exists.
+        self.version_badge = QLabel()
+        self.version_badge.setObjectName("versionBadge")
+        self.version_badge.setTextFormat(Qt.RichText)
+        self.version_badge.linkActivated.connect(lambda _l: self.open_settings("updates"))
+        sb.addPermanentWidget(self.version_badge)
 
     def _build_shortcuts(self):
         QShortcut(QKeySequence("Ctrl+P"), self, activated=self.open_in_slicer)
@@ -472,6 +480,7 @@ class MainWindow(QMainWindow):
         self.act_settings.setText(tr("Settings"))
         self.act_about.setText(tr("About"))
         self._update_theme_button()
+        self.refresh_update_badge()
 
         self.welcome_sub.setText(tr("Drop an STL, 3MF or G-code file here, or open one."))
         self.welcome_open.setText(tr("Open file…"))
@@ -1080,10 +1089,12 @@ class MainWindow(QMainWindow):
             self.plotter.screenshot(path)
             self.statusBar().showMessage(tr("Saved {path}").format(path=path), 6000)
 
-    def open_settings(self):
+    def open_settings(self, page: str = ""):
         freecad_before = self.settings.get("freecad_path", "")
-        dlg = SettingsDialog(self.settings, self, renderer_info(self.plotter))
-        if dlg.exec():
+        dlg = SettingsDialog(self.settings, self, renderer_info(self.plotter), page=page)
+        accepted = dlg.exec()
+        self.refresh_update_badge()
+        if accepted:
             self._update_slicer_button()
             # FreeCAD just chosen: show the open FreeCAD file in 3D now.
             if (self.current_kind == "freecad" and self.current_path and self.model is not None
@@ -1093,16 +1104,58 @@ class MainWindow(QMainWindow):
             if self.act_bed.isChecked() != show_bed:
                 self.act_bed.setChecked(show_bed)
 
-    def show_about(self):
-        QMessageBox.about(
-            self, tr("About {app}").format(app=APP_NAME),
-            f"<h3>{APP_NAME} {__version__}</h3>"
-            "<p>" + tr("A lightweight viewer for STL, 3MF and G-code files, with one-click "
-                       "hand-off to your slicer (Creality Print, OrcaSlicer, Bambu Studio, "
-                       "PrusaSlicer, Cura and others).") + "</p>"
-            "<p>" + tr("Open source under the MIT License.") + "</p>"
-            "<p>" + tr("Built with Python, Qt (PySide6) and PyVista / VTK.") + "</p>"
-            + "".join(f"<br><small>{k}: {v}</small>" for k, v in renderer_info(self.plotter).items()))
+    # ------------------------------------------------------------ updates
+    def start_update_checks(self):
+        """Called once the window is shown (not for --screenshot)."""
+        self._update_checker = update_ui.make_checker(self.settings, self)
+        self._update_checker.finished.connect(self._update_check_done)
+        self._update_timer = QTimer(self)
+        self._update_timer.setInterval(3600 * 1000)        # long sessions: look again every hour
+        self._update_timer.timeout.connect(self._maybe_check_updates)
+        self._update_timer.start()
+        QTimer.singleShot(2500, self._first_update_step)
+
+    def _first_update_step(self):
+        if self.settings.get("update_check") is None:       # ask once
+            box = QMessageBox(self)
+            box.setIcon(QMessageBox.Question)
+            box.setWindowTitle(tr("Check for updates?"))
+            box.setText(tr("Should PrintView3D check GitHub once a day for new versions?"))
+            box.setInformativeText(tr("Only the newest version number is requested. No personal data or "
+                                      "files are sent. You can change this any time in Settings → Updates."))
+            yes = box.addButton(tr("Yes, check daily"), QMessageBox.YesRole)
+            box.addButton(tr("No, thanks"), QMessageBox.NoRole)
+            box.setDefaultButton(yes)
+            box.exec()
+            self.settings.set("update_check", box.clickedButton() is yes)
+        self._maybe_check_updates()
+
+    def _maybe_check_updates(self):
+        if up.check_is_due(self.settings):
+            self._update_checker.start()
+
+    def _update_check_done(self, rel, _err):
+        self.refresh_update_badge()
+        new = up.available(self.settings)
+        if new is not None:
+            self.statusBar().showMessage(
+                tr("PrintView3D {version} is available. Click the version in the corner to update.").format(
+                    version=new.version), 15000)
+
+    def refresh_update_badge(self):
+        new = up.available(self.settings)
+        if new is not None:
+            link = theme.colors()["link"]
+            self.version_badge.setText(
+                f'<span style="color:{theme.UPDATE_DOT}">●</span> <a href="updates" style="color:{link}; '
+                f'text-decoration:none">v{__version__} → {new.version}</a>')
+            self.version_badge.setToolTip(tr("PrintView3D {version} is available. Click to update.").format(
+                version=new.version))
+        else:
+            self.version_badge.setText(f'<a href="updates" style="color:{theme.colors()["muted"]}; '
+                                       f'text-decoration:none">v{__version__}</a>')
+            self.version_badge.setToolTip(tr("Version {version}. Click to check for updates.").format(
+                version=__version__))
 
     # ------------------------------------------------------------- recent
     def _refresh_recent_menu(self):

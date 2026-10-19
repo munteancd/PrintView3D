@@ -1,43 +1,51 @@
-"""Settings dialog: language, theme, default slicer, FreeCAD, default-app registration, viewer and graphics."""
+"""Settings dialog: a sidebar with one page per topic.
+
+Language · Appearance · Slicer · FreeCAD · Files (default program) · Viewer (and graphics) ·
+Updates · About. MainWindow.open_settings(page="updates") opens a given page.
+"""
 
 from __future__ import annotations
 
 import os
 import sys
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QDateTime, QLocale, QSize, Qt
 from PySide6.QtWidgets import (
     QApplication, QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout,
-    QFrame, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QMessageBox, QPushButton, QScrollArea,
-    QVBoxLayout, QWidget,
+    QFrame, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QMessageBox,
+    QPushButton, QScrollArea, QStackedWidget, QVBoxLayout, QWidget,
 )
 
-from .. import file_assoc, gpu, i18n
+from .. import APP_NAME, __version__, file_assoc, gpu, i18n
+from .. import updates as up
 from .. import freecad as fc
 from .. import slicer as sl
 from ..i18n import tr
 from . import theme
+from . import update_ui
 from .labels import assoc_status
+
+PAGES = ["language", "appearance", "slicer", "freecad", "files", "viewer", "updates", "about"]
 
 
 class SettingsDialog(QDialog):
-    def __init__(self, settings, parent=None, gpu_info=None):
+    def __init__(self, settings, parent=None, gpu_info=None, page: str = ""):
         super().__init__(parent)
         self.settings = settings
         self.setWindowTitle(tr("Settings"))
         self.setWindowFlag(Qt.WindowContextHelpButtonHint, False)
-        self.setMinimumWidth(560)
         outer = QVBoxLayout(self)
-        # The settings scroll when the screen is small (laptops with display scaling).
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll.setFrameShape(QFrame.NoFrame)
-        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        content = QWidget()
-        root = QVBoxLayout(content)
-        root.setContentsMargins(0, 0, 6, 0)
-        scroll.setWidget(content)
-        outer.addWidget(scroll, 1)
+        body = QHBoxLayout()
+        outer.addLayout(body, 1)
+        self.nav = QListWidget()
+        self.nav.setObjectName("settingsNav")
+        self.nav.setIconSize(QSize(20, 20))
+        self.nav.setFixedWidth(200)
+        self.pages = QStackedWidget()
+        body.addWidget(self.nav)
+        body.addWidget(self.pages, 1)
+        self.nav.currentRowChanged.connect(self.pages.setCurrentIndex)
+        self._page_keys: list[str] = []
 
         # ---------------- Language ----------------
         g0 = QGroupBox(tr("Language"))
@@ -59,7 +67,7 @@ class SettingsDialog(QDialog):
         help_lbl.setObjectName("muted")
         help_lbl.setWordWrap(True)
         l0.addRow(help_lbl)
-        root.addWidget(g0)
+        self._add_page("language", tr("Language"), [g0])
 
         # ---------------- Appearance ----------------
         ga = QGroupBox(tr("Appearance"))
@@ -71,7 +79,7 @@ class SettingsDialog(QDialog):
         ka = QLabel(tr("Theme"))
         ka.setObjectName("formKey")
         la.addRow(ka, self.theme_combo)
-        root.addWidget(ga)
+        self._add_page("appearance", tr("Appearance"), [ga])
 
         # ---------------- Slicer ----------------
         self._paths = dict(settings.get("slicer_paths") or {})
@@ -108,7 +116,7 @@ class SettingsDialog(QDialog):
         self.slicer_status.setObjectName("muted")
         self.slicer_status.setWordWrap(True)
         l1.addWidget(self.slicer_status)
-        root.addWidget(g1)
+        self._add_page("slicer", tr("Slicer"), [g1])
 
         # ---------------- FreeCAD ----------------
         gf = QGroupBox(tr("FreeCAD"))
@@ -131,7 +139,7 @@ class SettingsDialog(QDialog):
         self.freecad_status.setObjectName("muted")
         self.freecad_status.setWordWrap(True)
         lf.addWidget(self.freecad_status)
-        root.addWidget(gf)
+        self._add_page("freecad", tr("FreeCAD"), [gf])
         self._update_freecad_status()
 
         current_id = sl.resolve(settings, installed=self._installed)[0] or sl.SLICERS[0].id
@@ -180,7 +188,7 @@ class SettingsDialog(QDialog):
         self.assoc_note.setWordWrap(True)
         self.assoc_note.setObjectName("muted")
         l2.addWidget(self.assoc_note)
-        root.addWidget(g2)
+        self._add_page("files", tr("Files"), [g2])
 
         # ---------------- Viewer ----------------
         g3 = QGroupBox(tr("Viewer"))
@@ -191,7 +199,6 @@ class SettingsDialog(QDialog):
         self.bed_cb.setChecked(bool(settings.get("show_bed", True)))
         l3.addWidget(self.travel_cb)
         l3.addWidget(self.bed_cb)
-        root.addWidget(g3)
 
         # ---------------- Graphics ----------------
         g4 = QGroupBox(tr("Graphics"))
@@ -211,8 +218,8 @@ class SettingsDialog(QDialog):
             hint = tr("Available in the installed PrintView3D.exe.")
         else:
             hint = tr("On laptops with two graphics chips, start PrintView3D from the applications menu "
-                      "(after Register below) — the menu entry asks for the dedicated GPU — or use your "
-                      "desktop's \"Launch using Dedicated Graphics Card\" option.")
+                      "(after Register on the Files page) — the menu entry asks for the dedicated GPU — or "
+                      "use your desktop's \"Launch using Dedicated Graphics Card\" option.")
         if gpu.looks_integrated(gpu_name):
             hint = tr("This looks like the built-in (slower) graphics. Tick the box and restart "
                       "for smoother rotation.") + " " + hint
@@ -220,27 +227,184 @@ class SettingsDialog(QDialog):
         self.gpu_hint.setWordWrap(True)
         self.gpu_hint.setObjectName("muted")
         l4.addWidget(self.gpu_hint)
-        root.addWidget(g4)
+        self._add_page("viewer", tr("Viewer"), [g3, g4], keep_titles=True)
 
-        root.addStretch(1)
+        self._add_page("updates", tr("Updates"), [self._build_updates()])
+        self._add_page("about", tr("About"), [self._build_about(gpu_info)])
+
         bb = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         bb.accepted.connect(self._save)
         bb.rejected.connect(self.reject)
         outer.addWidget(bb)
 
         self._update_assoc_status()
-        self._initial_size(content)
+        self._refresh_updates()
+        self.nav.setCurrentRow(self._page_keys.index(page) if page in self._page_keys else 0)
+        self._initial_size()
 
-    def _initial_size(self, content):
-        """As tall as the content needs, but never taller than 90 % of the screen."""
-        width = 620
-        content.setFixedWidth(width - 40)            # lets wrapped labels compute their height
-        need = content.sizeHint().height() + 70
-        content.setMinimumWidth(0)
-        content.setMaximumWidth(16777215)
+    # ---------------------------------------------------------------- pages
+    def _add_page(self, key: str, title: str, widgets: list, keep_titles: bool = False):
+        page = QWidget()
+        v = QVBoxLayout(page)
+        v.setContentsMargins(16, 0, 6, 0)
+        head = QLabel(title)
+        head.setObjectName("pageTitle")
+        v.addWidget(head)
+        for w in widgets:
+            if isinstance(w, QGroupBox) and not keep_titles:
+                w.setTitle("")                          # the page title already says it
+            v.addWidget(w)
+        v.addStretch(1)
+        scroll = QScrollArea()                          # long pages scroll on small screens
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll.setWidget(page)
+        self.pages.addWidget(scroll)
+        item = QListWidgetItem(theme.nav_icon(key), title)
+        item.setData(Qt.UserRole, key)
+        self.nav.addItem(item)
+        self._page_keys.append(key)
+
+    def _initial_size(self):
         screen = (self.parent().screen() if self.parent() is not None else QApplication.primaryScreen())
-        avail = screen.availableGeometry().height() if screen is not None else 900
-        self.resize(width, min(need, int(avail * 0.9)))
+        avail = screen.availableGeometry() if screen is not None else None
+        w, h = 860, 580
+        if avail is not None:
+            w, h = min(w, int(avail.width() * 0.9)), min(h, int(avail.height() * 0.9))
+        self.resize(w, h)
+
+    def show_page(self, key: str):
+        if key in self._page_keys:
+            self.nav.setCurrentRow(self._page_keys.index(key))
+
+    # -------------------------------------------------------------- updates
+    def _build_updates(self) -> QGroupBox:
+        g = QGroupBox()
+        v = QVBoxLayout(g)
+        self.upd_version = QLabel()
+        v.addWidget(self.upd_version)
+        self.upd_status = QLabel()
+        self.upd_status.setObjectName("muted")
+        self.upd_status.setWordWrap(True)
+        v.addWidget(self.upd_status)
+        row = QHBoxLayout()
+        self.upd_install = QPushButton(update_ui.install_button_text())
+        self.upd_install.setObjectName("primary")
+        self.upd_install.clicked.connect(self._install_update)
+        self.upd_notes = QPushButton(tr("What's new"))
+        self.upd_notes.clicked.connect(lambda: self._available and update_ui.show_whats_new(self, self._available))
+        self.upd_skip = QPushButton(tr("Skip this version"))
+        self.upd_skip.clicked.connect(self._skip_update)
+        self.upd_check = QPushButton(tr("Check for updates now"))
+        self.upd_check.clicked.connect(self._check_now)
+        for b in (self.upd_install, self.upd_notes, self.upd_skip, self.upd_check):
+            row.addWidget(b)
+        row.addStretch(1)
+        v.addLayout(row)
+        v.addSpacing(6)
+        self.upd_auto = QCheckBox(tr("Check for updates automatically (once a day)"))
+        self.upd_auto.setChecked(up.auto_check_enabled(self.settings))
+        v.addWidget(self.upd_auto)
+        note = QLabel(tr("Only asks GitHub for the newest version number. No personal data or files "
+                         "are sent.") + f' <a href="{up.PRIVACY_URL}">' + tr("Read more") + "</a>")
+        note.setObjectName("muted")
+        note.setWordWrap(True)
+        note.setOpenExternalLinks(True)
+        v.addWidget(note)
+        if up.install_kind() != "installer":
+            how = QLabel(tr("This copy of PrintView3D is not the installed Windows version, so updates "
+                            "open the download page."))
+            how.setObjectName("muted")
+            how.setWordWrap(True)
+            v.addWidget(how)
+        self._checker = update_ui.make_checker(self.settings, self)
+        self._checker.finished.connect(self._check_done)
+        return g
+
+    def _refresh_updates(self, checking: bool = False):
+        self._available = up.available(self.settings)
+        rel = self._available
+        last = float(self.settings.get("update_last_check") or 0)
+        when = self._when(last) if last else tr("never")
+        if rel:
+            self.upd_version.setText(f'<span style="color:{theme.UPDATE_DOT}">●</span>&nbsp; '
+                                     + tr("<b>Version {new} is available</b> (you have {current})").format(
+                                         new=rel.version, current=__version__))
+        else:
+            self.upd_version.setText(tr("You have version {version}").format(version=f"<b>{__version__}</b>"))
+        if checking:
+            self.upd_status.setText(tr("Checking…"))
+        elif rel:
+            self.upd_status.setText(tr("Last checked: {when}").format(when=when))
+        elif last:
+            self.upd_status.setText("✔ " + tr("You are up to date · last checked {when}").format(when=when))
+        else:
+            self.upd_status.setText(tr("Not checked yet."))
+        for b in (self.upd_install, self.upd_notes, self.upd_skip):
+            b.setVisible(bool(rel))
+        self.upd_check.setEnabled(not checking)
+        row = self._page_keys.index("updates") if "updates" in self._page_keys else -1
+        if row >= 0:
+            self.nav.item(row).setIcon(theme.nav_icon("updates", dot=bool(rel)))
+
+    @staticmethod
+    def _when(ts: float) -> str:
+        """'today 14:02' or '14 Nov 2026, 14:02' in the user's language."""
+        dt = QDateTime.fromSecsSinceEpoch(int(ts))
+        loc = QLocale()
+        hm = loc.toString(dt.time(), "HH:mm")
+        if dt.date() == QDateTime.currentDateTime().date():
+            return tr("today {time}").format(time=hm)
+        return loc.toString(dt.date(), "d MMM yyyy") + ", " + hm
+
+    def _check_now(self):
+        self._refresh_updates(checking=True)
+        self._checker.start()
+
+    def _check_done(self, rel, err):
+        self._refresh_updates()
+        if err:
+            self.upd_status.setText(tr("Could not check for updates: {error}").format(error=err))
+        parent = self.parent()
+        if hasattr(parent, "refresh_update_badge"):
+            parent.refresh_update_badge()
+
+    def _skip_update(self):
+        if self._available:
+            self.settings.set("update_skip", self._available.version)
+        self._refresh_updates()
+        parent = self.parent()
+        if hasattr(parent, "refresh_update_badge"):
+            parent.refresh_update_badge()
+
+    def _install_update(self):
+        if self._available:
+            self._save_update_choice()
+            update_ui.install(self, self._available)
+
+    def _save_update_choice(self):
+        self.settings.set("update_check", self.upd_auto.isChecked())
+
+    # ---------------------------------------------------------------- about
+    def _build_about(self, gpu_info) -> QGroupBox:
+        g = QGroupBox()
+        v = QVBoxLayout(g)
+        v.addWidget(QLabel(f"<b>{APP_NAME} {__version__}</b>"))
+        about = QLabel(tr("A lightweight viewer for STL, 3MF and G-code files, with one-click "
+                          "hand-off to your slicer (Creality Print, OrcaSlicer, Bambu Studio, "
+                          "PrusaSlicer, Cura and others).") + "<br><br>"
+                       + tr("Open source under the MIT License.") + "<br>"
+                       + f'<a href="https://github.com/{up.REPO}">github.com/{up.REPO}</a>')
+        about.setWordWrap(True)
+        about.setOpenExternalLinks(True)
+        v.addWidget(about)
+        built = QLabel(tr("Built with Python, Qt (PySide6) and PyVista / VTK.") + "<br>"
+                       + "<br>".join(f"{k}: {val}" for k, val in (gpu_info or {}).items()))
+        built.setObjectName("muted")
+        built.setWordWrap(True)
+        v.addWidget(built)
+        return g
 
     # ---------------------------------------------------------------- slicer
     def _store_slicer_fields(self):
@@ -388,6 +552,7 @@ class SettingsDialog(QDialog):
         self.settings.set("freecad_path", self.freecad_edit.text().strip())
         self.settings.set("show_travel", self.travel_cb.isChecked())
         self.settings.set("show_bed", self.bed_cb.isChecked())
+        self._save_update_choice()
         if gpu.is_supported() and self.gpu_cb.isChecked() != gpu.high_performance_enabled():
             try:
                 gpu.set_high_performance(self.gpu_cb.isChecked())

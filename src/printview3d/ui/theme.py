@@ -191,6 +191,12 @@ def apply_theme(app, choice: str = "auto") -> str:
             width: 14px; margin: -6px 0; border-radius: 8px; }}
         QStatusBar {{ background: {t['bar']}; color: {t['group_title']}; }}
         QListWidget {{ border: 1px solid {t['border']}; border-radius: 6px; }}
+        QListWidget#settingsNav {{ background: {t['bar']}; border-radius: 8px; padding: 6px; outline: none; }}
+        QListWidget#settingsNav::item {{ padding: 8px 6px; border-radius: 6px; color: {t['text']}; }}
+        QListWidget#settingsNav::item:hover {{ background: {t['tool_hover']}; }}
+        QListWidget#settingsNav::item:selected {{ background: {t['tool_checked']}; color: {t['text']}; }}
+        QLabel#pageTitle {{ font-size: 18px; font-weight: 600; padding-bottom: 4px; }}
+        QLabel#versionBadge {{ color: {t['muted']}; padding: 0 6px; }}
     """)
     return _current
 
@@ -216,6 +222,93 @@ def theme_icon(name: str | None = None) -> QIcon:
     half.moveTo(c)
     half.arcTo(QRectF(c.x() - r, c.y() - r, 2 * r, 2 * r), 90, 180)
     p.fillPath(half, fg)
+    p.end()
+    return QIcon(pm)
+
+
+UPDATE_DOT = "#e5484d"      # the red "update available" dot
+
+
+def nav_icon(kind: str, dot: bool = False) -> QIcon:
+    """Line icons for the Settings sidebar, in the theme's text colour (sharp at any scale).
+    With dot=True a red dot marks the icon (update available)."""
+    size = 64
+    pm = QPixmap(size, size)
+    pm.fill(Qt.transparent)
+    p = QPainter(pm)
+    p.setRenderHint(QPainter.Antialiasing)
+    fg = QColor(colors()["text"])
+    pen = QPen(fg, 4.5)
+    pen.setCapStyle(Qt.RoundCap)
+    pen.setJoinStyle(Qt.RoundJoin)
+    p.setPen(pen)
+    p.setBrush(Qt.NoBrush)
+    c = QPointF(32, 32)
+    if kind == "language":                       # globe
+        p.drawEllipse(c, 24, 24)
+        p.drawEllipse(c, 10, 24)
+        p.drawLine(QPointF(8, 32), QPointF(56, 32))
+        p.drawLine(QPointF(13, 20), QPointF(51, 20))
+        p.drawLine(QPointF(13, 44), QPointF(51, 44))
+    elif kind == "appearance":                   # half circle, as on the toolbar
+        p.drawEllipse(c, 24, 24)
+        half = QPainterPath()
+        half.moveTo(c)
+        half.arcTo(QRectF(8, 8, 48, 48), 90, 180)
+        p.fillPath(half, fg)
+    elif kind == "slicer":                       # 3D printer: frame, gantry, nozzle, bed
+        p.drawRoundedRect(QRectF(8, 8, 48, 48), 6, 6)
+        p.drawLine(QPointF(8, 22), QPointF(56, 22))
+        nozzle = QPainterPath()
+        nozzle.moveTo(26, 22)
+        nozzle.lineTo(38, 22)
+        nozzle.lineTo(32, 32)
+        nozzle.closeSubpath()
+        p.fillPath(nozzle, fg)
+        p.drawLine(QPointF(18, 46), QPointF(46, 46))
+    elif kind == "freecad":                      # isometric cube
+        top, mid, bot = QPointF(32, 8), QPointF(32, 32), QPointF(32, 58)
+        l_up, r_up = QPointF(10, 20), QPointF(54, 20)
+        l_dn, r_dn = QPointF(10, 46), QPointF(54, 46)
+        for a, b in ((top, l_up), (top, r_up), (l_up, mid), (r_up, mid), (mid, bot),
+                     (l_up, l_dn), (r_up, r_dn), (l_dn, bot), (r_dn, bot)):
+            p.drawLine(a, b)
+    elif kind == "files":                        # folder
+        path = QPainterPath()
+        path.moveTo(8, 18)
+        path.lineTo(26, 18)
+        path.lineTo(31, 24)
+        path.lineTo(56, 24)
+        path.lineTo(56, 52)
+        path.lineTo(8, 52)
+        path.closeSubpath()
+        p.drawPath(path)
+    elif kind == "viewer":                       # eye
+        eye = QPainterPath()
+        eye.moveTo(6, 32)
+        eye.quadTo(32, 6, 58, 32)
+        eye.quadTo(32, 58, 6, 32)
+        p.drawPath(eye)
+        p.setBrush(fg)
+        p.drawEllipse(c, 7, 7)
+    elif kind == "updates":                      # circular arrow
+        p.drawArc(QRectF(10, 10, 44, 44), 60 * 16, 290 * 16)
+        head = QPainterPath()
+        head.moveTo(48, 6)
+        head.lineTo(52, 22)
+        head.lineTo(36, 20)
+        head.closeSubpath()
+        p.fillPath(head, fg)
+    elif kind == "about":                        # (i)
+        p.drawEllipse(c, 24, 24)
+        p.drawLine(QPointF(32, 28), QPointF(32, 44))
+        p.setBrush(fg)
+        p.setPen(Qt.NoPen)
+        p.drawEllipse(QPointF(32, 19), 3.5, 3.5)
+    if dot:
+        p.setPen(QPen(QColor(colors()["bar"]), 3))
+        p.setBrush(QColor(UPDATE_DOT))
+        p.drawEllipse(QPointF(51, 13), 10, 10)
     p.end()
     return QIcon(pm)
 

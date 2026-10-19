@@ -95,6 +95,15 @@ jobs:
           if (-not (Test-Path $lnk)) { throw "Start menu shortcut missing" }
           $un = Get-ChildItem "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall" | Where-Object { $_.PSChildName -like '*f46ac51f*' }
           if (-not $un) { throw "Not listed in Apps & features" }
+          # Update the way PrintView3D does it from Settings -> Updates: the new version must start by itself.
+          $p = Start-Process .\PrintView3D-Setup.exe -ArgumentList '/SILENT','/SUPPRESSMSGBOXES','/NORESTART','/UPDATE=1' -PassThru -Wait
+          if ($p.ExitCode -ne 0) { throw "Update install failed ($($p.ExitCode))" }
+          $started = $null
+          for ($i = 0; $i -lt 30 -and -not $started; $i++) { Start-Sleep -Seconds 1; $started = Get-Process PrintView3D -ErrorAction SilentlyContinue }
+          if (-not $started) { throw "The updated program did not start again after the update" }
+          $started | Stop-Process -Force
+          Start-Sleep -Seconds 2
+          Write-Host "Update mode OK (program restarted after update)"
           $p = Start-Process "$dir\unins000.exe" -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART' -PassThru -Wait
           # The uninstaller hands over to a copy of itself; wait until it is done.
           for ($i = 0; $i -lt 60 -and (Test-Path "$dir\PrintView3D.exe"); $i++) { Start-Sleep -Seconds 1 }

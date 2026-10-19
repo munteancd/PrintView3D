@@ -5,6 +5,10 @@
 ;   "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DAppVersion=0.8.0 packaging\windows\PrintView3D.iss
 ; Output: dist\PrintView3D-Setup.exe
 ;
+; PrintView3D updates itself by running this installer with
+;   /SILENT /SUPPRESSMSGBOXES /NORESTART /UPDATE=1
+; (progress window, no questions, previous choices kept, new version started afterwards).
+;
 ; - Installs for the current user only: no administrator password needed.
 ; - Installing a newer version updates the old one; settings are kept.
 ; - Appears in Windows Settings -> Apps, where it can be uninstalled.
@@ -99,6 +103,8 @@ Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; Tasks: desktopico
 ; "Open with" registration (the same as Settings -> Register in the program).
 Filename: "{app}\{#AppExe}"; Parameters: "--register"; Tasks: fileassoc; Flags: runhidden waituntilterminated
 Filename: "{app}\{#AppExe}"; Description: "{cm:LaunchProgram,{#AppName}}"; Flags: nowait postinstall skipifsilent
+; Update started from inside PrintView3D (/UPDATE=1): start the new version again by itself.
+Filename: "{app}\{#AppExe}"; Flags: nowait; Check: IsUpdate
 
 [UninstallRun]
 ; Undo every file association before the files are removed.
@@ -108,6 +114,11 @@ Filename: "{app}\{#AppExe}"; Parameters: "--unregister"; Flags: runhidden waitun
 Type: filesandordirs; Name: "{app}\_internal"
 
 [Code]
+function IsUpdate: Boolean;
+begin
+  Result := ExpandConstant('{param:UPDATE|0}') = '1';
+end;
+
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
   Dir: String;

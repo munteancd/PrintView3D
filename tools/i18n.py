@@ -69,6 +69,9 @@ NOTES = {
     "Light": "Colour theme name: light colours (not 'not heavy').",
     "Graphite": "Colour theme name: a warm, dark brownish charcoal.",
     "Theme: {name} (Ctrl+T: next theme)": "Tooltip of the theme icon. {name} is the current theme (Dark, Gray...).",
+    "Files": "Settings page: which file types open with PrintView3D (default program).",
+    "today {time}": "When the last update check was. {time} is e.g. 14:02.",
+    "Skip this version": "Update button: do not show this new version again (the next one is shown).",
     "Plate {n}": "A build plate inside a slicer project; {n} is its number.",
 }
 

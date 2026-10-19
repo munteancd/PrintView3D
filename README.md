@@ -39,6 +39,7 @@ file to Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura and others w
 | **Default app** | Optional: make PrintView3D open `.stl`, `.3mf` and `.gcode` files when you double-click them. Fully reversible. |
 | **Your language** | English, العربية (Arabic, right-to-left), Nederlands, Deutsch, Français and Español; switch any time in Settings, no restart needed. [Help translate](#translations). |
 | **Themes** | Automatic (follows your system), Dark, Gray, Graphite (warm, easy on the eyes) or Light, for the window and the 3D view. Switch with one click on ◐ or `Ctrl+T`. Toolpath colours stay the same in every theme. |
+| **Updates** | **Check for updates** in Settings, or once a day if you allow it. On Windows one click downloads, checks and installs the new version. The version in the corner gets a red dot when an update is ready. [What is sent](#updates-and-privacy). |
 | **Comfortable to use** | Slicer-style camera, drag & drop, recent files, screenshots. |
 
 <table>
@@ -98,7 +99,7 @@ Nothing is installed. (`install_windows.bat` in the zip still works too.)
 #### Make it the default program for 3D files (optional)
 
 1. In PrintView3D, click **Settings**.
-2. Under *Default program for 3D files*, click **Register & choose as default…**.
+2. Open the **Files** page and click **Register & choose as default…**.
 3. Windows Settings opens. Pick **PrintView3D** for `.stl`, `.3mf` and `.gcode`.
 
 Windows requires you to confirm this last step yourself; no program is allowed to do it silently.
@@ -124,8 +125,8 @@ Fedora 36+, openSUSE Tumbleweed, Arch, Manjaro, Pop!_OS, elementary OS, Zorin OS
    ```
 3. Double-click it, or run `./PrintView3D-x86_64.AppImage`.
 
-**Add it to your applications menu** (optional, recommended): in PrintView3D open **Settings** and
-click **Register & make default**. PrintView3D then appears in your applications menu and in
+**Add it to your applications menu** (optional, recommended): in PrintView3D open **Settings → Files**
+and click **Register & make default**. PrintView3D then appears in your applications menu and in
 "Open With", and opens `.stl`, `.3mf` and `.gcode` files on double-click. On Linux this takes effect
 immediately; **Remove registration** undoes it.
 
@@ -254,10 +255,41 @@ model colours stay the same so they always match your slicer.
 
 ![The same G-code in the Dark, Gray, Graphite and Light themes](docs/screenshot-themes.png)
 
+### Updates
+
+**Settings → Updates** shows your version and has **Check for updates now**. You can also switch on
+**Check for updates automatically (once a day)**; PrintView3D asks once whether you want this, and
+you can change it there at any time.
+
+When a new version exists, the version in the bottom-right corner shows a **red dot** (`● v0.10.0 →
+0.11.0`), and so does *Updates* in Settings. Click it to see **What's new**, then:
+
+- **Windows (installed with Setup.exe): Install update.** PrintView3D downloads the new installer,
+  checks its SHA-256 fingerprint against the one GitHub publishes, installs it (no questions, your
+  settings are kept) and starts the new version.
+- **Linux (AppImage) and the portable Windows zip: Download update** opens the release page;
+  download the new file and replace the old one.
+- **Skip this version** hides that version; the next one is shown again.
+
+![Settings → Updates when a new version is available](docs/screenshot-updates.png)
+
+#### Updates and privacy
+
+PrintView3D works offline. It connects to the internet **only** for updates, and only when you
+click *Check for updates now* or have switched on the daily check:
+
+| | |
+|---|---|
+| **What is contacted** | `api.github.com` (to ask for the newest release of this project) and, when you click *Install update*, the download from `github.com` |
+| **How often** | At most once a day (automatic check), or when you click *Check for updates now* |
+| **What is sent** | Only the request for the newest version, with the program name and version (`PrintView3D/0.10.0`). No personal data, no files, no usage statistics, no ID. |
+| **What GitHub sees** | Like any website: your IP address. See [GitHub's privacy statement](https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement). |
+| **How to turn it off** | Settings → Updates → untick *Check for updates automatically*. Nothing is contacted after that. |
+
 ### Smoother rotation on laptops
 
 Many laptops have two graphics chips and run programs on the slower one by default.
-**Settings → Graphics** shows which one PrintView3D uses. If it says *Intel*, tick
+**Settings → Viewer → Graphics** shows which one PrintView3D uses. If it says *Intel*, tick
 **Use the high-performance graphics card** and restart PrintView3D.
 
 ---
@@ -473,7 +505,9 @@ reviewed before they are merged.
 
 **Privacy:** this program will not transfer any information to other networked systems unless
 specifically requested by the user or the person installing or operating it. PrintView3D works
-fully offline; it only opens your files and starts the slicer you choose.
+fully offline; it only opens your files and starts the slicer you choose. The only connection it
+ever makes is the update check, and only when you ask for it or switched on the daily check;
+see [Updates and privacy](#updates-and-privacy).
 
 ## License
 

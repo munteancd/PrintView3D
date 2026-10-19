@@ -19,6 +19,10 @@ DEFAULTS = {
     "custom_slicer": {},
     "freecad_path": "",         # FreeCAD program picked in Settings; empty = find automatically        # {"name": ..., "path": ...} for any other program
     "slicer_path": "",          # v0.1/v0.2 setting, migrated into slicer_paths
+    "update_check": None,       # None = not asked yet; True/False = automatic daily check on/off
+    "update_last_check": 0,     # time of the last check (seconds since 1970)
+    "update_latest": {},        # newest release seen on GitHub (version, notes, download)
+    "update_skip": "",          # version the user chose to skip
     "recent_files": [],
     "show_travel": False,
     "show_bed": True,

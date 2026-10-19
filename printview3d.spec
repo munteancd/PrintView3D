@@ -39,14 +39,16 @@ hiddenimports = (
     + collect_submodules("vtkmodules.qt")
     + [
         "qtpy", "qtpy.QtCore", "qtpy.QtGui", "qtpy.QtWidgets",
-        "vtkmodules.util.numpy_support",
+        "vtkmodules.util.numpy_support", "certifi",
     ]
 )
+
+from PyInstaller.utils.hooks import collect_data_files
 
 a = Analysis(
     ["src/printview3d/__main__.py"],
     pathex=["src"],
-    datas=[("src/printview3d/resources", "printview3d/resources")],
+    datas=[("src/printview3d/resources", "printview3d/resources")] + collect_data_files("certifi"),
     hiddenimports=hiddenimports,
     excludes=[
         # Not needed and large; keeps the build smaller.
