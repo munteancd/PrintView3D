@@ -57,3 +57,21 @@ def test_auto_resolves_to_a_real_theme(app):
 def test_unknown_value_falls_back_to_auto(app):
     theme.apply_theme(app, "purple")
     assert theme.setting() == "auto"
+
+
+def test_graphite_is_offered_before_light():
+    assert list(theme.THEME_NAMES) == ["auto", "dark", "gray", "graphite", "light"]
+
+
+def test_next_theme_cycles_through_all():
+    seen, t = [], "dark"
+    for _ in range(4):
+        t = theme.next_theme(t)
+        seen.append(t)
+    assert seen == ["gray", "graphite", "light", "dark"]
+    assert theme.next_theme("auto") == "dark"
+
+
+def test_theme_icon_draws(app):
+    for name in theme.CYCLE:
+        assert not theme.theme_icon(name).isNull()

@@ -37,7 +37,7 @@ file to Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura and others w
 | **Open in your slicer** | One click (or `Ctrl+P`) opens the current file in your slicer. Installed slicers are found automatically. |
 | **Default app** | Optional: make PrintView3D open `.stl`, `.3mf` and `.gcode` files when you double-click them. Fully reversible. |
 | **Your language** | English, العربية (Arabic, right-to-left), Nederlands, Deutsch, Français and Español; switch any time in Settings, no restart needed. [Help translate](#translations). |
-| **Themes** | Automatic (follows your system), Dark, Gray or Light, for the window and the 3D view. Toolpath colours stay the same in every theme. |
+| **Themes** | Automatic (follows your system), Dark, Gray, Graphite (warm, easy on the eyes) or Light, for the window and the 3D view. Switch with one click on ◐ or `Ctrl+T`. Toolpath colours stay the same in every theme. |
 | **Comfortable to use** | Slicer-style camera, drag & drop, recent files, screenshots. |
 
 <table>
@@ -184,6 +184,7 @@ Looking from underneath? The plate gets out of the way so you can see the bottom
 |---|---|
 | `Ctrl+O` | Open a file |
 | `Ctrl+P` | Open the file in your default slicer |
+| `Ctrl+T` | Next theme (Dark → Gray → Graphite → Light) |
 | `F` · `1` · `2` · `3` · `4` | Fit · Iso · Top · Front · Right view |
 | `↑` / `↓` | Next / previous layer (G-code) |
 | `Page Up` / `Page Down` | 10 layers up / down |
@@ -208,12 +209,19 @@ right-to-left layout; measurements always use Western digits (0.20 mm).
 
 ### Themes
 
-**Settings → Appearance → Theme**: *Automatic* follows the dark/light setting of Windows or your
-Linux desktop (and switches along when that changes), or choose **Dark**, **Gray** or **Light**.
+Click the **◐ icon** at the right end of the toolbar to pick a theme, or press **`Ctrl+T`** to
+step to the next one. The same choice is in **Settings → Appearance → Theme**.
+
+- **Automatic** follows the dark/light setting of Windows or your Linux desktop (and switches
+  along when that changes).
+- **Dark**, **Gray**, **Graphite** (a warm, dark brownish tone that is soft on the eyes) or **Light**.
+
 The switch is immediate; the 3D background, plate and grid change with it, while G-code and
 model colours stay the same so they always match your slicer.
 
-![The same G-code in the Dark, Gray and Light themes](docs/screenshot-themes.png)
+![The theme menu on the toolbar](docs/screenshot-theme-menu.png)
+
+![The same G-code in the Dark, Gray, Graphite and Light themes](docs/screenshot-themes.png)
 
 ### Smoother rotation on laptops
 
@@ -371,7 +379,7 @@ PrintView3D.exe part.gcode --screenshot out.png    save a picture and exit
 PrintView3D.exe model.stl --send-to-slicer         open the file in your default slicer and exit
 PrintView3D.exe model.stl --send-to-slicer orcaslicer   ...or in a specific one
 PrintView3D.exe --lang ar                          start in a language (en, ar, nl, de, fr, es)
-PrintView3D.exe --theme light                      start with a theme (auto, dark, gray, light)
+PrintView3D.exe --theme light                      start with a theme (auto, dark, gray, graphite, light)
 PrintView3D.exe --register                         add to "Open with" (Linux: also the applications menu)
 PrintView3D.exe --unregister                       remove file associations
 (on Linux use ./PrintView3D-x86_64.AppImage instead of PrintView3D.exe)

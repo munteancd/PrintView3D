@@ -1,4 +1,4 @@
-"""Colour themes: Automatic (follows the system), Dark, Gray and Light.
+"""Colour themes: Automatic (follows the system), Dark, Gray, Graphite and Light.
 
 A theme sets the colours of the window (Qt palette + style sheet) and of the
 3D view (background, build plate, grid). The colours of G-code features and
@@ -11,8 +11,8 @@ window recolours the 3D view (MainWindow.apply_theme).
 
 from __future__ import annotations
 
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QColor, QGuiApplication, QPalette
+from PySide6.QtCore import QPointF, QRectF, Qt
+from PySide6.QtGui import QColor, QGuiApplication, QIcon, QPainter, QPainterPath, QPalette, QPen, QPixmap
 
 from ..i18n import tr_noop
 
@@ -24,8 +24,11 @@ THEME_NAMES = {
     "auto": tr_noop("Automatic (system theme)"),
     "dark": tr_noop("Dark"),
     "gray": tr_noop("Gray"),
+    "graphite": tr_noop("Graphite"),
     "light": tr_noop("Light"),
 }
+# Order used by Ctrl+T (next theme).
+CYCLE = ["dark", "gray", "graphite", "light"]
 
 THEMES: dict[str, dict[str, str]] = {
     "dark": {
@@ -55,6 +58,20 @@ THEMES: dict[str, dict[str, str]] = {
         "bg_bottom": "#45494f", "bg_top": "#6c727a", "plate": "#4f545a",
         "grid_minor": "#5f646b", "grid_major": "#7b8189", "plate_edge": "#a6acb3",
         "axes_label": "#eef0f2",
+    },
+    # Warm, dark coffee-brown charcoal: soft on the eyes in the evening.
+    "graphite": {
+        "window": "#2b2622", "base": "#231f1c", "alt": "#312b27", "text": "#ece6df",
+        "button": "#3a332e", "button_hover": "#463e37", "button_border": "#5a4e44",
+        "tool_hover": "#3d3530", "tool_checked": "#4a4039",
+        "bar": "#26211e", "bar_border": "#3a332d", "border": "#40372f",
+        "muted": "#b3a89c", "group_title": "#c2b6a9", "disabled": "#7d7268",
+        "placeholder": "#9e9387", "tooltip": "#3a332e",
+        "groove": "#40372f", "handle": "#ece6df", "handle_border": "#ece6df",
+        "link": "#8fd6d2", "thumb": "#201c19",
+        "bg_bottom": "#28221e", "bg_top": "#4d433b", "plate": "#3a322c",
+        "grid_minor": "#4a4038", "grid_major": "#685b50", "plate_edge": "#9a8b7d",
+        "axes_label": "#ece6df",
     },
     "light": {
         "window": "#f3f4f6", "base": "#ffffff", "alt": "#f0f1f3", "text": "#1f2328",
@@ -145,6 +162,12 @@ def apply_theme(app, choice: str = "auto") -> str:
         QToolButton {{ padding: 5px 9px; border-radius: 5px; color: {t['text']}; }}
         QToolButton:hover {{ background: {t['tool_hover']}; }}
         QToolButton:checked {{ background: {t['tool_checked']}; }}
+        QToolBar QToolButton {{ border: 1px solid {t['button_border']}; background: {t['button']};
+            padding: 4px 10px; margin: 1px 2px; }}
+        QToolBar QToolButton:hover {{ background: {t['button_hover']}; border-color: {t['muted']}; }}
+        QToolBar QToolButton:checked {{ background: {t['tool_checked']}; border-color: {ACCENT}; }}
+        QToolBar QToolButton#themeButton {{ padding: 4px 6px; }}
+        QToolBar QToolButton#themeButton::menu-indicator {{ image: none; width: 0; }}
         QToolButton#slicerButton {{ background: {ACCENT}; color: white; font-weight: 600; padding: 6px 14px; }}
         QToolButton#slicerButton:hover {{ background: {ACCENT_HOVER}; }}
         QToolButton#slicerButton[popupMode="1"] {{ padding-right: 28px; }}
@@ -170,6 +193,31 @@ def apply_theme(app, choice: str = "auto") -> str:
         QListWidget {{ border: 1px solid {t['border']}; border-radius: 6px; }}
     """)
     return _current
+
+
+def next_theme(name: str) -> str:
+    """The theme after `name` for Ctrl+T."""
+    i = CYCLE.index(name) if name in CYCLE else -1
+    return CYCLE[(i + 1) % len(CYCLE)]
+
+
+def theme_icon(name: str | None = None) -> QIcon:
+    """Half-filled circle (the usual 'theme' symbol) in the theme's text colour."""
+    size = 64                       # drawn large, Qt scales it down sharply
+    pm = QPixmap(size, size)
+    pm.fill(Qt.transparent)
+    p = QPainter(pm)
+    p.setRenderHint(QPainter.Antialiasing)
+    fg = QColor(colors(name)["text"])
+    p.setPen(QPen(fg, 5))
+    c, r = QPointF(size / 2, size / 2), 24
+    p.drawEllipse(c, r, r)
+    half = QPainterPath()
+    half.moveTo(c)
+    half.arcTo(QRectF(c.x() - r, c.y() - r, 2 * r, 2 * r), 90, 180)
+    p.fillPath(half, fg)
+    p.end()
+    return QIcon(pm)
 
 
 def apply_dark_theme(app):

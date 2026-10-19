@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.0
+- **Graphite** theme: a warm, dark brownish charcoal that is soft on the eyes.
+- **Theme icon** (◐) at the right end of the toolbar: one click opens the theme menu.
+- **`Ctrl+T`** steps to the next theme (Dark → Gray → Graphite → Light).
+- Toolbar buttons now look like buttons (border and fill) in every theme; an active toggle
+  (Plate) gets a teal outline.
+
 ## 0.6.0
 - **Themes**: Automatic (follows the system's dark/light setting, also while running), Dark,
   Gray and Light. Choose in Settings → Appearance; the switch is immediate.
