@@ -38,5 +38,6 @@ without discussion.
 
 1. Update the version in `src/printview3d/__init__.py`, `pyproject.toml`, `version_info.txt`
    and add an entry to `CHANGELOG.md`.
-2. Commit, then tag and push: `git tag v0.4.0 && git push origin v0.4.0`.
-3. GitHub Actions builds the program and publishes the release with the zip attached.
+2. Commit and push to `main`.
+3. GitHub Actions builds the program and, because the version is new, publishes release
+   `v0.4.0` with `PrintView3D-windows.zip` and the changelog entry. (Pushing a `v*` tag works too.)

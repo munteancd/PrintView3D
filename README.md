@@ -241,8 +241,8 @@ printview3d.spec      PyInstaller recipe
 ```
 
 **Automatic builds:** every push builds and tests the Windows program on GitHub
-([Actions](../../actions)). Pushing a version tag such as `v0.3.0` also publishes a
-[release](../../releases) with `PrintView3D-windows.zip` attached.
+([Actions](../../actions)). When the version number in `src/printview3d/__init__.py` changes,
+it also publishes a new [release](../../releases) with `PrintView3D-windows.zip` attached.
 
 ### Command line
 
