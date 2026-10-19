@@ -7,8 +7,8 @@ import threading
 from typing import Optional
 
 import numpy as np
-from PySide6.QtCore import QEvent, QObject, QSize, Qt, QTimer, Signal
-from PySide6.QtGui import QAction, QActionGroup, QColor, QGuiApplication, QIcon, QKeySequence, QPixmap, QShortcut
+from PySide6.QtCore import QEvent, QObject, QSize, Qt, QTimer, QUrl, Signal
+from PySide6.QtGui import QAction, QActionGroup, QColor, QDesktopServices, QGuiApplication, QIcon, QKeySequence, QPixmap, QShortcut
 from PySide6.QtWidgets import (
     QApplication, QCheckBox, QFileDialog, QFormLayout, QGroupBox, QHBoxLayout, QLabel,
     QMainWindow, QMenu, QMessageBox, QProgressBar, QPushButton, QScrollArea,
@@ -17,6 +17,7 @@ from PySide6.QtWidgets import (
 )
 
 from .. import APP_NAME, __version__
+from .. import freecad as fc
 from .. import slicer as sl
 from ..gpu import renderer_info
 from ..i18n import count, ltr, num, tr
@@ -42,10 +43,11 @@ def resource(name: str) -> str:
 
 def file_filter() -> str:
     return ";;".join([
-        tr("3D files") + " (*.stl *.3mf *.gcode *.gco *.g)",
+        tr("3D files") + " (*.stl *.3mf *.gcode *.gco *.g *.FCStd *.fcstd)",
         tr("STL models") + " (*.stl)",
         tr("3MF projects") + " (*.3mf)",
         tr("G-code") + " (*.gcode *.gco *.g)",
+        tr("FreeCAD documents") + " (*.FCStd *.fcstd)",
         tr("All files") + " (*)",
     ])
 
@@ -229,6 +231,57 @@ class MainWindow(QMainWindow):
         self.theme_btn.setPopupMode(QToolButton.InstantPopup)
         tb.addWidget(self.theme_btn)
 
+    def _build_preview_page(self) -> QWidget:
+        page = QWidget()
+        v = QVBoxLayout(page)
+        v.addStretch(1)
+        self.preview_image = QLabel()
+        self.preview_image.setAlignment(Qt.AlignCenter)
+        v.addWidget(self.preview_image)
+        self.preview_title = QLabel()
+        self.preview_title.setAlignment(Qt.AlignCenter)
+        self.preview_title.setStyleSheet("font-size: 17px; font-weight: 600; margin-top: 10px;")
+        v.addWidget(self.preview_title)
+        self.preview_text = QLabel()
+        self.preview_text.setObjectName("muted")
+        self.preview_text.setAlignment(Qt.AlignCenter)
+        self.preview_text.setWordWrap(True)
+        self.preview_text.setFixedWidth(520)          # fixed width: word wrap gets its full height
+        v.addWidget(self.preview_text, 0, Qt.AlignHCenter)
+        v.addSpacing(8)
+        row = QHBoxLayout()
+        row.addStretch(1)
+        self.preview_download = QPushButton()
+        self.preview_download.setObjectName("primary")
+        self.preview_download.clicked.connect(
+            lambda: QDesktopServices.openUrl(QUrl("https://www.freecad.org/downloads.php")))
+        row.addWidget(self.preview_download)
+        self.preview_choose = QPushButton()
+        self.preview_choose.clicked.connect(self.open_settings)
+        row.addWidget(self.preview_choose)
+        row.addStretch(1)
+        v.addLayout(row)
+        v.addStretch(2)
+        return page
+
+    def _show_freecad_preview(self, m: ModelData):
+        pm = QPixmap()
+        if m.thumbnail and pm.loadFromData(m.thumbnail) and not pm.isNull():
+            self.preview_image.setPixmap(pm.scaled(400, 400, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            self.preview_image.show()
+        else:
+            self.preview_image.hide()
+        status = (m.freecad or {}).get("status")
+        self.preview_title.setText(tr("Preview picture") if m.thumbnail else tr("No 3D view"))
+        self.preview_text.setText(self._freecad_status_text(m))
+        self.preview_text.setMinimumHeight(self.preview_text.heightForWidth(520))
+        no_freecad = status == "no_freecad"
+        self.preview_download.setText(tr("Download FreeCAD"))
+        self.preview_download.setVisible(no_freecad)
+        self.preview_choose.setText(tr("Choose FreeCAD…"))
+        self.preview_choose.setVisible(no_freecad or status == "failed")
+        self.view_stack.setCurrentIndex(1)
+
     def _build_central(self):
         from pyvistaqt import QtInteractor
 
@@ -283,7 +336,11 @@ class MainWindow(QMainWindow):
         self.controls = TurntableControls(self.plotter, self.scene, self.scene.interaction_started,
                                           self.scene.interaction_ended)
         self.scene.bed_visible = self.act_bed.isChecked()
-        splitter.addWidget(self.plotter.interactor)
+        # The 3D view, or (FreeCAD file without FreeCAD) a large preview picture.
+        self.view_stack = QStackedWidget()
+        self.view_stack.addWidget(self.plotter.interactor)
+        self.view_stack.addWidget(self._build_preview_page())
+        splitter.addWidget(self.view_stack)
 
         self.side = QWidget()
         self.side_layout = QVBoxLayout(self.side)
@@ -498,6 +555,8 @@ class MainWindow(QMainWindow):
             self._reset_side_panel()
             self.name_label.setText(os.path.basename(self.current_path or ""))
             self._fill_model_panel(self.model)
+            if self.view_stack.currentIndex() == 1:
+                self._show_freecad_preview(self.model)
 
     def _add_detail(self, key: str, value: str):
         k = QLabel(key)
@@ -521,7 +580,7 @@ class MainWindow(QMainWindow):
     def _kind_text(self) -> str:
         if self.showing_embedded:
             return tr("Sliced toolpaths · {plate}").format(plate=_plate_name(self._embedded_member))
-        names = {"stl": "STL", "3mf": "3MF", "gcode": tr("G-code")}
+        names = {"stl": "STL", "3mf": "3MF", "gcode": tr("G-code"), "freecad": "FreeCAD"}
         return tr("{kind} · {size} MB").format(kind=names.get(self.current_kind, self.current_kind.upper()),
                                                size=num(self._file_size_mb, 1))
 
@@ -544,7 +603,7 @@ class MainWindow(QMainWindow):
         kind = file_kind(path)
         if not kind:
             QMessageBox.warning(self, tr("Unsupported file"),
-                                tr("PrintView3D can open STL, 3MF and G-code files."))
+                                tr("PrintView3D can open STL, 3MF, G-code and FreeCAD files."))
             return
         self._load_token += 1
         token = self._load_token
@@ -555,7 +614,8 @@ class MainWindow(QMainWindow):
 
         def work():
             try:
-                result = load_file(path, lambda f: self._signals.progress.emit(token, f))
+                result = load_file(path, lambda f: self._signals.progress.emit(token, f),
+                                   self.settings.get("freecad_path", ""))
                 self._signals.done.emit(token, (path, kind, result))
             except Exception as e:  # noqa: BLE001 - show any error to the user
                 self._signals.failed.emit(token, f"{type(e).__name__}: {e}")
@@ -566,7 +626,8 @@ class MainWindow(QMainWindow):
         """Load without a worker thread (used for --screenshot)."""
         path = os.path.abspath(path)
         self._load_token += 1
-        self._on_loaded(self._load_token, (path, file_kind(path), load_file(path)))
+        self._on_loaded(self._load_token, (path, file_kind(path),
+                                           load_file(path, None, self.settings.get("freecad_path", ""))))
 
     def _on_progress(self, token: int, frac: float):
         if token == self._load_token:
@@ -599,6 +660,7 @@ class MainWindow(QMainWindow):
         self.stack.setCurrentIndex(1)
 
         self.scene.clear()
+        self.view_stack.setCurrentIndex(0)
         self._reset_side_panel()
         self.name_label.setText(os.path.basename(path))
 
@@ -611,22 +673,32 @@ class MainWindow(QMainWindow):
             self._show_model(data)
         self.scene.set_bed_visible(self.act_bed.isChecked())
         self.scene.set_view("iso")
-        self.statusBar().showMessage(tr("Opened {path}").format(path=path), 6000)
+        self._update_slicer_button()
+        msg = tr("Opened {path}").format(path=path)
+        if kind == "freecad" and not getattr(data, "parts", None):
+            msg = self._freecad_status_text(data)
+        self.statusBar().showMessage(msg, 10000)
 
     # ------------------------------------------------------------- model
     def _show_model(self, m: ModelData):
         self._model_actors = self.scene.show_model(m)
+        if m.freecad is not None and not m.parts:   # FreeCAD file without FreeCAD
+            self._show_freecad_preview(m)
         self._fill_model_panel(m)
 
     def _fill_model_panel(self, m: ModelData):
         self.kind_label.setText(self._kind_text())
-        self._set_thumbnail(m.thumbnail)
+        if m.freecad is not None and not m.parts:
+            self.thumb_label.hide()                 # shown large on the preview page
+        else:
+            self._set_thumbnail(m.thumbnail)
         actors = getattr(self, "_model_actors", [])
         b = m.bounds()
         if b:
             self._add_detail(tr("Size (X×Y×Z)"), ltr(tr("{x} × {y} × {z} mm").format(
                 x=num(b[1] - b[0]), y=num(b[3] - b[2]), z=num(b[5] - b[4]))))
-        self._add_detail(tr("Triangles"), count(m.n_triangles))
+        if m.parts:
+            self._add_detail(tr("Triangles"), count(m.n_triangles))
         if len(m.parts) == 1:
             vol = self._mesh_volume(m.parts[0])
             if vol:
@@ -644,6 +716,9 @@ class MainWindow(QMainWindow):
             self.objects_box.setTitle(tr("Objects ({n})").format(n=len(m.parts)))
             self.objects_box.show()
 
+        if m.freecad:
+            self._fill_freecad_box(m)
+
         if m.embedded_gcode:
             self.embedded_box.setTitle(tr("Sliced plates"))
             info = QLabel(tr("This project contains sliced G-code."))
@@ -655,6 +730,77 @@ class MainWindow(QMainWindow):
                 b.clicked.connect(lambda _=False, mem=member: self._show_embedded(mem))
                 self.embedded_layout.addWidget(b)
             self.embedded_box.show()
+
+    # ----------------------------------------------------------- FreeCAD
+    def _freecad_status_text(self, m: ModelData) -> str:
+        info = m.freecad or {}
+        status = info.get("status")
+        if status == "ok":
+            return tr("Shown as in FreeCAD: visible objects only (no sketches, hidden objects or helpers).")
+        if status == "nothing_visible":
+            return tr("Nothing is visible in this document: all objects are hidden in FreeCAD.")
+        if status == "failed":
+            return tr("FreeCAD could not convert this file: {error}").format(error=info.get("error", ""))
+        return tr("FreeCAD was not found, so only the preview picture is shown. "
+                  "Install FreeCAD (free, freecad.org) to see the model in 3D.")
+
+    def _fill_freecad_box(self, m: ModelData):
+        info = m.freecad
+        self.embedded_box.setTitle(tr("FreeCAD document"))
+        if m.parts:                                 # (otherwise the preview page explains it)
+            text = QLabel(self._freecad_status_text(m))
+            text.setObjectName("muted")
+            text.setWordWrap(True)
+            self.embedded_layout.addWidget(text)
+        shown = info.get("shown") or []
+        if shown and not m.parts:
+            names = QLabel(tr("Visible objects: {names}").format(
+                names=", ".join(o.label for o in shown)))
+            names.setWordWrap(True)
+            self.embedded_layout.addWidget(names)
+        if info.get("install"):
+            b = QPushButton(tr("Open in FreeCAD"))
+            b.clicked.connect(self.open_in_freecad)
+            self.embedded_layout.addWidget(b)
+        else:
+            b = QPushButton(tr("Choose FreeCAD…"))
+            b.clicked.connect(self.open_settings)
+            self.embedded_layout.addWidget(b)
+        self.embedded_box.show()
+
+    def _freecad_install(self):
+        info = (self.model.freecad or {}) if self.model is not None else {}
+        return info.get("install") or fc.find_freecad(self.settings.get("freecad_path", ""))
+
+    def open_in_freecad(self):
+        install = self._freecad_install()
+        if install is None:
+            r = QMessageBox.question(self, tr("FreeCAD not found"),
+                                     tr("FreeCAD was not found on this computer.") + "\n\n"
+                                     + tr("Open Settings to choose the FreeCAD program?"))
+            if r == QMessageBox.Yes:
+                self.open_settings()
+            return
+        try:
+            fc.open_in_freecad(install, self.current_path)
+        except OSError as e:
+            QMessageBox.critical(self, tr("Could not start FreeCAD"), str(e))
+            return
+        self.statusBar().showMessage(tr("Opening {file} in {slicer}…").format(
+            file=os.path.basename(self.current_path or ""), slicer="FreeCAD"), 6000)
+
+    def _freecad_stl_for_slicer(self) -> Optional[str]:
+        """The visible FreeCAD objects as a temporary STL a slicer can open."""
+        m = self.model
+        actors = getattr(self, "_model_actors", [])
+        parts = [p for p, a in zip(m.parts, actors) if a.GetVisibility()] if m else []
+        if not parts:
+            QMessageBox.information(self, tr("Nothing to send"),
+                                    tr("To send a FreeCAD model to a slicer, PrintView3D needs FreeCAD to "
+                                       "convert it first. Install FreeCAD or choose it in Settings."))
+            return None
+        base = os.path.splitext(os.path.basename(self.current_path or "model"))[0]
+        return fc.export_stl(parts, os.path.join(fc.cache_dir(), "to-slicer", base + ".stl"))
 
     @staticmethod
     def _mesh_volume(part) -> float:
@@ -837,6 +983,11 @@ class MainWindow(QMainWindow):
         return tr("custom slicer") if (sid == sl.CUSTOM and name == "custom slicer") else name
 
     def _update_slicer_button(self):
+        if self.current_kind == "freecad" and not self.showing_embedded:
+            self.slicer_btn.setText(tr("Open in FreeCAD"))
+            self.slicer_btn.setToolTip(tr("Open this file in FreeCAD (Ctrl+P). "
+                                          "Use the arrow to send the model to a slicer as STL."))
+            return
         sid, name, _ = sl.resolve(self.settings)
         if sid:
             name = self._slicer_name(sid, name)
@@ -855,11 +1006,15 @@ class MainWindow(QMainWindow):
         entries = [(s.id, s.name) for s in sl.SLICERS if s.id in installed]
         if os.path.isfile(custom.get("path", "")):
             entries.append((sl.CUSTOM, self._slicer_name(sl.CUSTOM, sl.slicer_name(sl.CUSTOM, custom.get("name", "")))))
+        freecad_file = self.current_kind == "freecad"
+        if freecad_file:
+            self.slicer_menu.addAction(tr("Open in FreeCAD"), self.open_in_freecad)
+            self.slicer_menu.addSeparator()
         if not entries:
             a = self.slicer_menu.addAction(tr("No slicers found"))
             a.setEnabled(False)
         for sid, name in entries:
-            label = tr("Open in {slicer}").format(slicer=name)
+            label = (tr("Send to {slicer} as STL") if freecad_file else tr("Open in {slicer}")).format(slicer=name)
             if sid == default_id:
                 label += "   " + tr("(default)")
             self.slicer_menu.addAction(label, lambda s_id=sid: self.open_in_slicer(s_id))
@@ -867,6 +1022,14 @@ class MainWindow(QMainWindow):
         self.slicer_menu.addAction(tr("Choose default slicer…"), self.open_settings)
 
     def open_in_slicer(self, slicer_id: Optional[str] = None):
+        file_to_send = self.current_path
+        if self.current_kind == "freecad" and self.current_path:
+            if slicer_id is None:                  # main button / Ctrl+P: FreeCAD itself
+                self.open_in_freecad()
+                return
+            file_to_send = self._freecad_stl_for_slicer()
+            if not file_to_send:
+                return
         sid, name, exe = sl.resolve(self.settings, slicer_id)
         name = self._slicer_name(sid, name)
         if not sid:
@@ -899,11 +1062,11 @@ class MainWindow(QMainWindow):
                 paths[sid] = exe
                 self.settings.set("slicer_paths", paths)
         try:
-            sl.open_in_slicer(exe, self.current_path)
+            sl.open_in_slicer(exe, file_to_send)
         except OSError as e:
             QMessageBox.critical(self, tr("Could not start {slicer}").format(slicer=name), str(e))
             return
-        what = os.path.basename(self.current_path) if self.current_path else name
+        what = os.path.basename(file_to_send) if file_to_send else name
         self.statusBar().showMessage(tr("Opening {file} in {slicer}…").format(file=what, slicer=name), 6000)
 
     def save_screenshot(self):
@@ -918,9 +1081,14 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage(tr("Saved {path}").format(path=path), 6000)
 
     def open_settings(self):
+        freecad_before = self.settings.get("freecad_path", "")
         dlg = SettingsDialog(self.settings, self, renderer_info(self.plotter))
         if dlg.exec():
             self._update_slicer_button()
+            # FreeCAD just chosen: show the open FreeCAD file in 3D now.
+            if (self.current_kind == "freecad" and self.current_path and self.model is not None
+                    and not self.model.parts and self.settings.get("freecad_path", "") != freecad_before):
+                self.load(self.current_path)
             show_bed = bool(self.settings.get("show_bed", True))
             if self.act_bed.isChecked() != show_bed:
                 self.act_bed.setChecked(show_bed)

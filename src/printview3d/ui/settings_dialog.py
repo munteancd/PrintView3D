@@ -1,4 +1,4 @@
-"""Settings dialog: language, theme, default slicer, default-app registration, viewer and graphics."""
+"""Settings dialog: language, theme, default slicer, FreeCAD, default-app registration, viewer and graphics."""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
 )
 
 from .. import file_assoc, gpu, i18n
+from .. import freecad as fc
 from .. import slicer as sl
 from ..i18n import tr
 from . import theme
@@ -108,6 +109,30 @@ class SettingsDialog(QDialog):
         self.slicer_status.setWordWrap(True)
         l1.addWidget(self.slicer_status)
         root.addWidget(g1)
+
+        # ---------------- FreeCAD ----------------
+        gf = QGroupBox(tr("FreeCAD"))
+        lf = QVBoxLayout(gf)
+        fc_help = QLabel(tr("FreeCAD files (.FCStd) are shown in 3D with the help of your installed "
+                            "FreeCAD. Without it, PrintView3D shows the preview picture and the object list."))
+        fc_help.setObjectName("muted")
+        fc_help.setWordWrap(True)
+        lf.addWidget(fc_help)
+        row_f = QHBoxLayout()
+        self.freecad_edit = QLineEdit(settings.get("freecad_path", ""))
+        self.freecad_edit.setPlaceholderText(tr("Found automatically"))
+        self.freecad_edit.textChanged.connect(self._update_freecad_status)
+        row_f.addWidget(self.freecad_edit, 1)
+        fb = QPushButton(tr("Browse…"))
+        fb.clicked.connect(self._browse_freecad)
+        row_f.addWidget(fb)
+        lf.addLayout(row_f)
+        self.freecad_status = QLabel()
+        self.freecad_status.setObjectName("muted")
+        self.freecad_status.setWordWrap(True)
+        lf.addWidget(self.freecad_status)
+        root.addWidget(gf)
+        self._update_freecad_status()
 
         current_id = sl.resolve(settings, installed=self._installed)[0] or sl.SLICERS[0].id
         self._current_id = current_id
@@ -263,6 +288,21 @@ class SettingsDialog(QDialog):
         if path:
             self.slicer_edit.setText(os.path.normpath(path))
 
+    def _browse_freecad(self):
+        start = (os.path.dirname(self.freecad_edit.text()) or os.environ.get("ProgramFiles", "")
+                 or os.path.expanduser("~"))
+        path, _ = QFileDialog.getOpenFileName(self, tr("Locate FreeCAD"), start, sl.program_file_filter())
+        if path:
+            self.freecad_edit.setText(os.path.normpath(path))
+
+    def _update_freecad_status(self, *_):
+        found = fc.find_freecad(self.freecad_edit.text().strip())
+        if found:
+            self.freecad_status.setText("✔ " + tr("FreeCAD found: {where}").format(where=found.where))
+        else:
+            self.freecad_status.setText(tr("FreeCAD was not found. Install it from freecad.org "
+                                           "(free), or choose its program file with Browse."))
+
     def _detect(self):
         sid = self._current_id
         found = sl.find_slicer(sid, "")
@@ -345,6 +385,7 @@ class SettingsDialog(QDialog):
         self.settings.set("slicer_id", sid)
         self.settings.set("slicer_paths", self._paths)
         self.settings.set("custom_slicer", self._custom)
+        self.settings.set("freecad_path", self.freecad_edit.text().strip())
         self.settings.set("show_travel", self.travel_cb.isChecked())
         self.settings.set("show_bed", self.bed_cb.isChecked())
         if gpu.is_supported() and self.gpu_cb.isChecked() != gpu.high_performance_enabled():

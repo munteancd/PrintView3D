@@ -42,6 +42,7 @@ class ModelData:
     bed: Optional[tuple] = None
     thumbnail: Optional[bytes] = None
     embedded_gcode: list[str] = field(default_factory=list)   # zip member names
+    freecad: Optional[dict] = None   # FreeCAD documents: object list and conversion status
 
     @property
     def n_triangles(self) -> int:

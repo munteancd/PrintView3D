@@ -182,6 +182,24 @@ def main():
                 r.bottom() - b.y() + 20).save(os.path.join(DOCS, "screenshot-theme-menu.png"))
     print("saved screenshot-theme-menu.png")
     w.theme_menu.close()
+
+    # 10) FreeCAD document: in 3D (needs FreeCAD; PRINTVIEW3D_FREECAD=path/to/freecadcmd
+    #     to choose one) and the preview page shown without FreeCAD
+    from printview3d import freecad as fc
+    settings.set("freecad_path", os.environ.get("PRINTVIEW3D_FREECAD", ""))
+    demo_fc = os.path.join(EX, "demo_bracket.FCStd")
+    if fc.find_freecad(settings.get("freecad_path")):
+        w.load_sync(demo_fc)
+        camera(20, 0, 1.0)
+        shot("screenshot-freecad.png")
+    else:
+        print("FreeCAD not found: screenshot-freecad.png not updated")
+    real_find = fc.find_freecad
+    fc.find_freecad = lambda *_a: None
+    w.load_sync(demo_fc)
+    shot("screenshot-freecad-preview.png")
+    fc.find_freecad = real_find
+    settings.set("freecad_path", "")
     print("saved screenshot-themes.png")
     w.close()
 
