@@ -39,6 +39,7 @@ file to Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura and others w
 | **Default app** | Optional: make PrintView3D open `.stl`, `.3mf` and `.gcode` files when you double-click them. Fully reversible. |
 | **Your language** | English, العربية (Arabic, right-to-left), Nederlands, Deutsch, Français and Español; switch any time in Settings, no restart needed. [Help translate](#translations). |
 | **Themes** | Automatic (follows your system), Dark, Gray, Graphite (warm, easy on the eyes) or Light, for the window and the 3D view. Switch with one click on ◐ or `Ctrl+T`. Toolpath colours stay the same in every theme. |
+| **Thumbnails** | Windows File Explorer shows previews of 3MF, STL, G-code and FreeCAD files (installed with PrintView3D, optional). |
 | **Updates** | **Check for updates** in Settings, or once a day if you allow it. On Windows one click downloads, checks and installs the new version. The version in the corner gets a red dot when an update is ready. [What is sent](#updates-and-privacy). |
 | **Comfortable to use** | Slicer-style camera, drag & drop, recent files, screenshots. |
 
@@ -83,6 +84,12 @@ All downloads are on the **[latest release](../../releases/latest)** page.
    - Adds PrintView3D to the Start menu (desktop shortcut optional) and to "Open with" for
      `.stl`, `.3mf` and `.gcode` files.
 3. PrintView3D starts. Done.
+
+**Previews in File Explorer:** the installer also shows **thumbnails of 3MF, STL, G-code and
+FreeCAD files** in File Explorer (you can untick this during installation). 3MF, G-code and FreeCAD
+show the preview picture saved by your slicer or FreeCAD; STL files are drawn. If thumbnails don't
+appear at once, switch the folder view to *Large icons*, or sign out and in again. (If PowerToys'
+File Explorer add-ons are on, PowerToys keeps showing STL and G-code thumbnails.)
 
 **Updating:** download the new `PrintView3D-Setup.exe` and run it. It replaces the old version and
 keeps your settings.

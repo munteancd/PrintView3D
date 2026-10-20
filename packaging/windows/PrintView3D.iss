@@ -19,6 +19,10 @@
 #define AppName "PrintView3D"
 #define AppExe "PrintView3D.exe"
 #define Root "..\.."
+; File Explorer thumbnail provider (packaging\windows\thumbnails). The version is part of the
+; file name, so an update never has to overwrite a DLL that Windows still has loaded.
+#define ThumbDll "PrintView3DThumbnails-" + AppVersion + ".dll"
+#define ThumbClsid "{{64535B54-55A8-4412-919A-88F46D3E3B86}"
 
 [Setup]
 ; Never change AppId: Windows uses it to recognise updates of the same program.
@@ -54,6 +58,8 @@ Compression=lzma2/max
 SolidCompression=yes
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
+; Tell File Explorer that file types changed (new thumbnails show up without a restart).
+ChangesAssociations=yes
 MinVersion=10.0
 
 [Languages]
@@ -72,17 +78,24 @@ nl.FileAssoc=PrintView3D toevoegen aan "Openen met" voor .stl-, .3mf- en .gcode-
 de.FileAssoc=PrintView3D zu "Öffnen mit" für .stl-, .3mf- und .gcode-Dateien hinzufügen
 fr.FileAssoc=Ajouter PrintView3D à « Ouvrir avec » pour les fichiers .stl, .3mf et .gcode
 es.FileAssoc=Añadir PrintView3D a "Abrir con" para archivos .stl, .3mf y .gcode
+en.Thumbnails=Show previews of 3MF, STL, G-code and FreeCAD files in File Explorer
+nl.Thumbnails=Voorbeelden van 3MF-, STL-, G-code- en FreeCAD-bestanden tonen in Verkenner
+de.Thumbnails=Vorschaubilder für 3MF-, STL-, G-Code- und FreeCAD-Dateien im Explorer anzeigen
+fr.Thumbnails=Afficher les aperçus des fichiers 3MF, STL, G-code et FreeCAD dans l'Explorateur
+es.Thumbnails=Mostrar vistas previas de archivos 3MF, STL, G-code y FreeCAD en el Explorador
 en.DeleteSettings=Also delete your PrintView3D settings (recent files, slicer choice, theme)?
 nl.DeleteSettings=Ook je PrintView3D-instellingen verwijderen (recente bestanden, slicer, thema)?
 de.DeleteSettings=Auch deine PrintView3D-Einstellungen löschen (zuletzt geöffnet, Slicer, Design)?
 fr.DeleteSettings=Supprimer aussi vos réglages PrintView3D (fichiers récents, slicer, thème) ?
 es.DeleteSettings=¿Eliminar también tus ajustes de PrintView3D (archivos recientes, slicer, tema)?
 #if FileExists(AddBackslash(CompilerPath) + "Languages\Arabic.isl")
+ar.Thumbnails=عرض معاينات ملفات 3MF وSTL وG-code وFreeCAD في مستكشف الملفات
 ar.FileAssoc=إضافة PrintView3D إلى "فتح باستخدام" لملفات ‎.stl و‎.3mf و‎.gcode
 ar.DeleteSettings=هل تريد أيضًا حذف إعدادات PrintView3D (الملفات الأخيرة، برنامج التقطيع، السمة)؟
 #endif
 
 [Tasks]
+Name: "thumbnails"; Description: "{cm:Thumbnails}"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "fileassoc"; Description: "{cm:FileAssoc}"
 
@@ -90,10 +103,24 @@ Name: "fileassoc"; Description: "{cm:FileAssoc}"
 Source: "{#Root}\dist\PrintView3D\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#Root}\examples\*"; DestDir: "{app}\examples"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#Root}\LICENSE"; DestDir: "{app}"; DestName: "LICENSE.txt"; Flags: ignoreversion
+Source: "{#Root}\packaging\windows\thumbnails\out\{#ThumbDll}"; DestDir: "{app}"; Flags: ignoreversion; Tasks: thumbnails
 
 [InstallDelete]
+; Thumbnail DLLs of earlier versions (skipped if Windows still has one loaded; removed next time).
+Type: files; Name: "{app}\PrintView3DThumbnails-*.dll"
 ; Remove files of the previous version that no longer exist (the app folder is replaced as a whole).
 Type: filesandordirs; Name: "{app}\_internal"
+
+[Registry]
+; Thumbnail provider, for this user only (no administrator rights needed).
+Root: HKCU; Subkey: "Software\Classes\CLSID\{#ThumbClsid}"; ValueType: string; ValueData: "PrintView3D thumbnails"; Flags: uninsdeletekey; Tasks: thumbnails
+Root: HKCU; Subkey: "Software\Classes\CLSID\{#ThumbClsid}\InprocServer32"; ValueType: string; ValueData: "{app}\{#ThumbDll}"; Tasks: thumbnails
+Root: HKCU; Subkey: "Software\Classes\CLSID\{#ThumbClsid}\InprocServer32"; ValueType: string; ValueName: "ThreadingModel"; ValueData: "Apartment"; Tasks: thumbnails
+Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.3mf\ShellEx\{{e357fccd-a995-4576-b01f-234630154e96}"; ValueType: string; ValueData: "{#ThumbClsid}"; Flags: uninsdeletekey; Tasks: thumbnails
+Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.stl\ShellEx\{{e357fccd-a995-4576-b01f-234630154e96}"; ValueType: string; ValueData: "{#ThumbClsid}"; Flags: uninsdeletekey; Tasks: thumbnails
+Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.gcode\ShellEx\{{e357fccd-a995-4576-b01f-234630154e96}"; ValueType: string; ValueData: "{#ThumbClsid}"; Flags: uninsdeletekey; Tasks: thumbnails
+Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.gco\ShellEx\{{e357fccd-a995-4576-b01f-234630154e96}"; ValueType: string; ValueData: "{#ThumbClsid}"; Flags: uninsdeletekey; Tasks: thumbnails
+Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.fcstd\ShellEx\{{e357fccd-a995-4576-b01f-234630154e96}"; ValueType: string; ValueData: "{#ThumbClsid}"; Flags: uninsdeletekey; Tasks: thumbnails
 
 [Icons]
 Name: "{autoprograms}\{#AppName}"; Filename: "{app}\{#AppExe}"; Comment: "STL, 3MF and G-code viewer"

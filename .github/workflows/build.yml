@@ -70,6 +70,18 @@ jobs:
           Copy-Item -Recurse examples dist\PrintView3D\examples
           Compress-Archive -Path dist\PrintView3D\* -DestinationPath PrintView3D-windows.zip
 
+      - name: Build the File Explorer thumbnail provider (C++) and test it
+        shell: pwsh
+        run: |
+          $v = (Select-String -Path src\printview3d\__init__.py -Pattern '__version__ = "(.+?)"').Matches[0].Groups[1].Value
+          Push-Location packaging\windows\thumbnails
+          cmd /c build.bat $v
+          if ($LASTEXITCODE -ne 0) { throw "Thumbnail provider build failed" }
+          Pop-Location
+          $dll = "packaging\windows\thumbnails\out\PrintView3DThumbnails-$v.dll"
+          & packaging\windows\thumbnails\out\test_thumbs.exe dll $dll examples\demo_plate.3mf examples\demo_bracket.FCStd examples\demo_vase.gcode examples\demo_vase.stl tests\data\cube_ascii.stl tests\data\cube_binary.stl
+          if ($LASTEXITCODE -ne 0) { throw "Thumbnail test failed" }
+
       - name: Build the installer (Inno Setup)
         shell: pwsh
         run: |
@@ -86,7 +98,7 @@ jobs:
         shell: pwsh
         run: |
           $dir = "$env:LOCALAPPDATA\Programs\PrintView3D"
-          $p = Start-Process .\PrintView3D-Setup.exe -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/TASKS=fileassoc','/LOG=install.log' -PassThru -Wait
+          $p = Start-Process .\PrintView3D-Setup.exe -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/TASKS=fileassoc,thumbnails','/LOG=install.log' -PassThru -Wait
           if ($p.ExitCode -ne 0) { Get-Content install.log; throw "Install failed ($($p.ExitCode))" }
           if (-not (Test-Path "$dir\PrintView3D.exe")) { throw "PrintView3D.exe not installed" }
           $ver = (Get-Item "$dir\PrintView3D.exe").VersionInfo.ProductVersion
@@ -94,6 +106,10 @@ jobs:
           if (-not (Test-Path "HKCU:\Software\Classes\Applications\PrintView3D.exe")) { throw "Open-with registration missing" }
           $lnk = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\PrintView3D.lnk"
           if (-not (Test-Path $lnk)) { throw "Start menu shortcut missing" }
+          if (-not (Test-Path "HKCU:\Software\Classes\SystemFileAssociations\.3mf\ShellEx\{e357fccd-a995-4576-b01f-234630154e96}")) { throw "Thumbnail provider not registered" }
+          # What File Explorer gets: ask the Windows shell itself for thumbnails.
+          & packaging\windows\thumbnails\out\test_thumbs.exe shell examples\demo_plate.3mf examples\demo_bracket.FCStd examples\demo_vase.gcode examples\demo_vase.stl
+          if ($LASTEXITCODE -ne 0) { Write-Warning "Shell thumbnail test failed (see above)"; $global:shellthumb = 1 }
           $un = Get-ChildItem "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall" | Where-Object { $_.PSChildName -like '*f46ac51f*' }
           if (-not $un) { throw "Not listed in Apps & features" }
           # Update the way PrintView3D does it from Settings -> Updates: the new version must start by itself.
@@ -114,6 +130,8 @@ jobs:
           if (Test-Path "$dir\PrintView3D.exe") { throw "Uninstall left the program behind" }
           if (Test-Path "HKCU:\Software\Classes\Applications\PrintView3D.exe") { throw "Uninstall left the registration behind" }
           if (Test-Path $lnk) { throw "Uninstall left the shortcut behind" }
+          if (Test-Path "HKCU:\Software\Classes\CLSID\{64535B54-55A8-4412-919A-88F46D3E3B86}") { throw "Uninstall left the thumbnail provider behind" }
+          if ($global:shellthumb) { throw "Shell thumbnail test failed" }
           Write-Host "Installer test OK"
 
       - uses: actions/upload-artifact@v7

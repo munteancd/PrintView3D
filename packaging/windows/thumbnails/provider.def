@@ -1,0 +1,4 @@
+LIBRARY PrintView3DThumbnails
+EXPORTS
+    DllGetClassObject PRIVATE
+    DllCanUnloadNow PRIVATE
