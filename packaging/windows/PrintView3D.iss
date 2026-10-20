@@ -116,6 +116,14 @@ Type: filesandordirs; Name: "{app}\_internal"
 Root: HKCU; Subkey: "Software\Classes\CLSID\{#ThumbClsid}"; ValueType: string; ValueData: "PrintView3D thumbnails"; Flags: uninsdeletekey; Tasks: thumbnails
 Root: HKCU; Subkey: "Software\Classes\CLSID\{#ThumbClsid}\InprocServer32"; ValueType: string; ValueData: "{app}\{#ThumbDll}"; Tasks: thumbnails
 Root: HKCU; Subkey: "Software\Classes\CLSID\{#ThumbClsid}\InprocServer32"; ValueType: string; ValueName: "ThreadingModel"; ValueData: "Apartment"; Tasks: thumbnails
+; Also on the extension itself: Windows looks there before the file type (ProgID) and before
+; SystemFileAssociations, so another program's handler (Windows' 3MF handler, the "Certificate
+; Trust List" type that .stl also has) cannot hide ours. Removed in [Code] only if it is still ours.
+Root: HKCU; Subkey: "Software\Classes\.3mf\ShellEx\{{e357fccd-a995-4576-b01f-234630154e96}"; ValueType: string; ValueData: "{#ThumbClsid}"; Tasks: thumbnails
+Root: HKCU; Subkey: "Software\Classes\.stl\ShellEx\{{e357fccd-a995-4576-b01f-234630154e96}"; ValueType: string; ValueData: "{#ThumbClsid}"; Tasks: thumbnails
+Root: HKCU; Subkey: "Software\Classes\.gcode\ShellEx\{{e357fccd-a995-4576-b01f-234630154e96}"; ValueType: string; ValueData: "{#ThumbClsid}"; Tasks: thumbnails
+Root: HKCU; Subkey: "Software\Classes\.gco\ShellEx\{{e357fccd-a995-4576-b01f-234630154e96}"; ValueType: string; ValueData: "{#ThumbClsid}"; Tasks: thumbnails
+Root: HKCU; Subkey: "Software\Classes\.fcstd\ShellEx\{{e357fccd-a995-4576-b01f-234630154e96}"; ValueType: string; ValueData: "{#ThumbClsid}"; Tasks: thumbnails
 Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.3mf\ShellEx\{{e357fccd-a995-4576-b01f-234630154e96}"; ValueType: string; ValueData: "{#ThumbClsid}"; Flags: uninsdeletekey; Tasks: thumbnails
 Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.stl\ShellEx\{{e357fccd-a995-4576-b01f-234630154e96}"; ValueType: string; ValueData: "{#ThumbClsid}"; Flags: uninsdeletekey; Tasks: thumbnails
 Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.gcode\ShellEx\{{e357fccd-a995-4576-b01f-234630154e96}"; ValueType: string; ValueData: "{#ThumbClsid}"; Flags: uninsdeletekey; Tasks: thumbnails
@@ -146,10 +154,34 @@ begin
   Result := ExpandConstant('{param:UPDATE|0}') = '1';
 end;
 
+// Remove our thumbnail handler from the extension keys, but only where it is still ours
+// (another program may have registered its own handler there since).
+procedure RemoveThumbnailHandlers;
+var
+  Exts: array of String;
+  I: Integer;
+  Key, Value: String;
+begin
+  SetArrayLength(Exts, 5);
+  Exts[0] := '.3mf';
+  Exts[1] := '.stl';
+  Exts[2] := '.gcode';
+  Exts[3] := '.gco';
+  Exts[4] := '.fcstd';
+  for I := 0 to GetArrayLength(Exts) - 1 do
+  begin
+    Key := 'Software\Classes\' + Exts[I] + '\ShellEx\{e357fccd-a995-4576-b01f-234630154e96}';
+    if RegQueryStringValue(HKCU, Key, '', Value) and (CompareText(Value, '{64535B54-55A8-4412-919A-88F46D3E3B86}') = 0) then
+      RegDeleteKeyIncludingSubkeys(HKCU, Key);
+  end;
+end;
+
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
   Dir: String;
 begin
+  if CurUninstallStep = usUninstall then
+    RemoveThumbnailHandlers;
   if CurUninstallStep = usPostUninstall then
   begin
     Dir := ExpandConstant('{userappdata}\PrintView3D');
