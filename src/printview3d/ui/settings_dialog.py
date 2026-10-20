@@ -41,6 +41,8 @@ class SettingsDialog(QDialog):
         self.nav.setObjectName("settingsNav")
         self.nav.setIconSize(QSize(20, 20))
         self.nav.setFixedWidth(200)
+        self.nav.setUniformItemSizes(True)
+        self.nav.setSpacing(1)
         self.pages = QStackedWidget()
         body.addWidget(self.nav)
         body.addWidget(self.pages, 1)
@@ -263,6 +265,9 @@ class SettingsDialog(QDialog):
         self.pages.addWidget(scroll)
         item = QListWidgetItem(theme.nav_icon(key), title)
         item.setData(Qt.UserRole, key)
+        # Fixed row height. (Height from style-sheet padding is measured differently by
+        # Windows' drawing, which made the highlight bigger than its row.)
+        item.setSizeHint(QSize(0, self.nav.fontMetrics().height() + 20))
         self.nav.addItem(item)
         self._page_keys.append(key)
 
