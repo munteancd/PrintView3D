@@ -192,7 +192,7 @@ def apply_theme(app, choice: str = "auto") -> str:
         QStatusBar {{ background: {t['bar']}; color: {t['group_title']}; }}
         QListWidget {{ border: 1px solid {t['border']}; border-radius: 6px; }}
         QListWidget#settingsNav {{ background: {t['bar']}; border-radius: 8px; padding: 6px; outline: none; }}
-        QListWidget#settingsNav::item {{ padding: 8px 6px; border-radius: 6px; color: {t['text']}; }}
+        QListWidget#settingsNav::item {{ padding: 0px 6px; border-radius: 6px; color: {t['text']}; }}
         QListWidget#settingsNav::item:hover {{ background: {t['tool_hover']}; }}
         QListWidget#settingsNav::item:selected {{ background: {t['tool_checked']}; color: {t['text']}; }}
         QLabel#pageTitle {{ font-size: 18px; font-weight: 600; padding-bottom: 4px; }}

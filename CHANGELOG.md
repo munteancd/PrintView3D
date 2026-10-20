@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.10.1
+- Fixed: in Settings on Windows, the highlight of the selected page in the sidebar was taller than
+  its row and covered the neighbouring entries, and the text jumped when the mouse moved away.
+  The rows now have a fixed height, so highlight and text always line up.
+
 ## 0.10.0
 - **Updates**: Settings → Updates shows your version with **Check for updates now**, and an
   automatic check (at most once a day) that you can switch on or off at any time. PrintView3D asks
