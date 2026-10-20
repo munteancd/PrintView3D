@@ -303,17 +303,40 @@ def _path_candidates(s: Slicer) -> list[str]:
     return out
 
 
+def _is_mac_app(p: str) -> bool:
+    return sys.platform == "darwin" and p.endswith(".app") and os.path.isdir(p)
+
+
+def _mac_candidates(s: "Slicer", dirs: Optional[list] = None) -> list[str]:
+    """macOS: apps are folders like /Applications/OrcaSlicer.app; match on the name
+    without spaces ("Bambu Studio" finds BambuStudio.app and "Bambu Studio.app")."""
+    if sys.platform != "darwin" and dirs is None:
+        return []
+    dirs = dirs if dirs is not None else ["/Applications", os.path.expanduser("~/Applications")]
+    key = s.name.lower().replace(" ", "")
+    out = []
+    for d in dirs:
+        try:
+            names = sorted(os.listdir(d))
+        except OSError:
+            continue
+        out += [os.path.join(d, n) for n in names
+                if n.lower().endswith(".app") and key in n.lower().replace(" ", "")]
+    return out
+
+
 def find_slicer(slicer_id: str, manual_path: str = "") -> Optional[str]:
     """Full path of a known slicer, or None if it is not installed."""
-    if manual_path and os.path.isfile(manual_path):
+    if manual_path and (os.path.isfile(manual_path) or _is_mac_app(manual_path)):
         return manual_path
     s = BY_ID.get(slicer_id)
     if s is None:
         return None
     seen, cands = set(), []
-    for p in _registry_candidates(s) + _folder_candidates(s) + _linux_candidates(s) + _desktop_candidates(s) + _path_candidates(s):
+    for p in (_registry_candidates(s) + _folder_candidates(s) + _linux_candidates(s) + _desktop_candidates(s)
+              + _mac_candidates(s) + _path_candidates(s)):
         key = os.path.normcase(os.path.abspath(p))
-        if key not in seen and os.path.isfile(p):
+        if key not in seen and (os.path.isfile(p) or _is_mac_app(p)):
             seen.add(key)
             cands.append(p)
     if not cands:

@@ -36,6 +36,19 @@ def _set_windows_app_id():
             pass
 
 
+def _FileOpener(app, win):
+    from PySide6.QtCore import QEvent, QObject
+
+    class FileOpener(QObject):
+        def eventFilter(self, obj, ev):
+            if ev.type() == QEvent.FileOpen and ev.file():
+                win.load(ev.file())
+                return True
+            return False
+
+    return FileOpener(app)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="PrintView3D", add_help=True)
     parser.add_argument("file", nargs="?", help="STL, 3MF or G-code file to open")
@@ -126,6 +139,9 @@ def main(argv: list[str] | None = None) -> int:
 
     win.show()
     win.start_update_checks()
+    # macOS: files opened from Finder (double-click, Open With, drop on the Dock icon)
+    # arrive as a FileOpen event, not on the command line.
+    app.installEventFilter(_FileOpener(app, win))
     if args.file:
         QTimer.singleShot(50, lambda: win.load(args.file))
     return app.exec()

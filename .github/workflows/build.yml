@@ -166,8 +166,74 @@ jobs:
           path: smoke-linux.png
           if-no-files-found: ignore
 
+  macos:
+    # Apple silicon (M1 and newer). Ad-hoc signed, not notarized: no paid Apple account.
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-build.txt
+
+      - name: Build translations and run tests
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          python tools/i18n.py compile
+          python tests/make_samples.py
+          python -m pytest -q tests
+
+      - name: Build PrintView3D.app
+        run: pyinstaller --noconfirm --clean printview3d.spec
+
+      - name: Sign (ad-hoc) and check the signature
+        # A broken signature makes macOS say "the app is damaged" with no way round it,
+        # so the build fails here instead.
+        run: |
+          codesign --force --deep --sign - dist/PrintView3D.app
+          codesign --verify --deep --strict --verbose=2 dist/PrintView3D.app
+          /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" dist/PrintView3D.app/Contents/Info.plist
+
+      - name: Smoke test (render a sample to an image)
+        continue-on-error: true
+        timeout-minutes: 3
+        run: |
+          dist/PrintView3D.app/Contents/MacOS/PrintView3D tests/data/cylinder.gcode --screenshot smoke-mac.png &
+          pid=$!; for i in $(seq 1 90); do kill -0 $pid 2>/dev/null || break; sleep 1; done; kill $pid 2>/dev/null || true
+          test -f smoke-mac.png && echo "Smoke test OK"
+
+      - name: Make the .dmg
+        run: |
+          mkdir dmg
+          cp -R dist/PrintView3D.app dmg/
+          ln -s /Applications dmg/Applications
+          hdiutil create -volname PrintView3D -srcfolder dmg -ov -format UDZO PrintView3D-macOS-AppleSilicon.dmg
+          # The app inside the .dmg must still have an intact signature.
+          hdiutil attach -nobrowse -readonly PrintView3D-macOS-AppleSilicon.dmg -mountpoint /tmp/pv3d
+          codesign --verify --deep --strict /tmp/pv3d/PrintView3D.app && echo "Signature inside the .dmg OK"
+          hdiutil detach /tmp/pv3d
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: PrintView3D-macos
+          path: PrintView3D-macOS-AppleSilicon.dmg
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: smoke-test-macos
+          path: smoke-mac.png
+          if-no-files-found: ignore
+
   release:
-    needs: [windows, linux]
+    needs: [windows, linux, macos]
     if: github.event_name == 'push'
     runs-on: ubuntu-24.04      # fixed version, so GitHub's move of "latest" to Ubuntu 26 changes nothing
     steps:
@@ -201,7 +267,7 @@ jobs:
           | **Windows 10/11** | `PrintView3D-Setup.exe` | Double-click and follow the steps (no admin rights needed) |
           | Windows, portable | `PrintView3D-windows.zip` | Extract and run `PrintView3D.exe`, nothing is installed |
           | **Linux** (x86-64) | `PrintView3D-x86_64.AppImage` | Make it executable and run it ([details]({repo}#linux)) |
-          | **macOS** | not built yet | [Ask for a Mac build]({repo}/issues/new?template=mac_build.md) |
+          | **macOS 12+ (Apple silicon), beta** | `PrintView3D-macOS-AppleSilicon.dmg` | Open, drag to Applications, first start: System Settings → Privacy & Security → **Open Anyway** ([details]({repo}#macos)) |
 
           No Python needed. See the [README]({repo}#install) for details.
 
@@ -235,3 +301,4 @@ jobs:
             PrintView3D-Setup.exe
             PrintView3D-windows.zip
             PrintView3D-x86_64.AppImage
+            PrintView3D-macOS-AppleSilicon.dmg
