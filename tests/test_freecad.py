@@ -250,6 +250,10 @@ cyl.Placement.Base = FreeCAD.Vector(10, 5, 5)
 part.addObject(box); part.addObject(cyl)
 doc.recompute()
 Import.export([part], os.environ["OUT_STEP"])
+# What FreeCAD itself reads back from the file: the reference for PrintView3D.
+bb = Part.read(os.environ["OUT_STEP"]).BoundBox
+import json
+json.dump([bb.XMin, bb.XMax, bb.YMin, bb.YMax, bb.ZMin, bb.ZMax], open(os.environ["OUT_STEP"] + ".json", "w"))
 os._exit(0)
 '''
 
@@ -265,8 +269,12 @@ def test_real_freecad_step(tmp_path, monkeypatch):
     assert out.is_file(), "FreeCAD did not create the test STEP file"
     m = fc.load_step(str(out), install=REAL)
     assert m.freecad["status"] == "ok", m.freecad["error"]
-    print("STEP parts:", [p.name for p in m.parts], "details:", m.meta)
+    import json
+    ref = json.load(open(str(out) + ".json"))
+    b = m.bounds()
+    print("\nSTEP parts:", [p.name for p in m.parts], "named:", m.freecad.get("named_parts"),
+          "bounds:", [round(x, 2) for x in b], "FreeCAD reads:", [round(x, 2) for x in ref], "details:", m.meta)
     assert len(m.parts) == 2
-    b = m.bounds()                       # Part container moved everything by x + 100
-    assert abs(b[0] - 100) < 0.05 and abs(b[1] - 120) < 0.05 and abs(b[5] - 20) < 0.05
+    assert all(abs(x - y) < 0.05 for x, y in zip(b, ref))     # exactly where FreeCAD puts it
+    assert abs((b[1] - b[0]) - 20) < 0.05 and abs((b[5] - b[4]) - 20) < 0.05   # box + peg sizes
     assert {p.name for p in m.parts} == {"Foot", "Peg"}      # names from the file kept

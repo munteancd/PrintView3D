@@ -139,7 +139,8 @@ class FreeCADError(RuntimeError):
     pass
 
 
-def convert(install: FreeCADInstall, path: str, names: list[str], kind: str = "fcstd") -> list[tuple[str, str]]:
+def convert(install: FreeCADInstall, path: str, names: list[str], kind: str = "fcstd",
+            info: Optional[dict] = None) -> list[tuple[str, str]]:
     """Run FreeCAD hidden; returns [(object label, stl path)]. Uses the cache when possible.
     kind "fcstd": the named objects of a FreeCAD document; "step": all parts of a STEP file."""
     out = _job_dir(path, names, kind)
@@ -168,6 +169,8 @@ def convert(install: FreeCADInstall, path: str, names: list[str], kind: str = "f
             raise FreeCADError("FreeCAD did not convert the file.")
     with open(result_file, encoding="utf-8") as f:
         result = json.load(f)
+    if info is not None:
+        info.update(result)
     objs = [(o["label"], o["stl"]) for o in result.get("objects", []) if os.path.isfile(o["stl"])]
     if not objs and result.get("errors"):
         shutil.rmtree(out, ignore_errors=True)        # don't cache a failure
@@ -221,8 +224,9 @@ def load_step(path: str, progress=None, install: Optional[FreeCADInstall] = None
         progress(0.1)
     if install is None:
         return m
+    result: dict = {}
     try:
-        objs = convert(install, path, [], "step")
+        objs = convert(install, path, [], "step", result)
     except FreeCADError as e:
         m.freecad.update(status="failed", error=str(e))
         return m
@@ -235,6 +239,7 @@ def load_step(path: str, progress=None, install: Optional[FreeCADInstall] = None
         m.freecad.update(status="failed", error="FreeCAD found no solid shapes in this file.")
         return m
     m.freecad["status"] = "ok"
+    m.freecad["named_parts"] = not result.get("fallback", False)
     return m
 
 
