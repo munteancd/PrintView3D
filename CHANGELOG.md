@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.0
+- **Thumbnails in Windows File Explorer** for 3MF, STL, G-code and FreeCAD files ([#13](https://github.com/sevagjb/PrintView3D/issues/13)).
+  3MF, G-code and FreeCAD show the preview picture saved in the file; STL models are drawn.
+  Installed with PrintView3D (option in the installer, no administrator rights), removed on uninstall.
+  It runs in Windows' separate helper process, so a damaged file can never affect File Explorer.
+
 ## 0.11.0
 - **macOS (beta)** for Apple silicon Macs (M1 and newer), macOS 12+: `PrintView3D-macOS-AppleSilicon.dmg`,
   built automatically with every release. Free, without a paid Apple account: the first start needs
