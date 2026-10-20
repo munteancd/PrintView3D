@@ -101,6 +101,10 @@ if sys.platform == "darwin":
                 _doc("3MF project", ["3mf"], ["public.3mf"]),
                 _doc("G-code", ["gcode", "gco", "g"], []),
                 _doc("FreeCAD document", ["FCStd", "fcstd"], []),
+                _doc("OBJ model", ["obj"], ["public.geometry-definition-format"]),
+                _doc("PLY model", ["ply"], ["public.polygon-file-format"]),
+                _doc("OFF model", ["off"], []),
+                _doc("glTF model", ["glb", "gltf"], []),
             ],
         },
     )

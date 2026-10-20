@@ -24,6 +24,11 @@ EXTENSIONS = {
     ".3mf": "3MF 3D Project",
     ".gcode": "G-code Print File",
     ".gco": "G-code Print File",
+    ".obj": "OBJ 3D Model",
+    ".ply": "PLY 3D Model",
+    ".off": "OFF 3D Model",
+    ".glb": "glTF 3D Model",
+    ".gltf": "glTF 3D Model",
 }
 
 CAPS_KEY = rf"Software\{APP_ID}\Capabilities"
@@ -86,7 +91,7 @@ def register() -> None:
         setval(hkcu, CAPS_KEY + r"\FileAssociations", ext, pid)
 
     setval(hkcu, CAPS_KEY, "ApplicationName", APP_NAME)
-    setval(hkcu, CAPS_KEY, "ApplicationDescription", "Viewer for STL, 3MF and G-code files")
+    setval(hkcu, CAPS_KEY, "ApplicationDescription", "Viewer for 3D models and G-code files")
     setval(hkcu, r"Software\RegisteredApplications", APP_ID, CAPS_KEY)
 
     app_key = rf"Software\Classes\Applications\{exe_name}"

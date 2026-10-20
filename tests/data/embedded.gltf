@@ -1,0 +1,93 @@
+{
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 8,
+   "max": [
+    0.02,
+    0.02,
+    -0.0
+   ],
+   "min": [
+    0.0,
+    0.0,
+    -0.02
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5123,
+   "count": 36,
+   "type": "SCALAR"
+  }
+ ],
+ "asset": {
+  "generator": "PrintView3D sample",
+  "version": "2.0"
+ },
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 96,
+   "byteOffset": 0
+  },
+  {
+   "buffer": 0,
+   "byteLength": 72,
+   "byteOffset": 96
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 168,
+   "uri": "data:application/octet-stream;base64,AAAAAAAAAAAAAACACtejPAAAAAAAAACACtejPAAAAAAK16O8AAAAAAAAAAAK16O8AAAAAArXozwAAACACtejPArXozwAAACACtejPArXozwK16O8AAAAAArXozwK16O8AAACAAEAAAADAAIABAAFAAYABAAGAAcAAAABAAUAAAAFAAQAAQACAAYAAQAGAAUAAgADAAcAAgAHAAYAAwAAAAQAAwAEAAcA"
+  }
+ ],
+ "materials": [
+  {
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.8,
+     0.1,
+     0.1,
+     1
+    ]
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "Cube",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0
+     },
+     "indices": 1,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "Big cube",
+   "scale": [
+    2,
+    2,
+    2
+   ]
+  }
+ ],
+ "scene": 0,
+ "scenes": [
+  {
+   "nodes": [
+    0
+   ]
+  }
+ ]
+}

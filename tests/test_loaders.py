@@ -31,7 +31,9 @@ def test_file_kind():
     assert file_kind("a.STL") == "stl"
     assert file_kind("a.3mf") == "3mf"
     assert file_kind("a.gcode") == "gcode"
-    assert file_kind("a.obj") == ""
+    assert file_kind("a.OBJ") == "obj"
+    assert file_kind("a.glb") == "gltf"
+    assert file_kind("a.dwg") == ""
 
 
 @pytest.mark.parametrize("name,size", [("cube_binary.stl", 20.0), ("cube_ascii.stl", 10.0)])

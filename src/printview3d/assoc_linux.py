@@ -35,6 +35,14 @@ MIME_TYPES = {
 # Older/alternative names used by some distributions; listed so "Open With" works there too.
 EXTRA_MIME_TYPES = ["application/sla", "model/x.stl-binary", "model/x.stl-ascii",
                     "application/vnd.ms-3mfdocument", "text/x-gcode"]
+# General 3D formats: PrintView3D is offered under "Open With", but "Set as default" leaves
+# them alone (people usually have a 3D editor for these). OBJ and glTF are known to
+# shared-mime-info; PLY and OFF are not, so we define those ourselves.
+OPEN_WITH_MIME_TYPES = {
+    "model/x.ply": ("PLY 3D model", ["*.ply"]),
+    "model/x.off": ("OFF 3D model", ["*.off"]),
+}
+OPEN_WITH_EXTRA = ["model/obj", "model/gltf-binary", "model/gltf+json"]
 EXT_TO_MIME = {".stl": "model/stl", ".3mf": "model/3mf", ".gcode": "text/x.gcode", ".gco": "text/x.gcode"}
 
 
@@ -98,18 +106,18 @@ def _run(*args) -> str:
 
 
 def desktop_entry() -> str:
-    mimes = ";".join(list(MIME_TYPES) + EXTRA_MIME_TYPES) + ";"
+    mimes = ";".join(list(MIME_TYPES) + EXTRA_MIME_TYPES + list(OPEN_WITH_MIME_TYPES) + OPEN_WITH_EXTRA) + ";"
     return (
         "[Desktop Entry]\n"
         "Type=Application\n"
         f"Name={APP_NAME}\n"
         "GenericName=3D File Viewer\n"
-        "Comment=View STL, 3MF and G-code files and open them in your slicer\n"
+        "Comment=View 3D models and G-code files and open them in your slicer\n"
         f"Exec={exec_line()}\n"
         "Icon=printview3d\n"
         "Terminal=false\n"
         "Categories=Graphics;3DGraphics;Viewer;Engineering;\n"
-        "Keywords=3D;print;STL;3MF;G-code;gcode;slicer;viewer;\n"
+        "Keywords=3D;print;STL;3MF;OBJ;PLY;glTF;GLB;G-code;gcode;slicer;viewer;\n"
         f"MimeType={mimes}\n"
         "StartupWMClass=PrintView3D\n"
         # Ask the desktop to start us on the dedicated GPU on dual-GPU laptops.
@@ -121,7 +129,7 @@ def desktop_entry() -> str:
 def mime_package() -> str:
     parts = ['<?xml version="1.0" encoding="UTF-8"?>',
              '<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">']
-    for mime, (comment, globs) in MIME_TYPES.items():
+    for mime, (comment, globs) in {**MIME_TYPES, **OPEN_WITH_MIME_TYPES}.items():
         parts.append(f'  <mime-type type="{mime}">')
         parts.append(f"    <comment>{comment}</comment>")
         if mime.startswith("text/"):

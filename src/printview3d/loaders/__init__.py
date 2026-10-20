@@ -1,28 +1,31 @@
-"""File loaders: STL, 3MF, G-code and FreeCAD documents."""
+"""File loaders: STL, 3MF, OBJ, PLY, OFF, glTF/GLB, G-code and FreeCAD documents."""
 
 import os
 
 from .gcode import FEATURES, GcodeData, parse_gcode_file, parse_gcode_text
+from .formats import load_gltf, load_obj, load_off, load_ply
 from .mesh import MeshPart, ModelData, load_3mf, load_stl, read_embedded_gcode
 
-MESH_EXTENSIONS = (".stl", ".3mf")
+# extension -> kind
+_KINDS = {
+    ".stl": "stl", ".3mf": "3mf",
+    ".obj": "obj", ".ply": "ply", ".off": "off", ".glb": "gltf", ".gltf": "gltf",
+    ".gcode": "gcode", ".gco": "gcode", ".g": "gcode",
+    ".fcstd": "freecad",
+}
+MESH_EXTENSIONS = (".stl", ".3mf", ".obj", ".ply", ".off", ".glb", ".gltf")
 GCODE_EXTENSIONS = (".gcode", ".gco", ".g")
 FREECAD_EXTENSIONS = (".fcstd",)
-SUPPORTED_EXTENSIONS = (".stl", ".3mf", ".gcode", ".gco", ".g", ".fcstd")
+SUPPORTED_EXTENSIONS = tuple(_KINDS)
+# Kinds that slicers don't all read: "Send to slicer" sends these as STL.
+SEND_AS_STL = ("ply", "off", "gltf", "freecad")
+_LOADERS = {"stl": load_stl, "3mf": load_3mf, "obj": load_obj, "ply": load_ply, "off": load_off,
+            "gltf": load_gltf, "gcode": parse_gcode_file}
 
 
 def file_kind(path: str) -> str:
-    """Return 'stl', '3mf', 'gcode', 'freecad' or '' for unsupported files."""
-    ext = os.path.splitext(path)[1].lower()
-    if ext == ".stl":
-        return "stl"
-    if ext == ".3mf":
-        return "3mf"
-    if ext in (".gcode", ".gco", ".g"):
-        return "gcode"
-    if ext in FREECAD_EXTENSIONS:
-        return "freecad"
-    return ""
+    """Return 'stl', '3mf', 'obj', 'ply', 'off', 'gltf', 'gcode', 'freecad' or '' (unsupported)."""
+    return _KINDS.get(os.path.splitext(path)[1].lower(), "")
 
 
 def load_file(path: str, progress=None, freecad_path: str = ""):
@@ -30,17 +33,14 @@ def load_file(path: str, progress=None, freecad_path: str = ""):
     if kind == "freecad":
         from .. import freecad          # not at import time: freecad imports this package
         return freecad.load_fcstd(path, progress, freecad.find_freecad(freecad_path))
-    if kind == "stl":
-        return load_stl(path, progress)
-    if kind == "3mf":
-        return load_3mf(path, progress)
-    if kind == "gcode":
-        return parse_gcode_file(path, progress)
+    if kind in _LOADERS:
+        return _LOADERS[kind](path, progress)
     raise ValueError(f"Unsupported file type: {os.path.basename(path)}")
 
 
 __all__ = [
-    "FEATURES", "FREECAD_EXTENSIONS", "GcodeData", "MeshPart", "ModelData", "SUPPORTED_EXTENSIONS",
-    "file_kind", "load_file", "load_3mf", "load_stl", "parse_gcode_file",
+    "FEATURES", "FREECAD_EXTENSIONS", "GcodeData", "MeshPart", "ModelData", "SEND_AS_STL",
+    "SUPPORTED_EXTENSIONS", "file_kind", "load_file", "load_3mf", "load_gltf", "load_obj", "load_off",
+    "load_ply", "load_stl", "parse_gcode_file",
     "parse_gcode_text", "read_embedded_gcode",
 ]

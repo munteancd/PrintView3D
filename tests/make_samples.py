@@ -1,8 +1,10 @@
 """Generate small sample files used by the tests (and handy for trying the app).
 
 Run:  python tests/make_samples.py
-Creates tests/data/cube_binary.stl, cube_ascii.stl, two_parts.3mf and
-cylinder.gcode. The 3MF mimics Creality Print / OrcaSlicer's multi-file
+Creates tests/data/cube_binary.stl, cube_ascii.stl, two_parts.3mf,
+cylinder.gcode and the general 3D formats: two_parts.obj (+ .mtl),
+cube_binary.ply, quads_ascii.ply, cube_colors.off, two_nodes.glb and
+embedded.gltf. The 3MF mimics Creality Print / OrcaSlicer's multi-file
 layout, and the G-code mimics their comment style.
 """
 
@@ -171,6 +173,127 @@ def make_gcode(radius=15.0, height=10.0, cx=110.0, cy=110.0, layer_h=0.2):
     return "\n".join(out) + "\n"
 
 
+# --------------------------------------------------------------- general 3D formats
+def write_obj(path):
+    """Two objects with materials; the second uses quads and negative indices."""
+    lines = ["# PrintView3D sample", "mtllib two_parts.mtl", "o Red cube", "usemtl red"]
+    v, f = cube_tris()
+    lines += ["v %g %g %g" % p for p in v]
+    lines += ["f %d/1/1 %d/1/1 %d/1/1" % (a + 1, b + 1, c + 1) for a, b, c in f]
+    lines += ["o Green block", "usemtl green"]
+    v2 = [(x + 30, y, z * 0.5) for x, y, z in v]
+    lines += ["v %g %g %g" % p for p in v2]
+    quads = [(0, 3, 2, 1), (4, 5, 6, 7), (0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)]
+    lines += ["f " + " ".join(str(i - 8) for i in q) for q in quads]      # -8..-1 = last 8 vertices
+    with open(path, "w", newline="\n") as fh:
+        fh.write("\n".join(lines) + "\n")
+    with open(os.path.splitext(path)[0] + ".mtl", "w", newline="\n") as fh:
+        fh.write("newmtl red\nKd 0.9 0.2 0.2\nnewmtl green\nKd 0.2 0.8 0.3\n")
+
+
+def write_ply_binary(path):
+    """Binary little-endian PLY, triangles, a colour per vertex."""
+    v, f = cube_tris()
+    head = ("ply\nformat binary_little_endian 1.0\ncomment PrintView3D sample\n"
+            "element vertex %d\nproperty float x\nproperty float y\nproperty float z\n"
+            "property uchar red\nproperty uchar green\nproperty uchar blue\n"
+            "element face %d\nproperty list uchar int vertex_indices\nend_header\n" % (len(v), len(f)))
+    with open(path, "wb") as fh:
+        fh.write(head.encode("ascii"))
+        for i, (x, y, z) in enumerate(v):
+            fh.write(struct.pack("<fffBBB", x, y, z, 255 if i & 1 else 40, 128, 255 if i & 4 else 40))
+        for a, b, c in f:
+            fh.write(struct.pack("<Biii", 3, a, b, c))
+
+
+def write_ply_ascii(path):
+    """Text PLY with quads and an extra element after the faces."""
+    v, _ = cube_tris()
+    quads = [(0, 3, 2, 1), (4, 5, 6, 7), (0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)]
+    out = ["ply", "format ascii 1.0", "element vertex %d" % len(v), "property float x",
+           "property float y", "property float z", "element face %d" % len(quads),
+           "property list uchar int vertex_index", "element edge 1", "property int vertex1",
+           "property int vertex2", "end_header"]
+    out += ["%g %g %g" % p for p in v]
+    out += ["4 %d %d %d %d" % q for q in quads]
+    out += ["0 1"]
+    with open(path, "w", newline="\n") as fh:
+        fh.write("\n".join(out) + "\n")
+
+
+def write_off(path):
+    """Text OFF with quads and a colour per face (0..255)."""
+    v, _ = cube_tris()
+    quads = [(0, 3, 2, 1), (4, 5, 6, 7), (0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)]
+    cols = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (0, 255, 255), (255, 0, 255)]
+    out = ["OFF", "# PrintView3D sample", "%d %d 0" % (len(v), len(quads))]
+    out += ["%g %g %g" % p for p in v]
+    out += ["4 %d %d %d %d %d %d %d" % (q + c) for q, c in zip(quads, cols)]
+    with open(path, "w", newline="\n") as fh:
+        fh.write("\n".join(out) + "\n")
+
+
+def _gltf_cube(doc, buf):
+    """Add a 1 x 1 x 1 m cube mesh (Y up) to a glTF document; returns its mesh index."""
+    v, f = cube_tris(size=0.02)                                   # 20 mm, in metres
+    v = [(x, z, -y) for x, y, z in v]                             # Z up -> Y up
+    pos = b"".join(struct.pack("<fff", *p) for p in v)
+    idx = b"".join(struct.pack("<HHH", *t) for t in f)
+    off = len(buf)
+    buf += pos + idx
+    bv = len(doc["bufferViews"])
+    doc["bufferViews"] += [{"buffer": 0, "byteOffset": off, "byteLength": len(pos)},
+                           {"buffer": 0, "byteOffset": off + len(pos), "byteLength": len(idx)}]
+    ac = len(doc["accessors"])
+    xs, ys, zs = zip(*v)
+    doc["accessors"] += [
+        {"bufferView": bv, "componentType": 5126, "count": len(v), "type": "VEC3",
+         "min": [min(xs), min(ys), min(zs)], "max": [max(xs), max(ys), max(zs)]},
+        {"bufferView": bv + 1, "componentType": 5123, "count": len(f) * 3, "type": "SCALAR"},
+    ]
+    doc["meshes"].append({"name": "Cube", "primitives": [
+        {"attributes": {"POSITION": ac}, "indices": ac + 1, "material": 0}]})
+    return len(doc["meshes"]) - 1, buf
+
+
+def _gltf_doc():
+    return {"asset": {"version": "2.0", "generator": "PrintView3D sample"}, "scene": 0,
+            "scenes": [{"nodes": [0]}], "nodes": [], "meshes": [], "accessors": [], "bufferViews": [],
+            "materials": [{"pbrMetallicRoughness": {"baseColorFactor": [0.8, 0.1, 0.1, 1]}}]}
+
+
+def write_glb(path):
+    """GLB: a parent node with two children using the same mesh, one moved 30 mm."""
+    import json as _json
+    doc = _gltf_doc()
+    mesh, buf = _gltf_cube(doc, b"")
+    doc["nodes"] = [{"name": "Assembly", "children": [1, 2]},
+                    {"name": "Left cube", "mesh": mesh},
+                    {"name": "Right cube", "mesh": mesh, "translation": [0.03, 0, 0]}]
+    while len(buf) % 4:
+        buf += b"\0"
+    doc["buffers"] = [{"byteLength": len(buf)}]
+    js = _json.dumps(doc, separators=(",", ":"), sort_keys=True).encode()
+    while len(js) % 4:
+        js += b" "
+    with open(path, "wb") as fh:
+        fh.write(struct.pack("<4sII", b"glTF", 2, 12 + 8 + len(js) + 8 + len(buf)))
+        fh.write(struct.pack("<II", len(js), 0x4E4F534A) + js)
+        fh.write(struct.pack("<II", len(buf), 0x004E4942) + buf)
+
+
+def write_gltf(path):
+    """Text glTF with its data embedded as base64, the node scaled by 2."""
+    import json as _json
+    doc = _gltf_doc()
+    mesh, buf = _gltf_cube(doc, b"")
+    doc["nodes"] = [{"name": "Big cube", "mesh": mesh, "scale": [2, 2, 2]}]
+    doc["buffers"] = [{"byteLength": len(buf),
+                       "uri": "data:application/octet-stream;base64," + base64.b64encode(buf).decode()}]
+    with open(path, "w", newline="\n") as fh:
+        _json.dump(doc, fh, indent=1, sort_keys=True)
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     write_stl_binary(os.path.join(OUT, "cube_binary.stl"))
@@ -178,6 +301,12 @@ def main():
     write_3mf(os.path.join(OUT, "two_parts.3mf"))
     with open(os.path.join(OUT, "cylinder.gcode"), "w") as fh:
         fh.write(make_gcode())
+    write_obj(os.path.join(OUT, "two_parts.obj"))
+    write_ply_binary(os.path.join(OUT, "cube_binary.ply"))
+    write_ply_ascii(os.path.join(OUT, "quads_ascii.ply"))
+    write_off(os.path.join(OUT, "cube_colors.off"))
+    write_glb(os.path.join(OUT, "two_nodes.glb"))
+    write_gltf(os.path.join(OUT, "embedded.gltf"))
     print("Sample files written to", OUT)
 
 

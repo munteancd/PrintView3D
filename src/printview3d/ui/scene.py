@@ -237,10 +237,16 @@ class Scene:
         for i, part in enumerate(model.parts):
             faces = np.hstack([np.full((len(part.faces), 1), 3, dtype=np.int64), part.faces]).ravel()
             mesh = pv.PolyData(part.vertices.astype(np.float32), faces=faces)
-            color = MODEL_COLORS[i % len(MODEL_COLORS)] if len(model.parts) > 1 else MODEL_COLORS[0]
-            actor = self.p.add_mesh(mesh, color=color, smooth_shading=True, split_sharp_edges=True,
-                                    feature_angle=35, specular=0.25, specular_power=20,
-                                    name=f"part_{i}", reset_camera=False)
+            style = dict(smooth_shading=True, split_sharp_edges=True, feature_angle=35, specular=0.25,
+                         specular_power=20, name=f"part_{i}", reset_camera=False)
+            if part.vertex_colors is not None and len(part.vertex_colors) == len(part.vertices):
+                mesh.point_data["rgb"] = part.vertex_colors
+                actor = self.p.add_mesh(mesh, scalars="rgb", rgb=True, **style)
+            elif part.face_colors is not None and len(part.face_colors) == len(part.faces):
+                mesh.cell_data["rgb"] = part.face_colors
+                actor = self.p.add_mesh(mesh, scalars="rgb", rgb=True, **style)
+            else:
+                actor = self.p.add_mesh(mesh, color=self.part_color(part, i, len(model.parts)), **style)
             self.model_actors.append(actor)
 
         b = model.bounds()
@@ -254,6 +260,18 @@ class Scene:
     @staticmethod
     def model_color(i: int, n: int) -> str:
         return MODEL_COLORS[i % len(MODEL_COLORS)] if n > 1 else MODEL_COLORS[0]
+
+    @staticmethod
+    def part_color(part, i: int, n: int) -> str:
+        """The colour saved in the file, otherwise PrintView3D's own colour for part i of n.
+        For parts coloured per vertex or face it is their average (for the objects list)."""
+        if part.color:
+            return part.color
+        cols = part.vertex_colors if part.vertex_colors is not None else part.face_colors
+        if cols is not None and len(cols):
+            r, g, b = (int(c) for c in np.asarray(cols, dtype=np.float64).mean(axis=0))
+            return f"#{r:02x}{g:02x}{b:02x}"
+        return Scene.model_color(i, n)
 
     # ----------------------------------------------------------------- gcode
     def show_gcode(self, g: GcodeData):

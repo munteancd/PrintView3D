@@ -18,6 +18,9 @@ EXTENSIONS = {
     ".gcode": "G-code Print File",
     ".gco": "G-code Print File",
 }
+# Also registered, but only under "Open with" (never made the default automatically):
+# people usually have a 3D editor for these.
+OPEN_WITH_EXTENSIONS = (".obj", ".ply", ".off", ".glb", ".gltf")
 
 if sys.platform == "win32":
     from . import assoc_windows as _impl

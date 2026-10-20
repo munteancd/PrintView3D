@@ -77,6 +77,16 @@ def main(argv: list[str] | None = None) -> int:
         if not exe:
             print(f"{name} was not found. Choose it in Settings.", file=sys.stderr)
             return 1
+        from .loaders import SEND_AS_STL, file_kind, load_file
+        if args.file and file_kind(args.file) in SEND_AS_STL:   # slicers don't all read these: send STL
+            from . import freecad as fc
+            model = load_file(args.file, None, settings.get("freecad_path", ""))
+            if not model.parts:
+                print("Nothing to send (a FreeCAD file needs FreeCAD to convert it).", file=sys.stderr)
+                return 1
+            base = os.path.splitext(os.path.basename(args.file))[0]
+            args.file = fc.export_stl(model.parts, os.path.join(os.path.dirname(fc.cache_dir()), "to-slicer",
+                                                                base + ".stl"))
         sl.open_in_slicer(exe, args.file)
         print(f"Opening {args.file or name} in {name}")
         return 0

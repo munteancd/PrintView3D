@@ -1,0 +1,4 @@
+newmtl red
+Kd 0.9 0.2 0.2
+newmtl green
+Kd 0.2 0.8 0.3
