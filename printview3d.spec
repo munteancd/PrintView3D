@@ -68,9 +68,39 @@ exe = EXE(
     [],
     exclude_binaries=True,
     name="PrintView3D",
-    icon="src/printview3d/resources/icon.ico",
+    icon="src/printview3d/resources/icon.ico" if sys.platform != "darwin" else "src/printview3d/resources/icon.png",
     console=False,
     upx=False,
     version=VERSION_FILE if sys.platform == "win32" else None,
 )
 coll = COLLECT(exe, a.binaries, a.datas, name="PrintView3D", upx=False)
+
+# macOS: wrap everything in PrintView3D.app. Finder lists it under "Open With" for these
+# file types; signing is ad-hoc (free, no Apple account), see README "macOS".
+if sys.platform == "darwin":
+    def _doc(name, exts, utis):
+        return {"CFBundleTypeName": name, "CFBundleTypeRole": "Viewer", "LSHandlerRank": "Alternate",
+                "CFBundleTypeExtensions": exts, "LSItemContentTypes": utis}
+
+    app = BUNDLE(
+        coll,
+        name="PrintView3D.app",
+        icon="src/printview3d/resources/icon.png",
+        bundle_identifier="io.github.sevagjb.printview3d",
+        version=VERSION,
+        info_plist={
+            "CFBundleName": "PrintView3D",
+            "CFBundleDisplayName": "PrintView3D",
+            "CFBundleShortVersionString": VERSION,
+            "CFBundleVersion": VERSION,
+            "LSMinimumSystemVersion": "12.0",
+            "NSHighResolutionCapable": True,
+            "NSRequiresAquaSystemAppearance": False,      # follow Dark Mode
+            "CFBundleDocumentTypes": [
+                _doc("STL model", ["stl"], ["public.standard-tesselated-geometry-format"]),
+                _doc("3MF project", ["3mf"], ["public.3mf"]),
+                _doc("G-code", ["gcode", "gco", "g"], []),
+                _doc("FreeCAD document", ["FCStd", "fcstd"], []),
+            ],
+        },
+    )

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.11.0
+- **macOS (beta)** for Apple silicon Macs (M1 and newer), macOS 12+: `PrintView3D-macOS-AppleSilicon.dmg`,
+  built automatically with every release. Free, without a paid Apple account: the first start needs
+  one *Open Anyway* in System Settings → Privacy & Security (steps in the README).
+- Finder: *Open With → PrintView3D* for .stl, .3mf, .gcode and .FCStd; files opened from Finder or
+  dropped on the Dock icon open in the window.
+- Slicers installed in /Applications are found automatically on the Mac.
+
 ## 0.10.1
 - Fixed: in Settings on Windows, the highlight of the selected page in the sidebar was taller than
   its row and covered the neighbouring entries, and the text jumped when the mouse moved away.

@@ -189,3 +189,14 @@ def test_clean_environment(monkeypatch):
 def test_user_choice_of_qt_platform_is_kept():
     out = sl.clean_environment({"QT_QPA_PLATFORM": "wayland"})
     assert out["QT_QPA_PLATFORM"] == "wayland"
+
+
+def test_mac_apps_are_found_by_name(tmp_path):
+    from printview3d import slicer as sl
+    for name in ("OrcaSlicer.app", "Bambu Studio.app", "UltiMaker Cura.app", "Notes.app"):
+        (tmp_path / name).mkdir()
+    found = {s.id: sl._mac_candidates(s, [str(tmp_path)]) for s in sl.SLICERS}
+    assert [os.path.basename(p) for p in found["orcaslicer"]] == ["OrcaSlicer.app"]
+    assert [os.path.basename(p) for p in found["bambu_studio"]] == ["Bambu Studio.app"]
+    assert [os.path.basename(p) for p in found["cura"]] == ["UltiMaker Cura.app"]
+    assert found["prusaslicer"] == []

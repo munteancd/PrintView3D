@@ -5,7 +5,7 @@
 <h1 align="center">PrintView3D</h1>
 
 <p align="center">
-  A fast, free viewer for <b>STL</b>, <b>3MF</b>, <b>G-code</b> and <b>FreeCAD</b> files on <b>Windows</b> and <b>Linux</b>,<br>
+  A fast, free viewer for <b>STL</b>, <b>3MF</b>, <b>G-code</b> and <b>FreeCAD</b> files on <b>Windows</b>, <b>Linux</b> and <b>macOS</b>,<br>
   with a one-click button that opens the file in <b>your slicer</b>.
 </p>
 
@@ -71,7 +71,7 @@ You do **not** need Python or anything else to use PrintView3D. Pick your system
 |---|---|---|
 | **Windows 10 / 11** | `PrintView3D-Setup.exe` (or the portable `PrintView3D-windows.zip`) | [Instructions](#windows) |
 | **Linux** (64-bit, x86-64) | `PrintView3D-x86_64.AppImage` | [Instructions](#linux) |
-| **macOS** | on request | [Read this](#macos) |
+| **macOS 12+** (Apple silicon), beta | `PrintView3D-macOS-AppleSilicon.dmg` | [Instructions](#macos) |
 
 All downloads are on the **[latest release](../../releases/latest)** page.
 
@@ -159,14 +159,35 @@ distribution's packages, or in `/opt`. Otherwise choose it once with **Browse…
 
 ### macOS
 
-The code already runs on macOS, but there is **no ready-made Mac download yet**, because nobody has
-tried it on a real Mac so far. **Would you like to use PrintView3D on your Mac? We can build a Mac
-version for you.** [Open a Mac build request](../../issues/new?template=mac_build.md) and tell us your
-Mac model and macOS version. Your feedback is what makes an official Mac release possible.
+> **Beta.** The Mac version is built and checked automatically, but has not been tried by many people
+> on real Macs yet. Please [tell us how it works](../../issues/new?template=mac_build.md): your Mac
+> model, macOS version, and anything that looks wrong.
 
-Comfortable with a terminal? You can try running it from source on macOS: install Python 3.12 from
-python.org, run `./build_linux.sh --no-appimage` once to set everything up, then
-`./run_from_source.sh`. This is not tested on a Mac yet, so please tell us how it goes.
+For Macs with **Apple silicon** (M1, M2, M3, M4 and newer) and **macOS 12 or newer**.
+
+1. From the **[latest release](../../releases/latest)** download **`PrintView3D-macOS-AppleSilicon.dmg`**.
+2. Open it and drag **PrintView3D** onto **Applications**.
+3. Start PrintView3D from Applications. **The first time**, macOS says it *cannot verify* the app.
+   Click **Done** (not "Move to Trash").
+4. Open **System Settings → Privacy & Security**, scroll down to *Security* and click
+   **Open Anyway** next to PrintView3D. Confirm with your password or Touch ID.
+
+From then on it opens normally.
+
+> **Why this extra step?** Apple only skips it for apps from developers who pay Apple every year
+> for a certificate and "notarization". PrintView3D is free and has no budget for that, so it is
+> signed without an Apple account instead. The program is the same open-source code as on Windows
+> and Linux, built automatically by [GitHub Actions](../../actions). (Right-click → Open no longer
+> works for this on macOS 15 and newer; use Open Anyway as above.)
+
+**Open files with PrintView3D:** in Finder, right-click a `.stl`, `.3mf`, `.gcode` or `.FCStd` file →
+**Open With → PrintView3D**. To make it the default: right-click the file → **Get Info** →
+*Open with:* **PrintView3D** → **Change All…**.
+
+**Slicers** in Applications (Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura, …) are
+found automatically. **Updates:** *Download update* opens the release page; drag the new version
+into Applications to replace the old one. Intel Macs: not built yet;
+[ask for it](../../issues/new?template=mac_build.md) if you need it.
 
 ---
 
@@ -478,8 +499,8 @@ Is your slicer missing? It is usually a single entry in `SLICERS` in
 
 ## Notes and limits
 
-- Windows 10/11 and Linux (x86-64) are packaged and tested. macOS runs from source; a packaged Mac
-  version is [available on request](#macos). ARM Linux (Raspberry Pi etc.) is not packaged yet.
+- Windows 10/11 and Linux (x86-64) are packaged and tested. The Mac version (Apple silicon) is in
+  [beta](#macos); Intel Macs are not built yet. ARM Linux (Raspberry Pi etc.) is not packaged yet.
 - A 3MF *project* saved in one brand of slicer may lose its printer/print settings when opened in a
   different brand. The model itself loads fine; that's how the slicers behave.
 - Binary G-code (`.bgcode`) is not supported yet.
