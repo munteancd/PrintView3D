@@ -97,6 +97,13 @@ SLICERS: list[Slicer] = [
 ]
 BY_ID = {s.id: s for s in SLICERS}
 
+# Slicers that open STEP files themselves; the others get an STL that FreeCAD made.
+STEP_SLICERS = frozenset({"orcaslicer", "prusaslicer", "bambu_studio"})
+
+
+def reads_step(slicer_id: str) -> bool:
+    return slicer_id in STEP_SLICERS
+
 # Helper programs that live next to the real slicer and must never be launched.
 _EXCLUDE = ("uninst", "update", "crash", "console", "gcodeviewer", "gcode-viewer", "engine",
             "helper", "setup", "redist", "qtwebengine", "dumper", "elevate", "repair")

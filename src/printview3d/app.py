@@ -78,11 +78,12 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{name} was not found. Choose it in Settings.", file=sys.stderr)
             return 1
         from .loaders import SEND_AS_STL, file_kind, load_file
-        if args.file and file_kind(args.file) in SEND_AS_STL:   # slicers don't all read these: send STL
+        kind = file_kind(args.file) if args.file else ""
+        if kind in SEND_AS_STL or (kind == "step" and not sl.reads_step(sid)):   # send these as STL
             from . import freecad as fc
             model = load_file(args.file, None, settings.get("freecad_path", ""))
             if not model.parts:
-                print("Nothing to send (a FreeCAD file needs FreeCAD to convert it).", file=sys.stderr)
+                print("Nothing to send (FreeCAD and STEP files need FreeCAD to convert them).", file=sys.stderr)
                 return 1
             base = os.path.splitext(os.path.basename(args.file))[0]
             args.file = fc.export_stl(model.parts, os.path.join(os.path.dirname(fc.cache_dir()), "to-slicer",

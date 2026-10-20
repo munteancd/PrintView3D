@@ -42,6 +42,9 @@ META_LABELS = {
     "Title": tr_noop("Title"),
     "Designer": tr_noop("Designer"),
     "Description": tr_noop("Description"),
+    "Format": tr_noop("Format"),
+    "Organization": tr_noop("Organization"),
+    "Date": tr_noop("Date"),
 }
 
 # File-association status texts (from file_assoc.status())
