@@ -46,10 +46,15 @@ echo [4/4] Building PrintView3D.exe ...
 REM Optional: the installer, if Inno Setup 6 is installed (https://jrsoftware.org/isinfo.php)
 set "ISCC=%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe"
 if not exist "%ISCC%" goto :noinstaller
-echo [+] Building the installer ...
 for /f "tokens=2 delims==" %%v in ('findstr /b "__version__" src\printview3d\__init__.py') do set "APPVER=%%~v"
 set "APPVER=%APPVER: =%"
 set "APPVER=%APPVER:"=%"
+echo [+] Building the File Explorer thumbnails (needs Visual Studio C++ Build Tools) ...
+pushd packaging\windows\thumbnails
+call build.bat %APPVER%
+if errorlevel 1 ( popd & echo Thumbnails need the Visual Studio C++ Build Tools; installer skipped. & goto :noinstaller )
+popd
+echo [+] Building the installer ...
 "%ISCC%" /Q "/DAppVersion=%APPVER%" packaging\windows\PrintView3D.iss || goto :fail
 :noinstaller
 
