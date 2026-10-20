@@ -75,6 +75,12 @@ int wmain(int argc, wchar_t** argv) {
         HBITMAP b = nullptr;
         HRESULT hr;
         if (shell) {
+            // Which thumbnail handler Windows picks for this file type.
+            wchar_t clsid[64] = L"(none)";
+            DWORD n = 64;
+            AssocQueryStringW(ASSOCF_INIT_DEFAULTTOSTAR, ASSOCSTR_SHELLEXTENSION, PathFindExtensionW(full),
+                              L"{e357fccd-a995-4576-b01f-234630154e96}", clsid, &n);
+            std::wprintf(L"  handler %ls%ls\n", clsid, _wcsicmp(clsid, L"{64535B54-55A8-4412-919A-88F46D3E3B86}") ? L" (not PrintView3D)" : L"");
             IShellItemImageFactory* sf = nullptr;
             hr = SHCreateItemFromParsingName(full, nullptr, IID_PPV_ARGS(&sf));
             if (SUCCEEDED(hr)) {

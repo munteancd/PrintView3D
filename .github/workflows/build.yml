@@ -108,6 +108,9 @@ jobs:
             $lnk = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\PrintView3D.lnk"
             if (-not (Test-Path $lnk)) { throw "Start menu shortcut missing" }
             if (-not (Test-Path "HKCU:\Software\Classes\SystemFileAssociations\.3mf\ShellEx\{e357fccd-a995-4576-b01f-234630154e96}")) { throw "Thumbnail provider not registered" }
+            foreach ($e in '.3mf','.stl','.gcode','.gco','.fcstd') {
+              if (-not (Test-Path "HKCU:\Software\Classes\$e\ShellEx\{e357fccd-a995-4576-b01f-234630154e96}")) { throw "Thumbnail provider not registered for $e" }
+            }
             # What File Explorer gets: ask the Windows shell itself for thumbnails.
             $out = & packaging\windows\thumbnails\out\test_thumbs.exe shell examples\demo_plate.3mf examples\demo_bracket.FCStd examples\demo_vase.gcode examples\demo_vase.stl 2>&1 | Out-String
             Write-Output $out
@@ -134,6 +137,9 @@ jobs:
             if (Test-Path "HKCU:\Software\Classes\Applications\PrintView3D.exe") { throw "Uninstall left the registration behind" }
             if (Test-Path $lnk) { throw "Uninstall left the shortcut behind" }
             if (Test-Path "HKCU:\Software\Classes\CLSID\{64535B54-55A8-4412-919A-88F46D3E3B86}") { throw "Uninstall left the thumbnail provider behind" }
+            foreach ($e in '.3mf','.stl','.gcode','.gco','.fcstd') {
+              if (Test-Path "HKCU:\Software\Classes\$e\ShellEx\{e357fccd-a995-4576-b01f-234630154e96}") { throw "Uninstall left the thumbnail handler behind for $e" }
+            }
             if ($global:shellthumb) { throw "Shell thumbnail test failed" }
             Write-Host "Installer test OK"
           } catch { Write-Output "::error title=Installer test::$($_.Exception.Message)"; throw }
