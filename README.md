@@ -5,7 +5,7 @@
 <h1 align="center">PrintView3D</h1>
 
 <p align="center">
-  A fast, free viewer for <b>STL</b>, <b>3MF</b>, <b>G-code</b> and <b>FreeCAD</b> files on <b>Windows</b>, <b>Linux</b> and <b>macOS</b>,<br>
+  A fast, free viewer for <b>STL</b>, <b>3MF</b>, <b>G-code</b>, <b>FreeCAD</b>, <b>OBJ</b>, <b>PLY</b> and <b>glTF</b> files on <b>Windows</b>, <b>Linux</b> and <b>macOS</b>,<br>
   with a one-click button that opens the file in <b>your slicer</b>.
 </p>
 
@@ -35,6 +35,7 @@ file to Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura and others w
 | **3MF** | Every object on the plate, including projects from Creality Print, OrcaSlicer and Bambu Studio. Show or hide each object, see the project's printer and filament settings and its thumbnail. If the project is already sliced, view its toolpaths without re-slicing. |
 | **G-code** | Toolpaths coloured by type (walls, infill, top/bottom, supports, bridges, travel…), a layer slider, "show only this layer", print time, filament use and the slicer's preview picture. |
 | **FreeCAD** | Open `.FCStd` documents to look at them: shown in 3D exactly as FreeCAD displays them (visible bodies only), with one click to open in FreeCAD or send to your slicer as STL. Uses your installed FreeCAD; without it you still see the preview picture. [Details](#freecad-files). |
+| **OBJ, PLY, OFF, glTF / GLB** | Other common 3D formats, with the colours saved in the file (textures are not shown). OBJ objects and glTF scenes are listed as separate objects. OBJ goes to your slicer as it is; PLY, OFF and glTF are sent as STL, because not every slicer reads them. [Details](#other-3d-formats). |
 | **Open in your slicer** | One click (or `Ctrl+P`) opens the current file in your slicer. Installed slicers are found automatically. |
 | **Default app** | Optional: make PrintView3D open `.stl`, `.3mf` and `.gcode` files when you double-click them. Fully reversible. |
 | **Your language** | English, العربية (Arabic, right-to-left), Nederlands, Deutsch, Français and Español; switch any time in Settings, no restart needed. [Help translate](#translations). |
@@ -260,6 +261,22 @@ Flatpak, AppImage). If yours is elsewhere, choose it in **Settings → FreeCAD**
 <td width="50%"><img src="docs/screenshot-freecad-preview.png" alt="The same file without FreeCAD: the preview picture"><br><sub>Without FreeCAD: the preview picture saved in the file.</sub></td>
 </tr>
 </table>
+
+### Other 3D formats
+
+| Format | What is read | Sent to your slicer as |
+|---|---|---|
+| **OBJ** (`.obj`) | Objects (`o`) or groups (`g`) as separate objects; colours from the `.mtl` file next to it, or vertex colours. | The `.obj` itself |
+| **PLY** (`.ply`) | Text and binary; vertex or face colours. Point clouds (no faces) can't be shown. | STL |
+| **OFF** (`.off`) | Text files (also COFF), with vertex or face colours. | STL |
+| **glTF / GLB** (`.gltf`, `.glb`) | Every object in the scene at its position, with its material colour or vertex colours. | STL |
+
+- **Sizes:** OBJ, PLY and OFF have no units; PrintView3D treats the numbers as millimetres, like
+  slicers do. If a model shows up tiny, the file was probably made in metres; your slicer can scale it.
+  glTF is always in metres and is shown in millimetres (with Z up, as on a printer).
+- **Not read:** textures (image files on the model), animations, and glTF files compressed with Draco
+  or meshoptimizer (PrintView3D says so; export them again without compression).
+- These types are added to **Open with**, but PrintView3D never makes itself their default app.
 
 ### Language
 
@@ -511,6 +528,7 @@ Is your slicer missing? It is usually a single entry in `SLICERS` in
 - A 3MF *project* saved in one brand of slicer may lose its printer/print settings when opened in a
   different brand. The model itself loads fine; that's how the slicers behave.
 - Binary G-code (`.bgcode`) is not supported yet.
+- File Explorer thumbnails are made for 3MF, STL, G-code and FreeCAD files; not yet for OBJ, PLY, OFF and glTF.
 - FreeCAD documents need an installed FreeCAD for the 3D view (PrintView3D does not include
   FreeCAD's geometry engine). Very old or very new FreeCAD versions may not open each other's files.
 

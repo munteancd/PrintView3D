@@ -22,7 +22,7 @@ from .. import slicer as sl
 from ..gpu import renderer_info
 from ..i18n import count, ltr, num, tr
 from ..loaders import (
-    FEATURES, GcodeData, ModelData, SUPPORTED_EXTENSIONS, file_kind, load_file,
+    FEATURES, GcodeData, ModelData, SEND_AS_STL, SUPPORTED_EXTENSIONS, file_kind, load_file,
     parse_gcode_text, read_embedded_gcode,
 )
 from ..loaders.gcode import FEATURE_INDEX
@@ -44,9 +44,10 @@ def resource(name: str) -> str:
 
 def file_filter() -> str:
     return ";;".join([
-        tr("3D files") + " (*.stl *.3mf *.gcode *.gco *.g *.FCStd *.fcstd)",
+        tr("3D files") + " (*.stl *.3mf *.obj *.ply *.off *.glb *.gltf *.gcode *.gco *.g *.FCStd *.fcstd)",
         tr("STL models") + " (*.stl)",
         tr("3MF projects") + " (*.3mf)",
+        tr("Other 3D models") + " (*.obj *.ply *.off *.glb *.gltf)",
         tr("G-code") + " (*.gcode *.gco *.g)",
         tr("FreeCAD documents") + " (*.FCStd *.fcstd)",
         tr("All files") + " (*)",
@@ -482,7 +483,7 @@ class MainWindow(QMainWindow):
         self._update_theme_button()
         self.refresh_update_badge()
 
-        self.welcome_sub.setText(tr("Drop an STL, 3MF or G-code file here, or open one."))
+        self.welcome_sub.setText(tr("Drop a 3D model or G-code file here, or open one."))
         self.welcome_open.setText(tr("Open file…"))
 
         self.details_box.setTitle(tr("Details"))
@@ -589,7 +590,8 @@ class MainWindow(QMainWindow):
     def _kind_text(self) -> str:
         if self.showing_embedded:
             return tr("Sliced toolpaths · {plate}").format(plate=_plate_name(self._embedded_member))
-        names = {"stl": "STL", "3mf": "3MF", "gcode": tr("G-code"), "freecad": "FreeCAD"}
+        names = {"stl": "STL", "3mf": "3MF", "obj": "OBJ", "ply": "PLY", "off": "OFF", "gltf": "glTF",
+                 "gcode": tr("G-code"), "freecad": "FreeCAD"}
         return tr("{kind} · {size} MB").format(kind=names.get(self.current_kind, self.current_kind.upper()),
                                                size=num(self._file_size_mb, 1))
 
@@ -612,7 +614,7 @@ class MainWindow(QMainWindow):
         kind = file_kind(path)
         if not kind:
             QMessageBox.warning(self, tr("Unsupported file"),
-                                tr("PrintView3D can open STL, 3MF, G-code and FreeCAD files."))
+                                tr("PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, G-code and FreeCAD files."))
             return
         self._load_token += 1
         token = self._load_token
@@ -706,6 +708,9 @@ class MainWindow(QMainWindow):
         if b:
             self._add_detail(tr("Size (X×Y×Z)"), ltr(tr("{x} × {y} × {z} mm").format(
                 x=num(b[1] - b[0]), y=num(b[3] - b[2]), z=num(b[5] - b[4]))))
+        if b and max(b[1] - b[0], b[3] - b[2], b[5] - b[4]) < 1.0:
+            self._add_detail(tr("Note"), tr("Very small: the file may use metres instead of millimetres. "
+                                            "Your slicer can scale it."))
         if m.parts:
             self._add_detail(tr("Triangles"), count(m.n_triangles))
         if len(m.parts) == 1:
@@ -718,7 +723,7 @@ class MainWindow(QMainWindow):
         if len(m.parts) > 1:
             for i, (part, actor) in enumerate(zip(m.parts, actors)):
                 cb = QCheckBox(tr("{name}  ({n} triangles)").format(name=part.name, n=count(part.n_triangles)))
-                cb.setIcon(_swatch(Scene.model_color(i, len(m.parts))))
+                cb.setIcon(_swatch(Scene.part_color(part, i, len(m.parts))))
                 cb.setChecked(bool(actor.GetVisibility()))
                 cb.toggled.connect(lambda on, a=actor: (a.SetVisibility(on), self.plotter.render()))
                 self.objects_layout.addWidget(cb)
@@ -798,18 +803,20 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage(tr("Opening {file} in {slicer}…").format(
             file=os.path.basename(self.current_path or ""), slicer="FreeCAD"), 6000)
 
-    def _freecad_stl_for_slicer(self) -> Optional[str]:
-        """The visible FreeCAD objects as a temporary STL a slicer can open."""
+    def _stl_for_slicer(self) -> Optional[str]:
+        """The visible objects as a temporary STL a slicer can open (FreeCAD, PLY, OFF, glTF)."""
         m = self.model
         actors = getattr(self, "_model_actors", [])
         parts = [p for p, a in zip(m.parts, actors) if a.GetVisibility()] if m else []
+        if m and m.parts and not parts:            # every object hidden: send them all
+            parts = list(m.parts)
         if not parts:
             QMessageBox.information(self, tr("Nothing to send"),
                                     tr("To send a FreeCAD model to a slicer, PrintView3D needs FreeCAD to "
                                        "convert it first. Install FreeCAD or choose it in Settings."))
             return None
         base = os.path.splitext(os.path.basename(self.current_path or "model"))[0]
-        return fc.export_stl(parts, os.path.join(fc.cache_dir(), "to-slicer", base + ".stl"))
+        return fc.export_stl(parts, os.path.join(os.path.dirname(fc.cache_dir()), "to-slicer", base + ".stl"))
 
     @staticmethod
     def _mesh_volume(part) -> float:
@@ -1023,7 +1030,8 @@ class MainWindow(QMainWindow):
             a = self.slicer_menu.addAction(tr("No slicers found"))
             a.setEnabled(False)
         for sid, name in entries:
-            label = (tr("Send to {slicer} as STL") if freecad_file else tr("Open in {slicer}")).format(slicer=name)
+            as_stl = self.current_kind in SEND_AS_STL and not self.showing_embedded
+            label = (tr("Send to {slicer} as STL") if as_stl else tr("Open in {slicer}")).format(slicer=name)
             if sid == default_id:
                 label += "   " + tr("(default)")
             self.slicer_menu.addAction(label, lambda s_id=sid: self.open_in_slicer(s_id))
@@ -1036,7 +1044,11 @@ class MainWindow(QMainWindow):
             if slicer_id is None:                  # main button / Ctrl+P: FreeCAD itself
                 self.open_in_freecad()
                 return
-            file_to_send = self._freecad_stl_for_slicer()
+            file_to_send = self._stl_for_slicer()
+            if not file_to_send:
+                return
+        elif self.current_kind in SEND_AS_STL and self.current_path and not self.showing_embedded:
+            file_to_send = self._stl_for_slicer()
             if not file_to_send:
                 return
         sid, name, exe = sl.resolve(self.settings, slicer_id)

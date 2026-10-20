@@ -2,12 +2,12 @@
 Type=Application
 Name=PrintView3D
 GenericName=3D File Viewer
-Comment=View STL, 3MF and G-code files and open them in your slicer
+Comment=View 3D models and G-code files and open them in your slicer
 Exec=PrintView3D %f
 Icon=printview3d
 Terminal=false
 Categories=Graphics;3DGraphics;Viewer;
-Keywords=3D;print;STL;3MF;G-code;gcode;slicer;viewer;
-MimeType=model/stl;model/3mf;text/x.gcode;application/sla;application/vnd.ms-3mfdocument;text/x-gcode;
+Keywords=3D;print;STL;3MF;OBJ;PLY;glTF;GLB;G-code;gcode;slicer;viewer;
+MimeType=model/stl;model/3mf;text/x.gcode;application/sla;application/vnd.ms-3mfdocument;text/x-gcode;model/x.ply;model/x.off;model/obj;model/gltf-binary;model/gltf+json;
 StartupWMClass=PrintView3D
 PrefersNonDefaultGPU=true

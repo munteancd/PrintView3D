@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.13.0
+- **Open more 3D formats**: OBJ, PLY, OFF and glTF / GLB ([#14](https://github.com/sevagjb/PrintView3D/issues/14)).
+  - Colours saved in the file are shown: OBJ materials (`.mtl`) and vertex colours, PLY and OFF
+    vertex or face colours, glTF material and vertex colours. Textures are not shown.
+  - OBJ objects/groups and the objects of a glTF scene are listed separately and can be hidden.
+  - glTF is converted from metres to millimetres and turned Z-up, so it stands on the plate.
+  - **Send to slicer**: OBJ as it is; PLY, OFF and glTF as STL (only the visible objects).
+  - Added to "Open with" on Windows, Linux and macOS (never made the default app).
+- A note in the details when a model is smaller than 1 mm (usually a file made in metres).
+
 ## 0.12.0
 - **Thumbnails in Windows File Explorer** for 3MF, STL, G-code and FreeCAD files ([#13](https://github.com/sevagjb/PrintView3D/issues/13)).
   3MF, G-code and FreeCAD show the preview picture saved in the file; STL models are drawn.

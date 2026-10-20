@@ -29,6 +29,10 @@ class MeshPart:
     name: str
     vertices: np.ndarray   # (N, 3) float32
     faces: np.ndarray      # (M, 3) int64
+    # Colours saved in the file (OBJ materials, PLY/OFF colours, glTF materials), if any.
+    color: Optional[str] = None                     # one colour for the part, "#rrggbb"
+    vertex_colors: Optional[np.ndarray] = None      # (N, 3) uint8
+    face_colors: Optional[np.ndarray] = None        # (M, 3) uint8
 
     @property
     def n_triangles(self) -> int:
