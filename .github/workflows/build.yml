@@ -82,6 +82,7 @@ jobs:
           Get-Item PrintView3D-Setup.exe | Format-List Name, Length
 
       - name: Test the installer (silent install, check, uninstall)
+        timeout-minutes: 15
         shell: pwsh
         run: |
           $dir = "$env:LOCALAPPDATA\Programs\PrintView3D"
@@ -96,7 +97,9 @@ jobs:
           $un = Get-ChildItem "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall" | Where-Object { $_.PSChildName -like '*f46ac51f*' }
           if (-not $un) { throw "Not listed in Apps & features" }
           # Update the way PrintView3D does it from Settings -> Updates: the new version must start by itself.
-          $p = Start-Process .\PrintView3D-Setup.exe -ArgumentList '/SILENT','/SUPPRESSMSGBOXES','/NORESTART','/UPDATE=1' -PassThru -Wait
+          # Not "-Wait": that also waits for programs the installer starts, i.e. the restarted PrintView3D.
+          $p = Start-Process .\PrintView3D-Setup.exe -ArgumentList '/SILENT','/SUPPRESSMSGBOXES','/NORESTART','/UPDATE=1' -PassThru
+          if (-not $p.WaitForExit(300000)) { $p.Kill(); throw "Update install did not finish" }
           if ($p.ExitCode -ne 0) { throw "Update install failed ($($p.ExitCode))" }
           $started = $null
           for ($i = 0; $i -lt 30 -and -not $started; $i++) { Start-Sleep -Seconds 1; $started = Get-Process PrintView3D -ErrorAction SilentlyContinue }
