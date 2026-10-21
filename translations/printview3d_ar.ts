@@ -6,7 +6,7 @@
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Outer wall</source>
-        <translation>الجدار الخارجي</translation>
+        <translation type="unfinished">الجدار الخارجي</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
