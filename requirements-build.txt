@@ -1,3 +1,4 @@
 pyinstaller>=6.6
 pytest>=7
+pyyaml>=6      # tests only: checks the winget manifests (tools/winget.py)
 pillow>=10; sys_platform == "darwin"   # lets PyInstaller turn icon.png into the Mac app icon

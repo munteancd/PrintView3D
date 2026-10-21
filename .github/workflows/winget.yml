@@ -1,0 +1,71 @@
+name: winget
+
+# Sends a PrintView3D release to the Windows Package Manager (microsoft/winget-pkgs), so that
+# "winget install PrintView3D" works. Runs by itself after every new release (from build.yml),
+# or by hand: Actions -> winget -> Run workflow.
+# Needs the repository secret WINGET_TOKEN: a classic GitHub token with only "public_repo".
+# wingetcreate opens the pull request in microsoft/winget-pkgs from a fork under that account.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to send, e.g. 0.14.3 (empty = the newest release)"
+        required: false
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        required: true
+    secrets:
+      WINGET_TOKEN:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  winget:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Which version, and is it in winget already?
+        id: check
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WANT: ${{ inputs.version }}
+        run: |
+          $v = $env:WANT
+          if (-not $v) { $v = (gh api "repos/${{ github.repository }}/releases/latest" --jq .tag_name).TrimStart('v') }
+          $base = "repos/microsoft/winget-pkgs/contents/manifests/s/sevagjb/PrintView3D"
+          gh api "$base/$v" --silent 2>$null; $versionThere = ($LASTEXITCODE -eq 0)
+          gh api $base --silent 2>$null;      $packageThere = ($LASTEXITCODE -eq 0)
+          $global:LASTEXITCODE = 0
+          "version=$v" >> $env:GITHUB_OUTPUT
+          "skip=$($versionThere.ToString().ToLower())" >> $env:GITHUB_OUTPUT
+          $title = if ($packageThere) { "New version: sevagjb.PrintView3D version $v" } else { "New package: sevagjb.PrintView3D version $v" }
+          "title=$title" >> $env:GITHUB_OUTPUT
+          if ($versionThere) { Write-Output "::notice title=winget::PrintView3D $v is already in winget, nothing to send." }
+          else { Write-Output "::notice title=winget::$title" }
+
+      - name: Make the manifests
+        if: steps.check.outputs.skip == 'false'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python tools/winget.py ${{ steps.check.outputs.version }} winget-out
+
+      - name: Send to microsoft/winget-pkgs
+        if: steps.check.outputs.skip == 'false'
+        shell: pwsh
+        env:
+          WINGET_TOKEN: ${{ secrets.WINGET_TOKEN }}
+          V: ${{ steps.check.outputs.version }}
+          TITLE: ${{ steps.check.outputs.title }}
+        run: |
+          if (-not $env:WINGET_TOKEN) { throw "The repository secret WINGET_TOKEN is missing (Settings -> Secrets and variables -> Actions)." }
+          Invoke-WebRequest https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
+          .\wingetcreate.exe submit --prtitle $env:TITLE --token $env:WINGET_TOKEN "winget-out\manifests\s\sevagjb\PrintView3D\$env:V"
+          if ($LASTEXITCODE -ne 0) { throw "wingetcreate could not submit the manifests" }
+          Write-Output "::notice title=winget::Sent. The pull request is in https://github.com/microsoft/winget-pkgs/pulls (author: the token's account)."

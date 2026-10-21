@@ -299,6 +299,9 @@ jobs:
     needs: [windows, linux, macos]
     if: github.event_name == 'push'
     runs-on: ubuntu-24.04      # fixed version, so GitHub's move of "latest" to Ubuntu 26 changes nothing
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      published: ${{ steps.publish.outcome == 'success' }}
     steps:
       - uses: actions/checkout@v7
 
@@ -351,6 +354,7 @@ jobs:
           merge-multiple: true
 
       - name: Publish release
+        id: publish
         if: >-
           startsWith(github.ref, 'refs/tags/v') ||
           (github.ref == 'refs/heads/main' && steps.version.outputs.released == 'false')
@@ -365,3 +369,12 @@ jobs:
             PrintView3D-windows.zip
             PrintView3D-x86_64.AppImage
             PrintView3D-macOS-AppleSilicon.dmg
+
+  # A new release also goes to the Windows Package Manager ("winget install PrintView3D").
+  winget:
+    needs: release
+    if: needs.release.outputs.published == 'true'
+    uses: ./.github/workflows/winget.yml
+    with:
+      version: ${{ needs.release.outputs.version }}
+    secrets: inherit
