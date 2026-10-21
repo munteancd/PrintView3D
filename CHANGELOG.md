@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.14.3
+- The "v" of the version in the bottom-right corner is bold.
+- Note on the green dot: right after an update it now appears at once, from the check that found the
+  update (0.14.1 did not yet record that its check reached GitHub, so 0.14.2 showed no dot until the
+  next check). Updates are still checked at most once a day, as promised.
+
 ## 0.14.2
 - **Version badge** (bottom right): a **green dot** when a check in the last two weeks found that
   PrintView3D is up to date, the red dot when an update is available, no dot when it hasn't been

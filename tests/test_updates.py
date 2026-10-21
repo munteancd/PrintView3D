@@ -130,14 +130,15 @@ def test_up_to_date_green_dot(settings):
     assert not u.up_to_date(settings, now + 2 * 86400)            # skipped is not "up to date"
 
 
-def test_new_version_checks_right_away(settings):
+def test_green_right_after_updating_without_asking_github_again(settings, monkeypatch):
+    """The daily check that found the new version also tells the new version it is up to date:
+    no extra request after the update (we promise at most one check a day)."""
+    now = 1_800_000_000
     settings.set("update_check", True)
-    u.remember(settings, None, now=10 ** 9)
-    assert not u.check_is_due(settings, now=10 ** 9 + 60)          # this version checked a minute ago
-    settings.set("update_checked_by", "0.0.1")                      # ... but that was the old version
-    assert u.check_is_due(settings, now=10 ** 9 + 60)               # just updated: check now
-    u.remember(settings, None, now=10 ** 9 + 61)                    # even if that try fails ...
-    assert not u.check_is_due(settings, now=10 ** 9 + 3600)         # ... no retry every hour
-    settings.set("update_check", False)
-    settings.set("update_checked_by", "0.0.1")
-    assert not u.check_is_due(settings, now=10 ** 9 + 3600)         # automatic checks off: never
+    monkeypatch.setattr(u.is_newer, "__defaults__", ("50.0.0",))             # running 50.0.0
+    u.remember(settings, u.parse_release(gh_release(tag="v50.0.1")), now)   # its check finds 50.0.1
+    assert u.available(settings) is not None and not u.up_to_date(settings, now)
+    monkeypatch.setattr(u.is_newer, "__defaults__", ("50.0.1",))             # updated to 50.0.1
+    assert u.available(settings) is None
+    assert u.up_to_date(settings, now + 600)                                  # green at once
+    assert not u.check_is_due(settings, now + 600)                            # no second check today
