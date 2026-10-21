@@ -196,7 +196,12 @@ def apply_theme(app, choice: str = "auto") -> str:
         QListWidget#settingsNav::item:hover {{ background: {t['tool_hover']}; }}
         QListWidget#settingsNav::item:selected {{ background: {t['tool_checked']}; color: {t['text']}; }}
         QLabel#pageTitle {{ font-size: 18px; font-weight: 600; padding-bottom: 4px; }}
-        QLabel#versionBadge {{ color: {t['muted']}; padding: 0 6px; }}
+        QLabel#versionBadge {{
+            color: {t['muted']}; background: {t['button']};
+            border: 1px solid {t['button_border']}; border-radius: 4px;
+            padding: 1px 8px; margin: 2px 4px;
+        }}
+        QLabel#versionBadge:hover {{ background: {t['button_hover']}; }}
     """)
     return _current
 
@@ -227,6 +232,7 @@ def theme_icon(name: str | None = None) -> QIcon:
 
 
 UPDATE_DOT = "#e5484d"      # the red "update available" dot
+UP_TO_DATE_DOT = "#30a46c"  # the green "up to date" dot
 
 
 def nav_icon(kind: str, dot: bool = False) -> QIcon:

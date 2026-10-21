@@ -332,18 +332,24 @@ class SettingsDialog(QDialog):
         rel = self._available
         last = float(self.settings.get("update_last_check") or 0)
         when = self._when(last) if last else tr("never")
+        ok = float(self.settings.get("update_last_ok") or 0)
         if rel:
             self.upd_version.setText(f'<span style="color:{theme.UPDATE_DOT}">●</span>&nbsp; '
                                      + tr("<b>Version {new} is available</b> (you have {current})").format(
                                          new=rel.version, current=__version__))
+        elif up.up_to_date(self.settings):
+            self.upd_version.setText(f'<span style="color:{theme.UP_TO_DATE_DOT}">●</span>&nbsp; '
+                                     + tr("You have version {version}").format(version=f"<b>{__version__}</b>"))
         else:
             self.upd_version.setText(tr("You have version {version}").format(version=f"<b>{__version__}</b>"))
         if checking:
             self.upd_status.setText(tr("Checking…"))
         elif rel:
             self.upd_status.setText(tr("Last checked: {when}").format(when=when))
-        elif last:
+        elif ok and ok >= last:
             self.upd_status.setText("✔ " + tr("You are up to date · last checked {when}").format(when=when))
+        elif last:                          # the last check could not reach GitHub
+            self.upd_status.setText(tr("Could not check for updates · last tried {when}").format(when=when))
         else:
             self.upd_status.setText(tr("Not checked yet."))
         for b in (self.upd_install, self.upd_notes, self.upd_skip):

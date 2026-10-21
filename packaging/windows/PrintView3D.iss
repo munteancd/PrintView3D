@@ -140,8 +140,8 @@ Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; Tasks: desktopico
 ; "Open with" registration (the same as Settings -> Register in the program).
 Filename: "{app}\{#AppExe}"; Parameters: "--register"; Tasks: fileassoc; Flags: runhidden waituntilterminated
 Filename: "{app}\{#AppExe}"; Description: "{cm:LaunchProgram,{#AppName}}"; Flags: nowait postinstall skipifsilent
-; Update started from inside PrintView3D (/UPDATE=1): start the new version again by itself.
-Filename: "{app}\{#AppExe}"; Flags: nowait; Check: IsUpdate
+; Update started from inside PrintView3D (/UPDATE=1): the new version is started again in [Code]
+; (CurStepChanged, ssDone), after Windows has been told about the changed file types.
 
 [UninstallRun]
 ; Undo every file association before the files are removed.
@@ -154,6 +154,18 @@ Type: filesandordirs; Name: "{app}\_internal"
 function IsUpdate: Boolean;
 begin
   Result := ExpandConstant('{param:UPDATE|0}') = '1';
+end;
+
+// After an update from inside PrintView3D: start the new version once Setup has finished
+// everything, including telling Windows about the file types (ChangesAssociations). Started
+// earlier, the taskbar could pick up its icon while Windows was refreshing its icons, and show a
+// generic one. --after-update makes PrintView3D refresh its taskbar icon once more.
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  Code: Integer;
+begin
+  if (CurStep = ssDone) and IsUpdate then
+    ExecAsOriginalUser(ExpandConstant('{app}\{#AppExe}'), '--after-update', '', SW_SHOWNORMAL, ewNoWait, Code);
 end;
 
 // Remove our thumbnail handler from the extension keys, but only where it is still ours

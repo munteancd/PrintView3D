@@ -1186,6 +1186,12 @@ class MainWindow(QMainWindow):
                 f'text-decoration:none">v{__version__} → {new.version}</a>')
             self.version_badge.setToolTip(tr("PrintView3D {version} is available. Click to update.").format(
                 version=new.version))
+        elif up.up_to_date(self.settings):
+            self.version_badge.setText(
+                f'<span style="color:{theme.UP_TO_DATE_DOT}">●</span> <a href="updates" '
+                f'style="color:{theme.colors()["muted"]}; text-decoration:none">v{__version__}</a>')
+            self.version_badge.setToolTip(tr("PrintView3D {version} is up to date. Click for update settings.")
+                                          .format(version=__version__))
         else:
             self.version_badge.setText(f'<a href="updates" style="color:{theme.colors()["muted"]}; '
                                        f'text-decoration:none">v{__version__}</a>')

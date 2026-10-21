@@ -72,6 +72,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--register", action="store_true",
                         help='add PrintView3D to "Open with" (and the Linux applications menu) and exit')
     parser.add_argument("--taskbar-selftest", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--after-update", action="store_true", help=argparse.SUPPRESS)  # started by Setup
     args, _unknown = parser.parse_known_args(argv if argv is not None else sys.argv[1:])
 
     if args.send_to_slicer is not None:
@@ -169,6 +170,13 @@ def main(argv: list[str] | None = None) -> int:
                 json.dump(result, f)
             win.close()
             return 0
+        if args.after_update:
+            # Just updated: Windows may still be refreshing icons. Give the taskbar the icon again.
+            def refresh_icon():
+                win.setWindowIcon(win.windowIcon())
+                set_window_identity(int(win.winId()), APP_USER_MODEL_ID, "PrintView3D")
+            for ms in (3000, 8000):
+                QTimer.singleShot(ms, refresh_icon)
     win.start_update_checks()
     # macOS: files opened from Finder (double-click, Open With, drop on the Dock icon)
     # arrive as a FileOpen event, not on the command line.

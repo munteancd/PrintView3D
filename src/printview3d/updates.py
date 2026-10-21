@@ -143,9 +143,27 @@ def check_is_due(settings, now: Optional[float] = None) -> bool:
 
 
 def remember(settings, rel: Optional[Release], now: Optional[float] = None) -> None:
-    settings.set("update_last_check", time.time() if now is None else now)
+    """After a check: rel is the latest release, or None when the check failed."""
+    now = time.time() if now is None else now
+    settings.set("update_last_check", now)
     if rel is not None:
         settings.set("update_latest", rel.to_dict())
+        settings.set("update_last_ok", now)          # the last check that really reached GitHub
+
+
+UP_TO_DATE_FOR = 14 * 24 * 3600     # how long a successful check counts as "up to date"
+
+
+def up_to_date(settings, now: Optional[float] = None) -> bool:
+    """True when a recent check that reached GitHub found nothing newer than this version
+    (the green dot). False when there is an update, when it was skipped, or when nobody
+    checked in the last two weeks: then PrintView3D simply doesn't know."""
+    now = time.time() if now is None else now
+    ok = float(settings.get("update_last_ok") or 0)
+    rel = Release.from_dict(settings.get("update_latest") or {})
+    if rel is None or not ok or now - ok > UP_TO_DATE_FOR or now < ok:
+        return False
+    return not is_newer(rel.version)
 
 
 def available(settings) -> Optional[Release]:
