@@ -128,3 +128,17 @@ def test_up_to_date_green_dot(settings):
     assert not u.up_to_date(settings, now + 2 * 86400)            # an update exists: red, not green
     settings.set("update_skip", "9.9.0")
     assert not u.up_to_date(settings, now + 2 * 86400)            # skipped is not "up to date"
+
+
+def test_green_right_after_updating_without_asking_github_again(settings, monkeypatch):
+    """The daily check that found the new version also tells the new version it is up to date:
+    no extra request after the update (we promise at most one check a day)."""
+    now = 1_800_000_000
+    settings.set("update_check", True)
+    monkeypatch.setattr(u.is_newer, "__defaults__", ("50.0.0",))             # running 50.0.0
+    u.remember(settings, u.parse_release(gh_release(tag="v50.0.1")), now)   # its check finds 50.0.1
+    assert u.available(settings) is not None and not u.up_to_date(settings, now)
+    monkeypatch.setattr(u.is_newer, "__defaults__", ("50.0.1",))             # updated to 50.0.1
+    assert u.available(settings) is None
+    assert u.up_to_date(settings, now + 600)                                  # green at once
+    assert not u.check_is_due(settings, now + 600)                            # no second check today
