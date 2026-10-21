@@ -184,3 +184,97 @@ def test_real_freecad(tmp_path, monkeypatch):
     assert [p.name for p in m.parts] == ["Foot"]
     v = m.parts[0].vertices
     assert abs(v[:, 0].min() - 100) < 0.01 and abs(v[:, 0].max() - 120) < 0.01
+
+
+# ------------------------------------------------------------------ STEP files
+STEP_HEADER = """ISO-10303-21;
+HEADER;
+FILE_DESCRIPTION(('FreeCAD Model'),'2;1');
+FILE_NAME('C:/Users/sevag/Desktop/Bracket.step','2026-10-21T01:20:00',('Sevag'),(
+    'Workshop \\X2\\00E9\\X0\\t\\X2\\00E9\\X0\\'),'Open CASCADE STEP processor 7.8','FreeCAD','Unknown');
+FILE_SCHEMA(('AUTOMOTIVE_DESIGN { 1 0 10303 214 1 1 1 1 }'));
+ENDSEC;
+DATA;
+#1 = APPLICATION_PROTOCOL_DEFINITION('international standard','automotive_design',2000,#2);
+ENDSEC;
+END-ISO-10303-21;
+"""
+
+
+def make_step(path):
+    with open(path, "w", newline="\n") as f:
+        f.write(STEP_HEADER)
+    return path
+
+
+def test_step_file_kind():
+    assert file_kind("a.STEP") == "step" and file_kind("a.stp") == "step"
+
+
+def test_step_header_without_freecad(tmp_path, monkeypatch):
+    monkeypatch.setattr(fc, "find_freecad", lambda *_a: None)
+    m = load_file(make_step(str(tmp_path / "b.step")))
+    assert m.parts == [] and m.freecad["status"] == "no_freecad" and m.freecad["source"] == "step"
+    assert m.meta == {"Format": "STEP AP214", "Created with": "FreeCAD", "Designer": "Sevag",
+                      "Organization": "Workshop été", "Date": "2026-10-21 01:20"}
+
+
+def test_not_a_step_file(tmp_path):
+    p = tmp_path / "x.stp"
+    p.write_text("solid nope\n")
+    with pytest.raises(ValueError, match="not a STEP file"):
+        load_file(str(p))
+
+
+def test_step_through_freecad(tmp_path, fake_install, monkeypatch):
+    path = make_step(str(tmp_path / "b.step"))
+    m = fc.load_step(path, install=fake_install)
+    assert m.freecad["status"] == "ok", m.freecad["error"]
+    assert [p.name for p in m.parts] == ["Solid 1", "Solid 2"]      # fake FreeCAD: no STEP importer
+    assert m.bounds()[0] == 0 and m.bounds()[1] == 30
+    assert m.meta["Format"] == "STEP AP214"
+    monkeypatch.setattr(fc.subprocess, "run", lambda *a, **k: pytest.fail("FreeCAD started again"))
+    assert len(fc.load_step(path, install=fake_install).parts) == 2   # from the cache
+
+
+MAKE_STEP = r'''
+import os, FreeCAD, Part, Import
+doc = FreeCAD.newDocument("Test")
+part = doc.addObject("App::Part", "Part"); part.Label = "Assembly"
+part.Placement.Base = FreeCAD.Vector(100, 0, 0)
+box = doc.addObject("Part::Box", "Box"); box.Label = "Foot"
+box.Length, box.Width, box.Height = 20, 10, 5
+cyl = doc.addObject("Part::Cylinder", "Cylinder"); cyl.Label = "Peg"
+cyl.Radius, cyl.Height = 2, 15
+cyl.Placement.Base = FreeCAD.Vector(10, 5, 5)
+part.addObject(box); part.addObject(cyl)
+doc.recompute()
+Import.export([part], os.environ["OUT_STEP"])
+# What FreeCAD itself reads back from the file: the reference for PrintView3D.
+bb = Part.read(os.environ["OUT_STEP"]).BoundBox
+import json
+json.dump([bb.XMin, bb.XMax, bb.YMin, bb.YMax, bb.ZMin, bb.ZMax], open(os.environ["OUT_STEP"] + ".json", "w"))
+os._exit(0)
+'''
+
+
+@pytest.mark.skipif(not WANT_REAL, reason="set PRINTVIEW3D_REAL_FREECAD=1 with FreeCAD installed")
+def test_real_freecad_step(tmp_path, monkeypatch):
+    assert REAL is not None, "PRINTVIEW3D_REAL_FREECAD is set but FreeCAD was not found"
+    monkeypatch.setattr(fc, "cache_dir", lambda: str(tmp_path / "cache"))
+    script, out = tmp_path / "make_step.py", tmp_path / "real.step"
+    script.write_text(MAKE_STEP)
+    subprocess.run(REAL.cmd + [str(script)], env=dict(os.environ, OUT_STEP=str(out)), timeout=180,
+                   stdin=subprocess.DEVNULL, capture_output=True)
+    assert out.is_file(), "FreeCAD did not create the test STEP file"
+    m = fc.load_step(str(out), install=REAL)
+    assert m.freecad["status"] == "ok", m.freecad["error"]
+    import json
+    ref = json.load(open(str(out) + ".json"))
+    b = m.bounds()
+    print("\nSTEP parts:", [p.name for p in m.parts], "named:", m.freecad.get("named_parts"),
+          "bounds:", [round(x, 2) for x in b], "FreeCAD reads:", [round(x, 2) for x in ref], "details:", m.meta)
+    assert len(m.parts) == 2
+    assert all(abs(x - y) < 0.05 for x, y in zip(b, ref))     # exactly where FreeCAD puts it
+    assert abs((b[1] - b[0]) - 20) < 0.05 and abs((b[5] - b[4]) - 20) < 0.05   # box + peg sizes
+    assert {p.name for p in m.parts} == {"Foot", "Peg"}      # names from the file kept

@@ -161,7 +161,7 @@ class SettingsDialog(QDialog):
         else:
             info_text = tr("Add PrintView3D to your applications menu and to \"Open with\", and make it "
                            "the default app for .stl, .3mf and .gcode files. Remove registration undoes it.")
-        info = QLabel(info_text + " " + tr('OBJ, PLY, OFF and glTF files are only added to "Open with".'))
+        info = QLabel(info_text + " " + tr('OBJ, PLY, OFF, glTF and STEP files are only added to "Open with".'))
         info.setWordWrap(True)
         info.setObjectName("muted")
         l2.addWidget(info)

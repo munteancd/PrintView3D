@@ -29,6 +29,8 @@ EXTENSIONS = {
     ".off": "OFF 3D Model",
     ".glb": "glTF 3D Model",
     ".gltf": "glTF 3D Model",
+    ".step": "STEP CAD Model",
+    ".stp": "STEP CAD Model",
 }
 
 CAPS_KEY = rf"Software\{APP_ID}\Capabilities"

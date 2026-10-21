@@ -37,12 +37,14 @@ EXTRA_MIME_TYPES = ["application/sla", "model/x.stl-binary", "model/x.stl-ascii"
                     "application/vnd.ms-3mfdocument", "text/x-gcode"]
 # General 3D formats: PrintView3D is offered under "Open With", but "Set as default" leaves
 # them alone (people usually have a 3D editor for these). OBJ and glTF are known to
-# shared-mime-info; PLY and OFF are not, so we define those ourselves.
+# shared-mime-info; PLY, OFF and STEP are not, so we define those ourselves.
 OPEN_WITH_MIME_TYPES = {
     "model/x.ply": ("PLY 3D model", ["*.ply"]),
     "model/x.off": ("OFF 3D model", ["*.off"]),
+    "model/step": ("STEP CAD model", ["*.step", "*.stp"]),
 }
-OPEN_WITH_EXTRA = ["model/obj", "model/gltf-binary", "model/gltf+json"]
+OPEN_WITH_EXTRA = ["model/obj", "model/gltf-binary", "model/gltf+json", "application/step",
+                   "application/x-step"]
 EXT_TO_MIME = {".stl": "model/stl", ".3mf": "model/3mf", ".gcode": "text/x.gcode", ".gco": "text/x.gcode"}
 
 

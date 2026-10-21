@@ -1,4 +1,4 @@
-"""File loaders: STL, 3MF, OBJ, PLY, OFF, glTF/GLB, G-code and FreeCAD documents."""
+"""File loaders: STL, 3MF, OBJ, PLY, OFF, glTF/GLB, G-code, FreeCAD documents and STEP."""
 
 import os
 
@@ -12,10 +12,12 @@ _KINDS = {
     ".obj": "obj", ".ply": "ply", ".off": "off", ".glb": "gltf", ".gltf": "gltf",
     ".gcode": "gcode", ".gco": "gcode", ".g": "gcode",
     ".fcstd": "freecad",
+    ".step": "step", ".stp": "step",
 }
 MESH_EXTENSIONS = (".stl", ".3mf", ".obj", ".ply", ".off", ".glb", ".gltf")
 GCODE_EXTENSIONS = (".gcode", ".gco", ".g")
 FREECAD_EXTENSIONS = (".fcstd",)
+STEP_EXTENSIONS = (".step", ".stp")
 SUPPORTED_EXTENSIONS = tuple(_KINDS)
 # Kinds that slicers don't all read: "Send to slicer" sends these as STL.
 SEND_AS_STL = ("ply", "off", "gltf", "freecad")
@@ -24,15 +26,16 @@ _LOADERS = {"stl": load_stl, "3mf": load_3mf, "obj": load_obj, "ply": load_ply, 
 
 
 def file_kind(path: str) -> str:
-    """Return 'stl', '3mf', 'obj', 'ply', 'off', 'gltf', 'gcode', 'freecad' or '' (unsupported)."""
+    """Return 'stl', '3mf', 'obj', 'ply', 'off', 'gltf', 'gcode', 'freecad', 'step' or ''."""
     return _KINDS.get(os.path.splitext(path)[1].lower(), "")
 
 
 def load_file(path: str, progress=None, freecad_path: str = ""):
     kind = file_kind(path)
-    if kind == "freecad":
+    if kind in ("freecad", "step"):
         from .. import freecad          # not at import time: freecad imports this package
-        return freecad.load_fcstd(path, progress, freecad.find_freecad(freecad_path))
+        load = freecad.load_fcstd if kind == "freecad" else freecad.load_step
+        return load(path, progress, freecad.find_freecad(freecad_path))
     if kind in _LOADERS:
         return _LOADERS[kind](path, progress)
     raise ValueError(f"Unsupported file type: {os.path.basename(path)}")

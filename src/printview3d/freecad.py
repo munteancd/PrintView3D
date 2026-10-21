@@ -1,9 +1,9 @@
-"""Finding the user's FreeCAD and using it to show FreeCAD documents in 3D.
+"""Finding the user's FreeCAD and using it to show FreeCAD documents and STEP files in 3D.
 
 PrintView3D does not include FreeCAD's geometry engine. When FreeCAD is
 installed, its command-line program (FreeCADCmd) is started hidden in the
 background with resources/freecad_export.py, which turns the visible objects
-into STL meshes. The result is cached, so opening the same file again is
+(or the parts of a STEP file) into STL meshes. The result is cached, so opening the same file again is
 instant. Without FreeCAD, only the preview picture and the object list are
 shown (see loaders.freecad).
 """
@@ -22,6 +22,7 @@ from typing import Optional
 
 from .loaders.freecad import FreeCADDoc, read_fcstd
 from .loaders.mesh import MeshPart, ModelData, load_stl
+from .loaders.step import header_meta, read_step_header
 
 FREECAD_EXTENSIONS = (".fcstd",)
 TIMEOUT = 180
@@ -123,9 +124,9 @@ def cache_dir() -> str:
     return os.path.join(base, "printview3d", "freecad")
 
 
-def _job_dir(path: str, names: list[str]) -> str:
+def _job_dir(path: str, names: list[str], kind: str = "fcstd") -> str:
     st = os.stat(path)
-    key = f"{os.path.abspath(path)}|{st.st_size}|{st.st_mtime_ns}|{','.join(names)}|2"
+    key = f"{os.path.abspath(path)}|{st.st_size}|{st.st_mtime_ns}|{','.join(names)}|{kind}|2"
     return os.path.join(cache_dir(), hashlib.sha1(key.encode("utf-8")).hexdigest()[:16])
 
 
@@ -138,9 +139,11 @@ class FreeCADError(RuntimeError):
     pass
 
 
-def convert(install: FreeCADInstall, path: str, names: list[str]) -> list[tuple[str, str]]:
-    """Run FreeCAD hidden; returns [(object label, stl path)]. Uses the cache when possible."""
-    out = _job_dir(path, names)
+def convert(install: FreeCADInstall, path: str, names: list[str], kind: str = "fcstd",
+            info: Optional[dict] = None) -> list[tuple[str, str]]:
+    """Run FreeCAD hidden; returns [(object label, stl path)]. Uses the cache when possible.
+    kind "fcstd": the named objects of a FreeCAD document; "step": all parts of a STEP file."""
+    out = _job_dir(path, names, kind)
     result_file = os.path.join(out, "result.json")
     if not os.path.isfile(result_file):
         os.makedirs(out, exist_ok=True)
@@ -148,7 +151,7 @@ def convert(install: FreeCADInstall, path: str, names: list[str]) -> list[tuple[
         shutil.copyfile(_script_path(), script)
         job = os.path.join(out, "job.json")
         with open(job, "w", encoding="utf-8") as f:
-            json.dump({"file": os.path.abspath(path), "objects": names, "out_dir": out}, f)
+            json.dump({"file": os.path.abspath(path), "objects": names, "out_dir": out, "type": kind}, f)
         from .slicer import clean_environment
         env = clean_environment()
         env["PRINTVIEW3D_FREECAD_JOB"] = job
@@ -166,6 +169,8 @@ def convert(install: FreeCADInstall, path: str, names: list[str]) -> list[tuple[
             raise FreeCADError("FreeCAD did not convert the file.")
     with open(result_file, encoding="utf-8") as f:
         result = json.load(f)
+    if info is not None:
+        info.update(result)
     objs = [(o["label"], o["stl"]) for o in result.get("objects", []) if os.path.isfile(o["stl"])]
     if not objs and result.get("errors"):
         shutil.rmtree(out, ignore_errors=True)        # don't cache a failure
@@ -207,6 +212,34 @@ def load_fcstd(path: str, progress=None, install: Optional[FreeCADInstall] = Non
         if progress:
             progress(0.2 + 0.8 * (i + 1) / len(objs))
     m.freecad["status"] = "ok"
+    return m
+
+
+def load_step(path: str, progress=None, install: Optional[FreeCADInstall] = None) -> ModelData:
+    """A STEP file: the header details always; the 3D model through FreeCAD when installed."""
+    m = ModelData(parts=[], meta=header_meta(read_step_header(path)))
+    m.freecad = {"doc": None, "shown": [], "status": "no_freecad", "error": "", "install": install,
+                 "source": "step"}
+    if progress:
+        progress(0.1)
+    if install is None:
+        return m
+    result: dict = {}
+    try:
+        objs = convert(install, path, [], "step", result)
+    except FreeCADError as e:
+        m.freecad.update(status="failed", error=str(e))
+        return m
+    for i, (label, stl) in enumerate(objs):
+        part = load_stl(stl).parts[0]
+        m.parts.append(MeshPart(label, part.vertices, part.faces))
+        if progress:
+            progress(0.2 + 0.8 * (i + 1) / len(objs))
+    if not m.parts:
+        m.freecad.update(status="failed", error="FreeCAD found no solid shapes in this file.")
+        return m
+    m.freecad["status"] = "ok"
+    m.freecad["named_parts"] = not result.get("fallback", False)
     return m
 
 

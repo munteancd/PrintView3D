@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.14.0
+- **Open STEP files** (`.step`, `.stp`) ([#15](https://github.com/sevagjb/PrintView3D/issues/15)).
+  - Shown in 3D through your installed FreeCAD, like FreeCAD documents: converted hidden in the
+    background, then remembered. Assembly parts are listed with their names and can be hidden.
+  - The details from the file are always shown, also without FreeCAD: STEP version (AP203/214/242),
+    CAD program, author, organization and date.
+  - **Send to slicer:** the STEP file itself to OrcaSlicer, PrusaSlicer and Bambu Studio; an STL of the
+    visible parts to other slicers. *Open in FreeCAD* is in the slicer menu.
+  - Added to "Open with" on Windows, Linux and macOS (never made the default app).
+
 ## 0.13.0
 - **Open more 3D formats**: OBJ, PLY, OFF and glTF / GLB ([#14](https://github.com/sevagjb/PrintView3D/issues/14)).
   - Colours saved in the file are shown: OBJ materials (`.mtl`) and vertex colours, PLY and OFF

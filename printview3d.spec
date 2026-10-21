@@ -105,6 +105,7 @@ if sys.platform == "darwin":
                 _doc("PLY model", ["ply"], ["public.polygon-file-format"]),
                 _doc("OFF model", ["off"], []),
                 _doc("glTF model", ["glb", "gltf"], []),
+                _doc("STEP model", ["step", "stp"], []),
             ],
         },
     )

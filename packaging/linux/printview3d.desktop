@@ -8,6 +8,6 @@ Icon=printview3d
 Terminal=false
 Categories=Graphics;3DGraphics;Viewer;
 Keywords=3D;print;STL;3MF;OBJ;PLY;glTF;GLB;G-code;gcode;slicer;viewer;
-MimeType=model/stl;model/3mf;text/x.gcode;application/sla;application/vnd.ms-3mfdocument;text/x-gcode;model/x.ply;model/x.off;model/obj;model/gltf-binary;model/gltf+json;
+MimeType=model/stl;model/3mf;text/x.gcode;application/sla;application/vnd.ms-3mfdocument;text/x-gcode;model/x.ply;model/x.off;model/obj;model/gltf-binary;model/gltf+json;model/step;application/step;application/x-step;
 StartupWMClass=PrintView3D
 PrefersNonDefaultGPU=true

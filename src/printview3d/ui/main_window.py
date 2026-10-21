@@ -44,12 +44,14 @@ def resource(name: str) -> str:
 
 def file_filter() -> str:
     return ";;".join([
-        tr("3D files") + " (*.stl *.3mf *.obj *.ply *.off *.glb *.gltf *.gcode *.gco *.g *.FCStd *.fcstd)",
+        tr("3D files") + " (*.stl *.3mf *.obj *.ply *.off *.glb *.gltf *.step *.stp *.STEP *.STP "
+                         "*.gcode *.gco *.g *.FCStd *.fcstd)",
         tr("STL models") + " (*.stl)",
         tr("3MF projects") + " (*.3mf)",
         tr("Other 3D models") + " (*.obj *.ply *.off *.glb *.gltf)",
         tr("G-code") + " (*.gcode *.gco *.g)",
         tr("FreeCAD documents") + " (*.FCStd *.fcstd)",
+        tr("STEP CAD files") + " (*.step *.stp *.STEP *.STP)",
         tr("All files") + " (*)",
     ])
 
@@ -591,7 +593,7 @@ class MainWindow(QMainWindow):
         if self.showing_embedded:
             return tr("Sliced toolpaths · {plate}").format(plate=_plate_name(self._embedded_member))
         names = {"stl": "STL", "3mf": "3MF", "obj": "OBJ", "ply": "PLY", "off": "OFF", "gltf": "glTF",
-                 "gcode": tr("G-code"), "freecad": "FreeCAD"}
+                 "gcode": tr("G-code"), "freecad": "FreeCAD", "step": "STEP"}
         return tr("{kind} · {size} MB").format(kind=names.get(self.current_kind, self.current_kind.upper()),
                                                size=num(self._file_size_mb, 1))
 
@@ -614,7 +616,7 @@ class MainWindow(QMainWindow):
         kind = file_kind(path)
         if not kind:
             QMessageBox.warning(self, tr("Unsupported file"),
-                                tr("PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, G-code and FreeCAD files."))
+                                tr("PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code and FreeCAD files."))
             return
         self._load_token += 1
         token = self._load_token
@@ -686,7 +688,7 @@ class MainWindow(QMainWindow):
         self.scene.set_view("iso")
         self._update_slicer_button()
         msg = tr("Opened {path}").format(path=path)
-        if kind == "freecad" and not getattr(data, "parts", None):
+        if kind in ("freecad", "step") and not getattr(data, "parts", None):
             msg = self._freecad_status_text(data)
         self.statusBar().showMessage(msg, 10000)
 
@@ -749,6 +751,12 @@ class MainWindow(QMainWindow):
     def _freecad_status_text(self, m: ModelData) -> str:
         info = m.freecad or {}
         status = info.get("status")
+        step = info.get("source") == "step"
+        if step and status == "ok":
+            return tr("Converted to 3D with FreeCAD.")
+        if step and status == "no_freecad":
+            return tr("STEP files are shown in 3D with the help of FreeCAD (free), "
+                      "which was not found on this computer.")
         if status == "ok":
             return tr("Shown as in FreeCAD: visible objects only (no sketches, hidden objects or helpers).")
         if status == "nothing_visible":
@@ -760,7 +768,7 @@ class MainWindow(QMainWindow):
 
     def _fill_freecad_box(self, m: ModelData):
         info = m.freecad
-        self.embedded_box.setTitle(tr("FreeCAD document"))
+        self.embedded_box.setTitle(tr("STEP file") if info.get("source") == "step" else tr("FreeCAD document"))
         if m.parts:                                 # (otherwise the preview page explains it)
             text = QLabel(self._freecad_status_text(m))
             text.setObjectName("muted")
@@ -811,9 +819,14 @@ class MainWindow(QMainWindow):
         if m and m.parts and not parts:            # every object hidden: send them all
             parts = list(m.parts)
         if not parts:
-            QMessageBox.information(self, tr("Nothing to send"),
-                                    tr("To send a FreeCAD model to a slicer, PrintView3D needs FreeCAD to "
-                                       "convert it first. Install FreeCAD or choose it in Settings."))
+            if self.current_kind == "step":
+                text = tr("This slicer does not open STEP files, and PrintView3D needs FreeCAD to convert "
+                          "it to STL. Install FreeCAD or choose it in Settings, or send the file to "
+                          "OrcaSlicer, PrusaSlicer or Bambu Studio, which open STEP files themselves.")
+            else:
+                text = tr("To send a FreeCAD model to a slicer, PrintView3D needs FreeCAD to "
+                          "convert it first. Install FreeCAD or choose it in Settings.")
+            QMessageBox.information(self, tr("Nothing to send"), text)
             return None
         base = os.path.splitext(os.path.basename(self.current_path or "model"))[0]
         return fc.export_stl(parts, os.path.join(os.path.dirname(fc.cache_dir()), "to-slicer", base + ".stl"))
@@ -1023,14 +1036,16 @@ class MainWindow(QMainWindow):
         if os.path.isfile(custom.get("path", "")):
             entries.append((sl.CUSTOM, self._slicer_name(sl.CUSTOM, sl.slicer_name(sl.CUSTOM, custom.get("name", "")))))
         freecad_file = self.current_kind == "freecad"
-        if freecad_file:
+        step_file = self.current_kind == "step"
+        if freecad_file or (step_file and self._freecad_install() is not None):
             self.slicer_menu.addAction(tr("Open in FreeCAD"), self.open_in_freecad)
             self.slicer_menu.addSeparator()
         if not entries:
             a = self.slicer_menu.addAction(tr("No slicers found"))
             a.setEnabled(False)
         for sid, name in entries:
-            as_stl = self.current_kind in SEND_AS_STL and not self.showing_embedded
+            as_stl = ((self.current_kind in SEND_AS_STL and not self.showing_embedded)
+                      or (step_file and not sl.reads_step(sid)))
             label = (tr("Send to {slicer} as STL") if as_stl else tr("Open in {slicer}")).format(slicer=name)
             if sid == default_id:
                 label += "   " + tr("(default)")
@@ -1051,6 +1066,12 @@ class MainWindow(QMainWindow):
             file_to_send = self._stl_for_slicer()
             if not file_to_send:
                 return
+        elif self.current_kind == "step" and self.current_path:
+            target = sl.resolve(self.settings, slicer_id)[0]
+            if target and not sl.reads_step(target):     # STEP for slicers that read it, STL otherwise
+                file_to_send = self._stl_for_slicer()
+                if not file_to_send:
+                    return
         sid, name, exe = sl.resolve(self.settings, slicer_id)
         name = self._slicer_name(sid, name)
         if not sid:
@@ -1109,7 +1130,7 @@ class MainWindow(QMainWindow):
         if accepted:
             self._update_slicer_button()
             # FreeCAD just chosen: show the open FreeCAD file in 3D now.
-            if (self.current_kind == "freecad" and self.current_path and self.model is not None
+            if (self.current_kind in ("freecad", "step") and self.current_path and self.model is not None
                     and not self.model.parts and self.settings.get("freecad_path", "") != freecad_before):
                 self.load(self.current_path)
             show_bed = bool(self.settings.get("show_bed", True))

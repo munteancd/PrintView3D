@@ -5,7 +5,7 @@
 <h1 align="center">PrintView3D</h1>
 
 <p align="center">
-  A fast, free viewer for <b>STL</b>, <b>3MF</b>, <b>G-code</b>, <b>FreeCAD</b>, <b>OBJ</b>, <b>PLY</b> and <b>glTF</b> files on <b>Windows</b>, <b>Linux</b> and <b>macOS</b>,<br>
+  A fast, free viewer for <b>STL</b>, <b>3MF</b>, <b>G-code</b>, <b>FreeCAD</b>, <b>STEP</b>, <b>OBJ</b>, <b>PLY</b> and <b>glTF</b> files on <b>Windows</b>, <b>Linux</b> and <b>macOS</b>,<br>
   with a one-click button that opens the file in <b>your slicer</b>.
 </p>
 
@@ -35,6 +35,7 @@ file to Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura and others w
 | **3MF** | Every object on the plate, including projects from Creality Print, OrcaSlicer and Bambu Studio. Show or hide each object, see the project's printer and filament settings and its thumbnail. If the project is already sliced, view its toolpaths without re-slicing. |
 | **G-code** | Toolpaths coloured by type (walls, infill, top/bottom, supports, bridges, travel…), a layer slider, "show only this layer", print time, filament use and the slicer's preview picture. |
 | **FreeCAD** | Open `.FCStd` documents to look at them: shown in 3D exactly as FreeCAD displays them (visible bodies only), with one click to open in FreeCAD or send to your slicer as STL. Uses your installed FreeCAD; without it you still see the preview picture. [Details](#freecad-files). |
+| **STEP** | Open `.step` / `.stp` CAD files: shown in 3D with the help of your installed FreeCAD (converted in the background, remembered afterwards), with the CAD program, author and date from the file. OrcaSlicer, PrusaSlicer and Bambu Studio get the STEP file itself; other slicers get an STL. [Details](#step-files). |
 | **OBJ, PLY, OFF, glTF / GLB** | Other common 3D formats, with the colours saved in the file (textures are not shown). OBJ objects and glTF scenes are listed as separate objects. OBJ goes to your slicer as it is; PLY, OFF and glTF are sent as STL, because not every slicer reads them. [Details](#other-3d-formats). |
 | **Open in your slicer** | One click (or `Ctrl+P`) opens the current file in your slicer. Installed slicers are found automatically. |
 | **Default app** | Optional: make PrintView3D open `.stl`, `.3mf` and `.gcode` files when you double-click them. Fully reversible. |
@@ -261,6 +262,22 @@ Flatpak, AppImage). If yours is elsewhere, choose it in **Settings → FreeCAD**
 <td width="50%"><img src="docs/screenshot-freecad-preview.png" alt="The same file without FreeCAD: the preview picture"><br><sub>Without FreeCAD: the preview picture saved in the file.</sub></td>
 </tr>
 </table>
+
+### STEP files
+
+STEP (`.step`, `.stp`) is the common format for exchanging CAD models between programs. It stores
+exact shapes (curved surfaces), not triangles, so PrintView3D uses **FreeCAD** to turn them into a
+mesh, the same way as for [FreeCAD files](#freecad-files): hidden in the background, a few seconds
+the first time, then remembered until the file changes.
+
+- **Parts:** an assembly's parts are listed separately with their names from the file, and can be
+  hidden. (If FreeCAD's import gives anything unexpected, PrintView3D shows each solid instead, so
+  the shape is always right.)
+- **Without FreeCAD** you still see the details from the file (STEP version, the CAD program it was
+  made with, author, organization, date) and a button to download FreeCAD.
+- **Send to slicer:** OrcaSlicer, PrusaSlicer and Bambu Studio open STEP files themselves and get the
+  file as it is (also without FreeCAD). Other slicers get the visible parts as STL, which needs FreeCAD.
+- STEP files are added to **Open with**, but PrintView3D never makes itself their default app.
 
 ### Other 3D formats
 

@@ -48,7 +48,13 @@ jobs:
           QT_QPA_PLATFORM: offscreen
         run: |
           choco install freecad -y --no-progress | Select-Object -Last 3
-          python -m pytest -q -s tests/test_freecad.py -k real_freecad
+          $out = python -m pytest -q -s -rA --tb=short tests/test_freecad.py -k real_freecad 2>&1 | Out-String
+          Write-Output $out
+          $code = $LASTEXITCODE
+          # Report the important lines where they can be seen without the log.
+          $lines = $out -split "`r?`n" | Where-Object { $_ -match '^(E |FAILED|PASSED|STEP parts|Using FreeCAD|NOTE)' -or $_ -match 'Error' }
+          Write-Output ("::warning title=Real FreeCAD tests::" + (($lines | Select-Object -First 40) -join " | "))
+          exit $code
 
       - name: Build with PyInstaller
         run: pyinstaller --noconfirm --clean printview3d.spec
