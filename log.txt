@@ -1,0 +1,48 @@
+2026-10-21 22:57:10.119 (   7.272s) [7143F8B504BC0FE2]vtkWin32OpenGLRenderWin:656    ERR| vtkWin32OpenGLRenderWindow (000002581F13F010): failed to get wglChoosePixelFormatARB
+WARNING:root:ERROR: In vtkWin32OpenGLRenderWindow.cxx, line 656
+vtkWin32OpenGLRenderWindow (000002581F13F010): failed to get wglChoosePixelFormatARB
+2026-10-21 22:57:10.121 (   7.275s) [7143F8B504BC0FE2]vtkWin32OpenGLRenderWin:731    ERR| vtkWin32OpenGLRenderWindow (000002581F13F010): failed to get valid pixel format.
+WARNING:root:ERROR: In vtkWin32OpenGLRenderWindow.cxx, line 731
+vtkWin32OpenGLRenderWindow (000002581F13F010): failed to get valid pixel format.
+2026-10-21 22:57:10.121 (   7.275s) [7143F8B504BC0FE2]vtkOpenGLRenderWindow.c:958   WARN| vtkWin32OpenGLRenderWindow (000002581F13F010): Failed to initialize OpenGL functions!
+2026-10-21 22:57:10.123 (   7.277s) [7143F8B504BC0FE2]vtkOSOpenGLRenderWindow:135   WARN| osmesa.dll not found. It appears that OSMesa is not installed in your system. Please install the OSMesa library. You can obtain pre-built binaries for Windows from https://github.com/pal1000/mesa-dist-win. Ensure that osmesa.dll is available in PATH.
+D:\a\PrintView3D\PrintView3D\tools\..\src\printview3d\ui\scene.py:45: UserWarning: VTK compiled with OSMesa/EGL does not properly support FXAA anti-aliasing and SSAA will be used instead.
+  self.p.enable_anti_aliasing("fxaa")
+2026-10-21 22:57:10.986 (   8.139s) [7143F8B504BC0FE2]vtkOpenGLRenderWindow.c:958   WARN| vtkGenericOpenGLRenderWindow (000002581E856870): Failed to initialize OpenGL functions!
+2026-10-21 22:57:10.986 (   8.140s) [7143F8B504BC0FE2]vtkOpenGLRenderWindow.c:958   WARN| vtkGenericOpenGLRenderWindow (000002581E856870): Failed to initialize OpenGL functions!
+2026-10-21 22:57:12.165 (   0.830s) [5579B2050611DBB0]vtkWin32OpenGLRenderWin:656    ERR| vtkWin32OpenGLRenderWindow (000001CC308BC640): failed to get wglChoosePixelFormatARB
+WARNING:root:ERROR: In vtkWin32OpenGLRenderWindow.cxx, line 656
+vtkWin32OpenGLRenderWindow (000001CC308BC640): failed to get wglChoosePixelFormatARB
+2026-10-21 22:57:12.166 (   0.831s) [5579B2050611DBB0]vtkWin32OpenGLRenderWin:731    ERR| vtkWin32OpenGLRenderWindow (000001CC308BC640): failed to get valid pixel format.
+WARNING:root:ERROR: In vtkWin32OpenGLRenderWindow.cxx, line 731
+vtkWin32OpenGLRenderWindow (000001CC308BC640): failed to get valid pixel format.
+2026-10-21 22:57:12.166 (   0.832s) [5579B2050611DBB0]vtkOpenGLRenderWindow.c:958   WARN| vtkWin32OpenGLRenderWindow (000001CC308BC640): Failed to initialize OpenGL functions!
+2026-10-21 22:57:12.168 (   0.834s) [5579B2050611DBB0]vtkOSOpenGLRenderWindow:135   WARN| osmesa.dll not found. It appears that OSMesa is not installed in your system. Please install the OSMesa library. You can obtain pre-built binaries for Windows from https://github.com/pal1000/mesa-dist-win. Ensure that osmesa.dll is available in PATH.
+D:\a\PrintView3D\PrintView3D\tools\..\src\printview3d\ui\scene.py:45: UserWarning: VTK compiled with OSMesa/EGL does not properly support FXAA anti-aliasing and SSAA will be used instead.
+  self.p.enable_anti_aliasing("fxaa")
+2026-10-21 22:57:12.903 (   1.569s) [5579B2050611DBB0]vtkOpenGLRenderWindow.c:958   WARN| vtkGenericOpenGLRenderWindow (000001CC2FE1A110): Failed to initialize OpenGL functions!
+2026-10-21 22:57:12.904 (   1.569s) [5579B2050611DBB0]vtkOpenGLRenderWindow.c:958   WARN| vtkGenericOpenGLRenderWindow (000001CC2FE1A110): Failed to initialize OpenGL functions!
+2026-10-21 22:57:14.081 (   0.835s) [E5625A3BF627EF8A]vtkWin32OpenGLRenderWin:656    ERR| vtkWin32OpenGLRenderWindow (0000023F65609100): failed to get wglChoosePixelFormatARB
+WARNING:root:ERROR: In vtkWin32OpenGLRenderWindow.cxx, line 656
+vtkWin32OpenGLRenderWindow (0000023F65609100): failed to get wglChoosePixelFormatARB
+2026-10-21 22:57:14.083 (   0.836s) [E5625A3BF627EF8A]vtkWin32OpenGLRenderWin:731    ERR| vtkWin32OpenGLRenderWindow (0000023F65609100): failed to get valid pixel format.
+WARNING:root:ERROR: In vtkWin32OpenGLRenderWindow.cxx, line 731
+vtkWin32OpenGLRenderWindow (0000023F65609100): failed to get valid pixel format.
+2026-10-21 22:57:14.083 (   0.837s) [E5625A3BF627EF8A]vtkOpenGLRenderWindow.c:958   WARN| vtkWin32OpenGLRenderWindow (0000023F65609100): Failed to initialize OpenGL functions!
+2026-10-21 22:57:14.085 (   0.838s) [E5625A3BF627EF8A]vtkOSOpenGLRenderWindow:135   WARN| osmesa.dll not found. It appears that OSMesa is not installed in your system. Please install the OSMesa library. You can obtain pre-built binaries for Windows from https://github.com/pal1000/mesa-dist-win. Ensure that osmesa.dll is available in PATH.
+D:\a\PrintView3D\PrintView3D\tools\..\src\printview3d\ui\scene.py:45: UserWarning: VTK compiled with OSMesa/EGL does not properly support FXAA anti-aliasing and SSAA will be used instead.
+  self.p.enable_anti_aliasing("fxaa")
+2026-10-21 22:57:14.802 (   1.556s) [E5625A3BF627EF8A]vtkOpenGLRenderWindow.c:958   WARN| vtkGenericOpenGLRenderWindow (0000023F64EEA280): Failed to initialize OpenGL functions!
+2026-10-21 22:57:14.803 (   1.556s) [E5625A3BF627EF8A]vtkOpenGLRenderWindow.c:958   WARN| vtkGenericOpenGLRenderWindow (0000023F64EEA280): Failed to initialize OpenGL functions!
+2026-10-21 22:57:15.930 (   0.809s) [1FABF2E28B1AB586]vtkWin32OpenGLRenderWin:656    ERR| vtkWin32OpenGLRenderWindow (00000269EC862660): failed to get wglChoosePixelFormatARB
+WARNING:root:ERROR: In vtkWin32OpenGLRenderWindow.cxx, line 656
+vtkWin32OpenGLRenderWindow (00000269EC862660): failed to get wglChoosePixelFormatARB
+2026-10-21 22:57:15.931 (   0.810s) [1FABF2E28B1AB586]vtkWin32OpenGLRenderWin:731    ERR| vtkWin32OpenGLRenderWindow (00000269EC862660): failed to get valid pixel format.
+WARNING:root:ERROR: In vtkWin32OpenGLRenderWindow.cxx, line 731
+vtkWin32OpenGLRenderWindow (00000269EC862660): failed to get valid pixel format.
+2026-10-21 22:57:15.931 (   0.811s) [1FABF2E28B1AB586]vtkOpenGLRenderWindow.c:958   WARN| vtkWin32OpenGLRenderWindow (00000269EC862660): Failed to initialize OpenGL functions!
+2026-10-21 22:57:15.933 (   0.812s) [1FABF2E28B1AB586]vtkOSOpenGLRenderWindow:135   WARN| osmesa.dll not found. It appears that OSMesa is not installed in your system. Please install the OSMesa library. You can obtain pre-built binaries for Windows from https://github.com/pal1000/mesa-dist-win. Ensure that osmesa.dll is available in PATH.
+D:\a\PrintView3D\PrintView3D\tools\..\src\printview3d\ui\scene.py:45: UserWarning: VTK compiled with OSMesa/EGL does not properly support FXAA anti-aliasing and SSAA will be used instead.
+  self.p.enable_anti_aliasing("fxaa")
+2026-10-21 22:57:16.640 (   1.519s) [1FABF2E28B1AB586]vtkOpenGLRenderWindow.c:958   WARN| vtkGenericOpenGLRenderWindow (00000269EC1A6370): Failed to initialize OpenGL functions!
+2026-10-21 22:57:16.641 (   1.520s) [1FABF2E28B1AB586]vtkOpenGLRenderWindow.c:958   WARN| vtkGenericOpenGLRenderWindow (00000269EC1A6370): Failed to initialize OpenGL functions!
