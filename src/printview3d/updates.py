@@ -137,15 +137,19 @@ def auto_check_enabled(settings) -> bool:
 
 
 def check_is_due(settings, now: Optional[float] = None) -> bool:
+    """Once a day; and right away when a new version starts for the first time (after an
+    update), so the corner shows straight away whether it is up to date."""
     now = time.time() if now is None else now
     last = float(settings.get("update_last_check") or 0)
-    return auto_check_enabled(settings) and (now - last >= CHECK_INTERVAL or now < last)
+    new_version = settings.get("update_checked_by", "") != __version__
+    return auto_check_enabled(settings) and (new_version or now - last >= CHECK_INTERVAL or now < last)
 
 
 def remember(settings, rel: Optional[Release], now: Optional[float] = None) -> None:
     """After a check: rel is the latest release, or None when the check failed."""
     now = time.time() if now is None else now
     settings.set("update_last_check", now)
+    settings.set("update_checked_by", __version__)   # also after a failed try: once per version
     if rel is not None:
         settings.set("update_latest", rel.to_dict())
         settings.set("update_last_ok", now)          # the last check that really reached GitHub

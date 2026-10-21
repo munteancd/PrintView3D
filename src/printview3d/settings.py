@@ -22,6 +22,7 @@ DEFAULTS = {
     "update_check": None,       # None = not asked yet; True/False = automatic daily check on/off
     "update_last_check": 0,     # time of the last check (seconds since 1970)
     "update_last_ok": 0,        # time of the last check that reached GitHub
+    "update_checked_by": "",    # the PrintView3D version that made that check
     "update_latest": {},        # newest release seen on GitHub (version, notes, download)
     "update_skip": "",          # version the user chose to skip
     "recent_files": [],

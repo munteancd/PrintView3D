@@ -128,3 +128,16 @@ def test_up_to_date_green_dot(settings):
     assert not u.up_to_date(settings, now + 2 * 86400)            # an update exists: red, not green
     settings.set("update_skip", "9.9.0")
     assert not u.up_to_date(settings, now + 2 * 86400)            # skipped is not "up to date"
+
+
+def test_new_version_checks_right_away(settings):
+    settings.set("update_check", True)
+    u.remember(settings, None, now=10 ** 9)
+    assert not u.check_is_due(settings, now=10 ** 9 + 60)          # this version checked a minute ago
+    settings.set("update_checked_by", "0.0.1")                      # ... but that was the old version
+    assert u.check_is_due(settings, now=10 ** 9 + 60)               # just updated: check now
+    u.remember(settings, None, now=10 ** 9 + 61)                    # even if that try fails ...
+    assert not u.check_is_due(settings, now=10 ** 9 + 3600)         # ... no retry every hour
+    settings.set("update_check", False)
+    settings.set("update_checked_by", "0.0.1")
+    assert not u.check_is_due(settings, now=10 ** 9 + 3600)         # automatic checks off: never
