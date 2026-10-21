@@ -73,6 +73,8 @@ def main(argv: list[str] | None = None) -> int:
                         help='add PrintView3D to "Open with" (and the Linux applications menu) and exit')
     parser.add_argument("--taskbar-selftest", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--after-update", action="store_true", help=argparse.SUPPRESS)  # started by Setup
+    parser.add_argument("--mica", action="store_true", help=argparse.SUPPRESS)          # force Mica (tests)
+    parser.add_argument("--mica-selftest", action="store_true", help=argparse.SUPPRESS)
     args, _unknown = parser.parse_known_args(argv if argv is not None else sys.argv[1:])
 
     if args.send_to_slicer is not None:
@@ -155,7 +157,20 @@ def main(argv: list[str] | None = None) -> int:
         win.close()
         return 0
 
+    from . import win_mica
+    use_mica = (args.mica or settings.get("mica", False)) and win_mica.supported()
+    if use_mica:
+        win.prepare_mica()
     win.show()
+    mica_ok = win.enable_mica() if use_mica else False
+    if args.mica_selftest:                      # CI: did Windows accept Mica?
+        import json
+        app.processEvents()
+        with open("mica-selftest.json", "w", encoding="utf-8") as f:
+            json.dump({"supported": win_mica.supported(), "applied": mica_ok,
+                       "backdrop": win_mica.backdrop(int(win.winId())) if use_mica else None}, f)
+        win.close()
+        return 0
     if sys.platform == "win32":
         from .win_taskbar import read_window_identity, set_window_identity
         ok = set_window_identity(int(win.winId()), APP_USER_MODEL_ID, "PrintView3D")

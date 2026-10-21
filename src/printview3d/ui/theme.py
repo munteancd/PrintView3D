@@ -125,7 +125,28 @@ def colors(name: str | None = None) -> dict[str, str]:
     return THEMES[name or _current]
 
 
-def apply_theme(app, choice: str = "auto") -> str:
+# Windows 11 Mica (Settings -> Appearance): the main window's own backgrounds become transparent,
+# so the backdrop Windows draws behind the window shows through (see win_mica.py). Only the main
+# window: dialogs stay solid. The 3D view is a separate OpenGL surface and stays solid anyway.
+MICA_CSS = """
+    QMainWindow#mainWindow,
+    QMainWindow#mainWindow > QWidget,
+    QMainWindow#mainWindow QToolBar,
+    QMainWindow#mainWindow QStatusBar,
+    QMainWindow#mainWindow QStackedWidget,
+    QMainWindow#mainWindow QSplitter,
+    QMainWindow#mainWindow QScrollArea,
+    QMainWindow#mainWindow QScrollArea > QWidget > QWidget {{ background: transparent; }}
+    QMainWindow#mainWindow QToolBar {{ border-bottom: 1px solid {border}; }}
+    QMainWindow#mainWindow QGroupBox {{ background: {panel}; }}
+"""
+
+
+def is_dark(name: str | None = None) -> bool:
+    return (name or _current) != "light"
+
+
+def apply_theme(app, choice: str = "auto", mica: bool = False) -> str:
     """Style the whole application. Returns the theme used."""
     global _setting, _current
     _setting = choice if choice in THEME_NAMES else "auto"
@@ -202,8 +223,13 @@ def apply_theme(app, choice: str = "auto") -> str:
             padding: 1px 8px; margin: 2px 4px;
         }}
         QLabel#versionBadge:hover {{ background: {t['button_hover']}; }}
-    """)
+    """ + (MICA_CSS.format(border=_rgba(t['bar_border'], 0.6), panel=_rgba(t['window'], 0.35)) if mica else ""))
     return _current
+
+
+def _rgba(hex_color: str, alpha: float) -> str:
+    c = QColor(hex_color)
+    return f"rgba({c.red()}, {c.green()}, {c.blue()}, {alpha})"
 
 
 def next_theme(name: str) -> str:

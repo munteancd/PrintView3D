@@ -69,6 +69,47 @@ jobs:
           if (-not $p.WaitForExit(90000)) { $p.Kill(); Write-Warning "Smoke test timed out (no GPU on CI)" }
           if (Test-Path smoke.png) { Write-Host "Smoke test OK" } else { Write-Warning "No image produced (CI has no OpenGL)" }
 
+      - name: Mica test (Windows 11 transparency; never blocks the build)
+        continue-on-error: true
+        timeout-minutes: 5
+        shell: pwsh
+        run: |
+          # A colourful wallpaper, so the Mica tint can be seen on the screenshot.
+          Add-Type -AssemblyName System.Drawing, System.Windows.Forms
+          $wall = Join-Path $env:RUNNER_TEMP "wall.bmp"
+          $bmp = New-Object System.Drawing.Bitmap 1920, 1080
+          $g = [System.Drawing.Graphics]::FromImage($bmp)
+          $r = New-Object System.Drawing.Rectangle 0, 0, 1920, 1080
+          $br = New-Object System.Drawing.Drawing2D.LinearGradientBrush($r, [System.Drawing.Color]::FromArgb(40, 90, 220), [System.Drawing.Color]::FromArgb(230, 110, 60), 35)
+          $g.FillRectangle($br, $r); $bmp.Save($wall, [System.Drawing.Imaging.ImageFormat]::Bmp); $g.Dispose(); $bmp.Dispose()
+          Add-Type 'using System.Runtime.InteropServices; public class W { [DllImport("user32.dll", CharSet=CharSet.Unicode)] public static extern bool SystemParametersInfo(int a, int b, string c, int d); }'
+          [W]::SystemParametersInfo(20, 0, $wall, 3) | Out-Null
+          $exe = "dist\PrintView3D\PrintView3D.exe"
+          # 1) Does Windows accept Mica for our window?
+          $p = Start-Process $exe -ArgumentList '--mica', '--mica-selftest' -PassThru
+          if (-not $p.WaitForExit(90000)) { $p.Kill() }
+          $json = if (Test-Path mica-selftest.json) { Get-Content mica-selftest.json -Raw } else { "no result" }
+          Write-Output "::notice title=Mica self-test::$json  (backdrop 2 = Mica; Windows build $([Environment]::OSVersion.Version.Build))"
+          # 2) What it looks like: a real screenshot of the desktop with PrintView3D open.
+          $p = Start-Process $exe -ArgumentList '--mica', 'examples\demo_plate.3mf' -PassThru
+          Start-Sleep -Seconds 20
+          $b = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+          $shot = New-Object System.Drawing.Bitmap $b.Width, $b.Height
+          $sg = [System.Drawing.Graphics]::FromImage($shot)
+          $sg.CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
+          $shot.Save("mica-screenshot.png", [System.Drawing.Imaging.ImageFormat]::Png)
+          if (-not $p.HasExited) { $p.Kill() }
+          Write-Output "Screenshot $($b.Width)x$($b.Height) saved"
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: mica-test-windows
+          path: |
+            mica-screenshot.png
+            mica-selftest.json
+          if-no-files-found: ignore
+
       - name: Package
         shell: pwsh
         run: |

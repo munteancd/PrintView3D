@@ -99,6 +99,8 @@ class MainWindow(QMainWindow):
         self._load_token = 0
 
         self.setWindowTitle(APP_NAME)
+        self.setObjectName("mainWindow")
+        self.mica = False                   # Windows 11 Mica, switched on by enable_mica() at start
         # Windows: the .ico holds every size the taskbar and Alt+Tab need.
         self.setWindowIcon(QIcon(resource("icon.ico" if sys.platform == "win32" else "icon.png")))
         self.resize(1320, 840)
@@ -137,11 +139,30 @@ class MainWindow(QMainWindow):
     # ================================================================ theme
     def apply_theme(self, choice: str):
         """Switch theme now: windows, then the 3D view."""
-        theme.apply_theme(QApplication.instance(), choice)
+        theme.apply_theme(QApplication.instance(), choice, mica=self.mica)
+        if self.mica:
+            from .. import win_mica
+            win_mica.set_dark(int(self.winId()), theme.is_dark())
         self.scene.set_colors(theme.colors())
         self._update_theme_button()
         self.refresh_update_badge()
         self.plotter.render()
+
+    def prepare_mica(self):
+        """Before the window is shown: transparent window background (Windows 11 Mica)."""
+        self.mica = True
+        self.setAttribute(Qt.WA_TranslucentBackground, True)
+        theme.apply_theme(QApplication.instance(), theme.setting(), mica=True)
+
+    def enable_mica(self) -> bool:
+        """After show(): ask Windows for the Mica backdrop. Falls back to the normal look."""
+        from .. import win_mica
+        ok = win_mica.apply(int(self.winId()), theme.is_dark())
+        if not ok:                                   # Windows said no: solid backgrounds again
+            self.mica = False
+            self.setAttribute(Qt.WA_TranslucentBackground, False)
+            theme.apply_theme(QApplication.instance(), theme.setting(), mica=False)
+        return ok
 
     def choose_theme(self, choice: str):
         """From the toolbar menu or Ctrl+T: switch and remember."""

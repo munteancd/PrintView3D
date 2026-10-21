@@ -75,3 +75,23 @@ def test_next_theme_cycles_through_all():
 def test_theme_icon_draws(app):
     for name in theme.CYCLE:
         assert not theme.theme_icon(name).isNull()
+
+
+def test_mica_makes_only_the_main_window_transparent(app):
+    from printview3d.ui import theme
+    theme.apply_theme(app, "dark", mica=False)
+    assert "transparent; }" not in app.styleSheet().split("QLabel#versionBadge:hover")[1]
+    theme.apply_theme(app, "dark", mica=True)
+    css = app.styleSheet()
+    assert "QMainWindow#mainWindow QToolBar" in css and "QMainWindow#mainWindow QStatusBar" in css
+    assert "{ background: transparent; }" in css
+    assert "{{" not in css                                    # the template was filled in
+    theme.apply_theme(app, "dark")                            # back to normal for the other tests
+
+
+def test_mica_not_offered_off_windows():
+    import sys
+    from printview3d import win_mica
+    if sys.platform != "win32":
+        assert not win_mica.supported()
+        assert not win_mica.apply(0, True)
