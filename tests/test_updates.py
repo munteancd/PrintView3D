@@ -113,3 +113,18 @@ def test_download_checks_the_fingerprint(tmp_path, monkeypatch):
 
 def test_install_kind_from_source_opens_the_page():
     assert u.install_kind() == "page"          # tests run from source, not the installed .exe
+
+
+def test_up_to_date_green_dot(settings):
+    now = 1_800_000_000
+    assert not u.up_to_date(settings, now)                        # never checked: unknown
+    u.remember(settings, u.parse_release(gh_release(tag="v" + __version__)), now)
+    assert u.up_to_date(settings, now)                            # GitHub has this version
+    assert u.up_to_date(settings, now + 13 * 86400)
+    assert not u.up_to_date(settings, now + 15 * 86400)           # too long ago to be sure
+    u.remember(settings, None, now + 86400)                       # a failed check changes nothing
+    assert u.up_to_date(settings, now + 86400)
+    u.remember(settings, u.parse_release(gh_release(tag="v9.9.0")), now + 2 * 86400)
+    assert not u.up_to_date(settings, now + 2 * 86400)            # an update exists: red, not green
+    settings.set("update_skip", "9.9.0")
+    assert not u.up_to_date(settings, now + 2 * 86400)            # skipped is not "up to date"

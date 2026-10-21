@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.14.2
+- **Version badge** (bottom right): a **green dot** when a check in the last two weeks found that
+  PrintView3D is up to date, the red dot when an update is available, no dot when it hasn't been
+  checked. The badge now has a button-style border that fits every theme.
+- Settings → Updates says so when the last check could not reach GitHub, instead of "up to date".
+- Windows: after a one-click update, the new version starts at the very end of the installation and
+  refreshes its taskbar icon, so the taskbar should no longer show a generic icon right after updating.
+
 ## 0.14.1
 - Fixed: on Windows the taskbar showed a generic icon for PrintView3D (also when pinned). PrintView3D
   gives itself a Windows app ID, and the taskbar takes the icon from a shortcut with that same ID; the
