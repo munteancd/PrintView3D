@@ -36,16 +36,21 @@ jobs:
         continue-on-error: true
         run: |
           mkdir shots | Out-Null
-          python tools/ci_mica_shots.py shots/1-dark-mica.png --theme dark --mica 1
-          python tools/ci_mica_shots.py shots/2-dark-mica-settings.png --theme dark --mica 1 --settings
-          python tools/ci_mica_shots.py shots/3-light-mica-settings.png --theme light --mica 1 --settings
-          python tools/ci_mica_shots.py shots/4-dark-nomica.png --theme dark --mica 0
-          Get-ChildItem shots
+          $env:PYTHONUNBUFFERED = "1"
+          python tools/ci_mica_shots.py shots/1-dark-mica.png --theme dark --mica 1 *>> shots/log.txt
+          python tools/ci_mica_shots.py shots/2-dark-mica-settings.png --theme dark --mica 1 --settings *>> shots/log.txt
+          python tools/ci_mica_shots.py shots/3-light-mica-settings.png --theme light --mica 1 --settings *>> shots/log.txt
+          python tools/ci_mica_shots.py shots/4-dark-nomica.png --theme dark --mica 0 *>> shots/log.txt
+          $files = (Get-ChildItem shots | ForEach-Object { "$($_.Name) $($_.Length)" }) -join ' | '
+          Write-Output "::notice title=Shots::$files"
+          $log = (Get-Content shots/log.txt -Raw) -replace "`r", "" -replace "`n", "%0A"
+          Write-Output "::notice title=Log::$log"
       - name: Push screenshots to ci-shots-${{ github.run_id }}
         shell: pwsh
         run: |
           cd shots
-          git init -q
+          git init -q -b shots
           git config user.name "ci"; git config user.email "ci@users.noreply.github.com"
-          git add -A; git commit -q -m "screenshots ${{ github.sha }}"
-          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:refs/heads/ci-shots-${{ github.run_id }}
+          git add -A; git commit -q --allow-empty -m "screenshots ${{ github.sha }}"
+          $out = git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:refs/heads/ci-shots-${{ github.run_id }} 2>&1
+          Write-Output "::notice title=Push::$($out -join ' | ')"

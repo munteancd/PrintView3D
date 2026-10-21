@@ -190,6 +190,7 @@ class MainWindow(QMainWindow):
     # =================================================================== UI
     def _build_toolbar(self):
         tb = QToolBar()
+        tb.setObjectName("mainToolbar")          # the Mica style rules name it (theme.MICA_CSS)
         tb.setObjectName("mainToolbar")
         tb.setMovable(False)
         tb.setIconSize(QSize(18, 18))
@@ -314,6 +315,7 @@ class MainWindow(QMainWindow):
         from pyvistaqt import QtInteractor
 
         self.stack = QStackedWidget()
+        self.stack.setObjectName("centralStack")  # the Mica style rules name it (theme.MICA_CSS)
 
         # ---- welcome page ----
         welcome = QWidget()
@@ -465,6 +467,7 @@ class MainWindow(QMainWindow):
 
     def _build_statusbar(self):
         sb = self.statusBar()
+        sb.setObjectName("mainStatusBar")        # the Mica style rules name it (theme.MICA_CSS)
         self.progress = QProgressBar()
         self.progress.setMaximumWidth(220)
         self.progress.setRange(0, 100)
