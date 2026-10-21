@@ -143,8 +143,10 @@ def write_ts(path: str, lang: str, messages: list[Message]) -> None:
              "<context>", f"    <name>{CONTEXT}</name>"]
     for m in messages:
         lines.append("    <message>")
-        for f, line in m.locations:
-            lines.append(f'        <location filename="{f}" line="{line}"/>')
+        # File names only, no line numbers: line numbers change with almost every code edit,
+        # and then clash with translations made on Weblate at the same time (merge conflicts).
+        for f in dict.fromkeys(f for f, _line in m.locations):
+            lines.append(f'        <location filename="{f}"/>')
         lines.append(f"        <source>{_esc(m.source)}</source>")
         if m.note:
             lines.append(f"        <extracomment>{_esc(m.note)}</extracomment>")
