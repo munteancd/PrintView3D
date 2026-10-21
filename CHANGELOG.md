@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.15.1
+- **Fixed: Settings turned black with Windows transparency (Mica) on.** The Mica style rules reached
+  every window that belongs to the main window, dialogs included; they now name only the main
+  window's own toolbar, side panel and status bar, so Settings and the other dialogs stay solid.
+- **The theme changes live in Settings**: choosing Light, Dark, Gray or Graphite switches the whole
+  program at once, as the toolbar button does. OK keeps it; Cancel, Esc or the cross puts back the
+  theme from when Settings was opened.
+- About Mica itself: Windows draws it as a soft, nearly solid tint of the wallpaper, not as see-through
+  glass, so in many setups it looks almost like the normal theme. For testing other Windows 11
+  backdrops there is a hidden start option `--backdrop mica-alt` (stronger tint) or `--backdrop acrylic`
+  (blur of what lies behind the window).
+
 ## 0.15.0
 - **Windows 11 transparency (Mica)**: new switch in Settings → Appearance. The toolbar, side panel
   and status bar take a soft tint of the desktop wallpaper, in the dark or light variant that matches

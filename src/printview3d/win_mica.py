@@ -18,6 +18,9 @@ MIN_BUILD = 22621                     # Windows 11 22H2: DWMWA_SYSTEMBACKDROP_TY
 DWMWA_USE_IMMERSIVE_DARK_MODE = 20
 DWMWA_SYSTEMBACKDROP_TYPE = 38
 DWMSBT_MAINWINDOW = 2                 # Mica
+DWMSBT_TRANSIENTWINDOW = 3            # Acrylic (blur of what lies behind the window)
+DWMSBT_TABBEDWINDOW = 4               # Mica Alt (stronger wallpaper tint)
+BACKDROPS = {"mica": DWMSBT_MAINWINDOW, "acrylic": DWMSBT_TRANSIENTWINDOW, "mica-alt": DWMSBT_TABBEDWINDOW}
 
 
 def supported() -> bool:
@@ -46,8 +49,9 @@ def set_dark(hwnd: int, dark: bool) -> bool:
         return False
 
 
-def apply(hwnd: int, dark: bool) -> bool:
-    """Ask Windows for Mica behind the whole window. True when Windows accepted it."""
+def apply(hwnd: int, dark: bool, kind: str = "mica") -> bool:
+    """Ask Windows for Mica (or kind: "mica-alt", "acrylic") behind the whole window.
+    True when Windows accepted it."""
     if not supported():
         return False
     try:
@@ -59,7 +63,7 @@ def apply(hwnd: int, dark: bool) -> bool:
         set_dark(hwnd, dark)
         # The "glass" frame covers the whole window, so the backdrop shows behind our content.
         ctypes.windll.dwmapi.DwmExtendFrameIntoClientArea(ctypes.c_void_p(hwnd), ctypes.byref(MARGINS(-1, -1, -1, -1)))
-        return _set_int(hwnd, DWMWA_SYSTEMBACKDROP_TYPE, DWMSBT_MAINWINDOW)
+        return _set_int(hwnd, DWMWA_SYSTEMBACKDROP_TYPE, BACKDROPS.get(kind, DWMSBT_MAINWINDOW))
     except Exception:  # noqa: BLE001 - never let a visual effect break the program
         return False
 

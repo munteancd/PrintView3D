@@ -154,10 +154,10 @@ class MainWindow(QMainWindow):
         self.setAttribute(Qt.WA_TranslucentBackground, True)
         theme.apply_theme(QApplication.instance(), theme.setting(), mica=True)
 
-    def enable_mica(self) -> bool:
+    def enable_mica(self, kind: str = "mica") -> bool:
         """After show(): ask Windows for the Mica backdrop. Falls back to the normal look."""
         from .. import win_mica
-        ok = win_mica.apply(int(self.winId()), theme.is_dark())
+        ok = win_mica.apply(int(self.winId()), theme.is_dark(), kind)
         if not ok:                                   # Windows said no: solid backgrounds again
             self.mica = False
             self.setAttribute(Qt.WA_TranslucentBackground, False)
