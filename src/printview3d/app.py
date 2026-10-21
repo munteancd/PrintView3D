@@ -27,11 +27,16 @@ if sys.platform.startswith("linux") and os.environ.get("WAYLAND_DISPLAY") \
     os.environ["PRINTVIEW3D_SET_QPA"] = "1"      # so slicers we start don't inherit it
 
 
+# Windows taskbar identity. The installer gives its shortcuts the same ID (PrintView3D.iss),
+# which is where the taskbar takes the icon from; win_taskbar adds it to the window as well.
+APP_USER_MODEL_ID = "PrintView3D.Viewer"
+
+
 def _set_windows_app_id():
     if sys.platform == "win32":
         try:
             import ctypes
-            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("PrintView3D.Viewer")  # type: ignore[attr-defined]
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(APP_USER_MODEL_ID)  # type: ignore[attr-defined]
         except Exception:
             pass
 
@@ -66,6 +71,7 @@ def main(argv: list[str] | None = None) -> int:
                         help="colour theme for this run")
     parser.add_argument("--register", action="store_true",
                         help='add PrintView3D to "Open with" (and the Linux applications menu) and exit')
+    parser.add_argument("--taskbar-selftest", action="store_true", help=argparse.SUPPRESS)
     args, _unknown = parser.parse_known_args(argv if argv is not None else sys.argv[1:])
 
     if args.send_to_slicer is not None:
@@ -149,6 +155,20 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     win.show()
+    if sys.platform == "win32":
+        from .win_taskbar import read_window_identity, set_window_identity
+        ok = set_window_identity(int(win.winId()), APP_USER_MODEL_ID, "PrintView3D")
+        if args.taskbar_selftest:              # CI: did Windows take the icon and app ID?
+            import json
+            app.processEvents()
+            try:
+                result = {"set": ok, "read": read_window_identity(int(win.winId()))}
+            except Exception as e:  # noqa: BLE001 - report it
+                result = {"set": ok, "error": f"{type(e).__name__}: {e}"}
+            with open("taskbar-selftest.json", "w", encoding="utf-8") as f:
+                json.dump(result, f)
+            win.close()
+            return 0
     win.start_update_checks()
     # macOS: files opened from Finder (double-click, Open With, drop on the Dock icon)
     # arrive as a FileOpen event, not on the command line.

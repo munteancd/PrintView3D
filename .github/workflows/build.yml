@@ -113,6 +113,22 @@ jobs:
             if (-not (Test-Path "HKCU:\Software\Classes\Applications\PrintView3D.exe")) { throw "Open-with registration missing" }
             $lnk = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\PrintView3D.lnk"
             if (-not (Test-Path $lnk)) { throw "Start menu shortcut missing" }
+            # Taskbar icon: the shortcut must carry the app ID PrintView3D gives itself ...
+            $sh = New-Object -ComObject Shell.Application
+            $aumid = $sh.Namespace((Split-Path $lnk)).ParseName((Split-Path $lnk -Leaf)).ExtendedProperty("System.AppUserModel.ID")
+            Write-Output "::notice title=Shortcut app ID::$aumid"
+            if ($aumid -ne "PrintView3D.Viewer") { throw "Start menu shortcut has app ID '$aumid', expected PrintView3D.Viewer" }
+            # ... and the window must tell Windows its app ID, icon and command.
+            $st = Join-Path $env:RUNNER_TEMP "selftest"
+            New-Item -ItemType Directory -Force $st | Out-Null
+            $p = Start-Process "$dir\PrintView3D.exe" -ArgumentList '--taskbar-selftest' -WorkingDirectory $st -PassThru
+            if (-not $p.WaitForExit(120000)) { $p.Kill(); throw "Taskbar self-test did not finish" }
+            $json = Get-Content (Join-Path $st "taskbar-selftest.json") -Raw
+            Write-Output "::notice title=Window taskbar properties::$json"
+            $t = $json | ConvertFrom-Json
+            if (-not $t.set -or $t.read.id -ne "PrintView3D.Viewer" -or $t.read.icon -notlike "*PrintView3D.exe,0") {
+              throw "The window's taskbar properties are not set: $json"
+            }
             if (-not (Test-Path "HKCU:\Software\Classes\SystemFileAssociations\.3mf\ShellEx\{e357fccd-a995-4576-b01f-234630154e96}")) { throw "Thumbnail provider not registered" }
             foreach ($e in '.3mf','.stl','.gcode','.gco','.fcstd') {
               if (-not (Test-Path "HKCU:\Software\Classes\$e\ShellEx\{e357fccd-a995-4576-b01f-234630154e96}")) { throw "Thumbnail provider not registered for $e" }

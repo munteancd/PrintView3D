@@ -131,8 +131,10 @@ Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.gco\ShellEx\{{e357
 Root: HKCU; Subkey: "Software\Classes\SystemFileAssociations\.fcstd\ShellEx\{{e357fccd-a995-4576-b01f-234630154e96}"; ValueType: string; ValueData: "{#ThumbClsid}"; Flags: uninsdeletekey; Tasks: thumbnails
 
 [Icons]
-Name: "{autoprograms}\{#AppName}"; Filename: "{app}\{#AppExe}"; Comment: "STL, 3MF and G-code viewer"
-Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; Tasks: desktopicon
+; AppUserModelID must match the one PrintView3D gives itself (app.py, APP_USER_MODEL_ID): the taskbar
+; takes the icon and name of a running or pinned PrintView3D from the shortcut with that ID.
+Name: "{autoprograms}\{#AppName}"; Filename: "{app}\{#AppExe}"; Comment: "STL, 3MF and G-code viewer"; AppUserModelID: "PrintView3D.Viewer"
+Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; Tasks: desktopicon; AppUserModelID: "PrintView3D.Viewer"
 
 [Run]
 ; "Open with" registration (the same as Settings -> Register in the program).
