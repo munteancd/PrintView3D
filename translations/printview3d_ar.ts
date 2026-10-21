@@ -163,17 +163,17 @@
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Format</source>
-        <translation type="unfinished">التنسيق</translation>
+        <translation>التنسيق</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Organization</source>
-        <translation type="unfinished">المؤسسة</translation>
+        <translation>المؤسسة</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Date</source>
-        <translation type="unfinished">التاريخ</translation>
+        <translation>التاريخ</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
@@ -218,17 +218,17 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Other 3D models</source>
-        <translation type="unfinished">نماذج ثلاثية الأبعاد أخرى</translation>
+        <translation>نماذج ثلاثية الأبعاد أخرى</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>FreeCAD documents</source>
-        <translation type="unfinished">مستندات FreeCAD</translation>
+        <translation>مستندات FreeCAD</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>STEP CAD files</source>
-        <translation type="unfinished">ملفات STEP للتصميم</translation>
+        <translation>ملفات STEP للتصميم</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -244,33 +244,33 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Next theme</source>
-        <translation type="unfinished">السمة التالية</translation>
+        <translation>السمة التالية</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Theme: {name} (Ctrl+T: next theme)</source>
         <extracomment>Tooltip of the theme icon. {name} is the current theme (Dark, Gray...).</extracomment>
-        <translation type="unfinished">السمة: {name} (Ctrl+T: السمة التالية)</translation>
+        <translation>السمة: {name} (Ctrl+T: السمة التالية)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Preview picture</source>
-        <translation type="unfinished">صورة المعاينة</translation>
+        <translation>صورة المعاينة</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>No 3D view</source>
-        <translation type="unfinished">لا يوجد عرض ثلاثي الأبعاد</translation>
+        <translation>لا يوجد عرض ثلاثي الأبعاد</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Download FreeCAD</source>
-        <translation type="unfinished">تنزيل FreeCAD</translation>
+        <translation>تنزيل FreeCAD</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Choose FreeCAD…</source>
-        <translation type="unfinished">اختيار FreeCAD…</translation>
+        <translation>اختيار FreeCAD…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -350,7 +350,7 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Drop a 3D model or G-code file here, or open one.</source>
-        <translation type="unfinished">اسحب نموذجًا ثلاثي الأبعاد أو ملف G-code وأفلته هنا، أو افتح ملفًا.</translation>
+        <translation>اسحب نموذجًا ثلاثي الأبعاد أو ملف G-code وأفلته هنا، أو افتح ملفًا.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -446,7 +446,7 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code and FreeCAD files.</source>
-        <translation type="unfinished">يمكن لـ PrintView3D فتح ملفات STL و3MF وOBJ وPLY وOFF وglTF/GLB وSTEP وG-code وFreeCAD.</translation>
+        <translation>يمكن لـ PrintView3D فتح ملفات STL و3MF وOBJ وPLY وOFF وglTF/GLB وSTEP وG-code وFreeCAD.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -476,12 +476,12 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Note</source>
-        <translation type="unfinished">ملاحظة</translation>
+        <translation>ملاحظة</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Very small: the file may use metres instead of millimetres. Your slicer can scale it.</source>
-        <translation type="unfinished">صغير جدًا: قد يستخدم الملف الأمتار بدلًا من المليمترات. يمكن لبرنامج التقطيع تكبيره.</translation>
+        <translation>صغير جدًا: قد يستخدم الملف الأمتار بدلًا من المليمترات. يمكن لبرنامج التقطيع تكبيره.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -521,72 +521,72 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Converted to 3D with FreeCAD.</source>
-        <translation type="unfinished">تم التحويل إلى ثلاثي الأبعاد باستخدام FreeCAD.</translation>
+        <translation>تم التحويل إلى ثلاثي الأبعاد باستخدام FreeCAD.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>STEP files are shown in 3D with the help of FreeCAD (free), which was not found on this computer.</source>
-        <translation type="unfinished">تُعرض ملفات STEP بشكل ثلاثي الأبعاد بمساعدة FreeCAD (مجاني)، ولم يُعثر عليه على هذا الكمبيوتر.</translation>
+        <translation>تُعرض ملفات STEP بشكل ثلاثي الأبعاد بمساعدة FreeCAD (مجاني)، ولم يُعثر عليه على هذا الكمبيوتر.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Shown as in FreeCAD: visible objects only (no sketches, hidden objects or helpers).</source>
-        <translation type="unfinished">معروض كما في FreeCAD: الكائنات الظاهرة فقط (بدون الرسومات التخطيطية أو الكائنات المخفية أو العناصر المساعدة).</translation>
+        <translation>معروض كما في FreeCAD: الكائنات الظاهرة فقط (بدون الرسومات التخطيطية أو الكائنات المخفية أو العناصر المساعدة).</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Nothing is visible in this document: all objects are hidden in FreeCAD.</source>
-        <translation type="unfinished">لا يوجد شيء ظاهر في هذا المستند: جميع الكائنات مخفية في FreeCAD.</translation>
+        <translation>لا يوجد شيء ظاهر في هذا المستند: جميع الكائنات مخفية في FreeCAD.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>FreeCAD could not convert this file: {error}</source>
-        <translation type="unfinished">تعذّر على FreeCAD تحويل هذا الملف: {error}</translation>
+        <translation>تعذّر على FreeCAD تحويل هذا الملف: {error}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>FreeCAD was not found, so only the preview picture is shown. Install FreeCAD (free, freecad.org) to see the model in 3D.</source>
-        <translation type="unfinished">لم يتم العثور على FreeCAD، لذلك تُعرض صورة المعاينة فقط. ثبّت FreeCAD (مجاني، freecad.org) لرؤية النموذج بشكل ثلاثي الأبعاد.</translation>
+        <translation>لم يتم العثور على FreeCAD، لذلك تُعرض صورة المعاينة فقط. ثبّت FreeCAD (مجاني، freecad.org) لرؤية النموذج بشكل ثلاثي الأبعاد.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>STEP file</source>
-        <translation type="unfinished">ملف STEP</translation>
+        <translation>ملف STEP</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>FreeCAD document</source>
-        <translation type="unfinished">مستند FreeCAD</translation>
+        <translation>مستند FreeCAD</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Visible objects: {names}</source>
-        <translation type="unfinished">الكائنات الظاهرة: {names}</translation>
+        <translation>الكائنات الظاهرة: {names}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open in FreeCAD</source>
-        <translation type="unfinished">فتح في FreeCAD</translation>
+        <translation>فتح في FreeCAD</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>FreeCAD not found</source>
-        <translation type="unfinished">لم يتم العثور على FreeCAD</translation>
+        <translation>لم يتم العثور على FreeCAD</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>FreeCAD was not found on this computer.</source>
-        <translation type="unfinished">لم يتم العثور على FreeCAD على هذا الكمبيوتر.</translation>
+        <translation>لم يتم العثور على FreeCAD على هذا الكمبيوتر.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open Settings to choose the FreeCAD program?</source>
-        <translation type="unfinished">هل تريد فتح الإعدادات لاختيار برنامج FreeCAD؟</translation>
+        <translation>هل تريد فتح الإعدادات لاختيار برنامج FreeCAD؟</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Could not start FreeCAD</source>
-        <translation type="unfinished">تعذّر تشغيل FreeCAD</translation>
+        <translation>تعذّر تشغيل FreeCAD</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -596,17 +596,17 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>This slicer does not open STEP files, and PrintView3D needs FreeCAD to convert it to STL. Install FreeCAD or choose it in Settings, or send the file to OrcaSlicer, PrusaSlicer or Bambu Studio, which open STEP files themselves.</source>
-        <translation type="unfinished">برنامج التقطيع هذا لا يفتح ملفات STEP، ويحتاج PrintView3D إلى FreeCAD لتحويلها إلى STL. ثبّت FreeCAD أو اختره في الإعدادات، أو أرسل الملف إلى OrcaSlicer أو PrusaSlicer أو Bambu Studio، فهي تفتح ملفات STEP بنفسها.</translation>
+        <translation>برنامج التقطيع هذا لا يفتح ملفات STEP، ويحتاج PrintView3D إلى FreeCAD لتحويلها إلى STL. ثبّت FreeCAD أو اختره في الإعدادات، أو أرسل الملف إلى OrcaSlicer أو PrusaSlicer أو Bambu Studio، فهي تفتح ملفات STEP بنفسها.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>To send a FreeCAD model to a slicer, PrintView3D needs FreeCAD to convert it first. Install FreeCAD or choose it in Settings.</source>
-        <translation type="unfinished">لإرسال نموذج FreeCAD إلى برنامج التقطيع، يحتاج PrintView3D إلى FreeCAD لتحويله أولاً. ثبّت FreeCAD أو اختره في الإعدادات.</translation>
+        <translation>لإرسال نموذج FreeCAD إلى برنامج التقطيع، يحتاج PrintView3D إلى FreeCAD لتحويله أولاً. ثبّت FreeCAD أو اختره في الإعدادات.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Nothing to send</source>
-        <translation type="unfinished">لا يوجد شيء لإرساله</translation>
+        <translation>لا يوجد شيء لإرساله</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -655,7 +655,7 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open this file in FreeCAD (Ctrl+P). Use the arrow to send the model to a slicer as STL.</source>
-        <translation type="unfinished">افتح هذا الملف في FreeCAD (Ctrl+P). استخدم السهم لإرسال النموذج إلى برنامج التقطيع بصيغة STL.</translation>
+        <translation>افتح هذا الملف في FreeCAD (Ctrl+P). استخدم السهم لإرسال النموذج إلى برنامج التقطيع بصيغة STL.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -685,7 +685,7 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Send to {slicer} as STL</source>
-        <translation type="unfinished">إرسال إلى {slicer} بصيغة STL</translation>
+        <translation>إرسال إلى {slicer} بصيغة STL</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -757,47 +757,47 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Check for updates?</source>
-        <translation type="unfinished">التحقق من وجود تحديثات؟</translation>
+        <translation>التحقق من وجود تحديثات؟</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Should PrintView3D check GitHub once a day for new versions?</source>
-        <translation type="unfinished">هل تريد أن يتحقق PrintView3D من GitHub مرة واحدة يوميًا بحثًا عن إصدارات جديدة؟</translation>
+        <translation>هل تريد أن يتحقق PrintView3D من GitHub مرة واحدة يوميًا بحثًا عن إصدارات جديدة؟</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Only the newest version number is requested. No personal data or files are sent. You can change this any time in Settings → Updates.</source>
-        <translation type="unfinished">يُطلب رقم أحدث إصدار فقط. لا تُرسل أي بيانات شخصية أو ملفات. يمكنك تغيير ذلك في أي وقت من الإعدادات ← التحديثات.</translation>
+        <translation>يُطلب رقم أحدث إصدار فقط. لا تُرسل أي بيانات شخصية أو ملفات. يمكنك تغيير ذلك في أي وقت من الإعدادات ← التحديثات.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Yes, check daily</source>
-        <translation type="unfinished">نعم، تحقق يوميًا</translation>
+        <translation>نعم، تحقق يوميًا</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>No, thanks</source>
-        <translation type="unfinished">لا، شكرًا</translation>
+        <translation>لا، شكرًا</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PrintView3D {version} is available. Click the version in the corner to update.</source>
-        <translation type="unfinished">الإصدار {version} من PrintView3D متاح. انقر على رقم الإصدار في الزاوية للتحديث.</translation>
+        <translation>الإصدار {version} من PrintView3D متاح. انقر على رقم الإصدار في الزاوية للتحديث.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PrintView3D {version} is available. Click to update.</source>
-        <translation type="unfinished">الإصدار {version} من PrintView3D متاح. انقر للتحديث.</translation>
+        <translation>الإصدار {version} من PrintView3D متاح. انقر للتحديث.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PrintView3D {version} is up to date. Click for update settings.</source>
-        <translation type="unfinished">لديك أحدث إصدار من PrintView3D ({version}). انقر لإعدادات التحديث.</translation>
+        <translation>لديك أحدث إصدار من PrintView3D ({version}). انقر لإعدادات التحديث.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Version {version}. Click to check for updates.</source>
-        <translation type="unfinished">الإصدار {version}. انقر للتحقق من وجود تحديثات.</translation>
+        <translation>الإصدار {version}. انقر للتحقق من وجود تحديثات.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -837,13 +837,13 @@
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Appearance</source>
-        <translation type="unfinished">المظهر</translation>
+        <translation>المظهر</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Theme</source>
         <extracomment>Settings: the colour theme of the program (dark, gray, light).</extracomment>
-        <translation type="unfinished">السمة</translation>
+        <translation>السمة</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -888,17 +888,17 @@
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>FreeCAD</source>
-        <translation type="unfinished">FreeCAD</translation>
+        <translation>FreeCAD</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>FreeCAD files (.FCStd) are shown in 3D with the help of your installed FreeCAD. Without it, PrintView3D shows the preview picture and the object list.</source>
-        <translation type="unfinished">تُعرض ملفات FreeCAD (‎.FCStd) بشكل ثلاثي الأبعاد بمساعدة برنامج FreeCAD المثبّت لديك. بدونه، يعرض PrintView3D صورة المعاينة وقائمة الكائنات.</translation>
+        <translation>تُعرض ملفات FreeCAD (‎.FCStd) بشكل ثلاثي الأبعاد بمساعدة برنامج FreeCAD المثبّت لديك. بدونه، يعرض PrintView3D صورة المعاينة وقائمة الكائنات.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Found automatically</source>
-        <translation type="unfinished">يتم العثور عليه تلقائيًا</translation>
+        <translation>يتم العثور عليه تلقائيًا</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -918,7 +918,7 @@
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>OBJ, PLY, OFF, glTF and STEP files are only added to &quot;Open with&quot;.</source>
-        <translation type="unfinished">تُضاف ملفات OBJ وPLY وOFF وglTF وSTEP إلى قائمة &quot;فتح باستخدام&quot; فقط.</translation>
+        <translation>تُضاف ملفات OBJ وPLY وOFF وglTF وSTEP إلى قائمة &quot;فتح باستخدام&quot; فقط.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -941,7 +941,7 @@
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Files</source>
         <extracomment>Settings page: which file types open with PrintView3D (default program).</extracomment>
-        <translation type="unfinished">الملفات</translation>
+        <translation>الملفات</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -991,7 +991,7 @@
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>On laptops with two graphics chips, start PrintView3D from the applications menu (after Register on the Files page) — the menu entry asks for the dedicated GPU — or use your desktop&apos;s &quot;Launch using Dedicated Graphics Card&quot; option.</source>
-        <translation type="unfinished">في أجهزة الكمبيوتر المحمولة التي تحتوي على شريحتي رسوميات، شغّل PrintView3D من قائمة التطبيقات (بعد التسجيل في صفحة «الملفات») — إذ يطلب إدخال القائمة بطاقة الرسوميات المخصصة — أو استخدم خيار سطح المكتب &quot;Launch using Dedicated Graphics Card&quot;.</translation>
+        <translation>في أجهزة الكمبيوتر المحمولة التي تحتوي على شريحتي رسوميات، شغّل PrintView3D من قائمة التطبيقات (بعد التسجيل في صفحة «الملفات») — إذ يطلب إدخال القائمة بطاقة الرسوميات المخصصة — أو استخدم خيار سطح المكتب &quot;Launch using Dedicated Graphics Card&quot;.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1001,94 +1001,94 @@
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Updates</source>
-        <translation type="unfinished">التحديثات</translation>
+        <translation>التحديثات</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>What&apos;s new</source>
-        <translation type="unfinished">ما الجديد</translation>
+        <translation>ما الجديد</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Skip this version</source>
         <extracomment>Update button: do not show this new version again (the next one is shown).</extracomment>
-        <translation type="unfinished">تخطي هذا الإصدار</translation>
+        <translation>تخطي هذا الإصدار</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Check for updates now</source>
-        <translation type="unfinished">التحقق من التحديثات الآن</translation>
+        <translation>التحقق من التحديثات الآن</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Check for updates automatically (once a day)</source>
-        <translation type="unfinished">التحقق من التحديثات تلقائيًا (مرة يوميًا)</translation>
+        <translation>التحقق من التحديثات تلقائيًا (مرة يوميًا)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Only asks GitHub for the newest version number. No personal data or files are sent.</source>
-        <translation type="unfinished">يسأل GitHub عن رقم أحدث إصدار فقط. لا تُرسل أي بيانات شخصية أو ملفات.</translation>
+        <translation>يسأل GitHub عن رقم أحدث إصدار فقط. لا تُرسل أي بيانات شخصية أو ملفات.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Read more</source>
-        <translation type="unfinished">اقرأ المزيد</translation>
+        <translation>اقرأ المزيد</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>This copy of PrintView3D is not the installed Windows version, so updates open the download page.</source>
-        <translation type="unfinished">هذه النسخة من PrintView3D ليست نسخة Windows المثبّتة، لذلك تفتح التحديثات صفحة التنزيل.</translation>
+        <translation>هذه النسخة من PrintView3D ليست نسخة Windows المثبّتة، لذلك تفتح التحديثات صفحة التنزيل.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>never</source>
-        <translation type="unfinished">أبدًا</translation>
+        <translation>أبدًا</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>&lt;b&gt;Version {new} is available&lt;/b&gt; (you have {current})</source>
-        <translation type="unfinished">&lt;b&gt;الإصدار {new} متاح&lt;/b&gt; (لديك {current})</translation>
+        <translation>&lt;b&gt;الإصدار {new} متاح&lt;/b&gt; (لديك {current})</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>You have version {version}</source>
-        <translation type="unfinished">لديك الإصدار {version}</translation>
+        <translation>لديك الإصدار {version}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Checking…</source>
-        <translation type="unfinished">جارٍ التحقق…</translation>
+        <translation>جارٍ التحقق…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Last checked: {when}</source>
-        <translation type="unfinished">آخر تحقق: {when}</translation>
+        <translation>آخر تحقق: {when}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>You are up to date · last checked {when}</source>
-        <translation type="unfinished">لديك أحدث إصدار · آخر تحقق {when}</translation>
+        <translation>لديك أحدث إصدار · آخر تحقق {when}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Could not check for updates · last tried {when}</source>
-        <translation type="unfinished">تعذّر التحقق من التحديثات · آخر محاولة {when}</translation>
+        <translation>تعذّر التحقق من التحديثات · آخر محاولة {when}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Not checked yet.</source>
-        <translation type="unfinished">لم يتم التحقق بعد.</translation>
+        <translation>لم يتم التحقق بعد.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>today {time}</source>
         <extracomment>When the last update check was. {time} is e.g. 14:02.</extracomment>
-        <translation type="unfinished">اليوم {time}</translation>
+        <translation>اليوم {time}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Could not check for updates: {error}</source>
-        <translation type="unfinished">تعذّر التحقق من التحديثات: {error}</translation>
+        <translation>تعذّر التحقق من التحديثات: {error}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1118,17 +1118,17 @@
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Locate FreeCAD</source>
-        <translation type="unfinished">تحديد موقع FreeCAD</translation>
+        <translation>تحديد موقع FreeCAD</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>FreeCAD found: {where}</source>
-        <translation type="unfinished">تم العثور على FreeCAD: {where}</translation>
+        <translation>تم العثور على FreeCAD: {where}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>FreeCAD was not found. Install it from freecad.org (free), or choose its program file with Browse.</source>
-        <translation type="unfinished">لم يتم العثور على FreeCAD. ثبّته من freecad.org (مجاني)، أو اختر ملف البرنامج باستخدام «استعراض».</translation>
+        <translation>لم يتم العثور على FreeCAD. ثبّته من freecad.org (مجاني)، أو اختر ملف البرنامج باستخدام «استعراض».</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1244,81 +1244,81 @@
     <message>
         <location filename="../src/printview3d/ui/theme.py"></location>
         <source>Automatic (system theme)</source>
-        <translation type="unfinished">تلقائي (سمة النظام)</translation>
+        <translation>تلقائي (سمة النظام)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/theme.py"></location>
         <source>Dark</source>
         <extracomment>Colour theme name.</extracomment>
-        <translation type="unfinished">داكن</translation>
+        <translation>داكن</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/theme.py"></location>
         <source>Gray</source>
         <extracomment>Colour theme name.</extracomment>
-        <translation type="unfinished">رمادي</translation>
+        <translation>رمادي</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/theme.py"></location>
         <source>Graphite</source>
         <extracomment>Colour theme name: a warm, dark brownish charcoal.</extracomment>
-        <translation type="unfinished">غرافيت</translation>
+        <translation>غرافيت</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/theme.py"></location>
         <source>Light</source>
         <extracomment>Colour theme name: light colours (not &apos;not heavy&apos;).</extracomment>
-        <translation type="unfinished">فاتح</translation>
+        <translation>فاتح</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>What&apos;s new in {version}</source>
-        <translation type="unfinished">ما الجديد في {version}</translation>
+        <translation>ما الجديد في {version}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>PrintView3D {new} is available. You have {current}.</source>
-        <translation type="unfinished">الإصدار {new} من PrintView3D متاح. لديك {current}.</translation>
+        <translation>الإصدار {new} من PrintView3D متاح. لديك {current}.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>No release notes.</source>
-        <translation type="unfinished">لا توجد ملاحظات للإصدار.</translation>
+        <translation>لا توجد ملاحظات للإصدار.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Downloading PrintView3D {version}…</source>
-        <translation type="unfinished">جارٍ تنزيل PrintView3D {version}…</translation>
+        <translation>جارٍ تنزيل PrintView3D {version}…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Cancel</source>
-        <translation type="unfinished">إلغاء</translation>
+        <translation>إلغاء</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Updating PrintView3D</source>
-        <translation type="unfinished">تحديث PrintView3D</translation>
+        <translation>تحديث PrintView3D</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Update failed</source>
-        <translation type="unfinished">فشل التحديث</translation>
+        <translation>فشل التحديث</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>The update could not be downloaded: {error}</source>
-        <translation type="unfinished">تعذّر تنزيل التحديث: {error}</translation>
+        <translation>تعذّر تنزيل التحديث: {error}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Install update</source>
-        <translation type="unfinished">تثبيت التحديث</translation>
+        <translation>تثبيت التحديث</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Download update</source>
-        <translation type="unfinished">تنزيل التحديث</translation>
+        <translation>تنزيل التحديث</translation>
     </message>
     <message>
         <source>PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, G-code and FreeCAD files.</source>
