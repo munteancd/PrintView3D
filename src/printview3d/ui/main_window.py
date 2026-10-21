@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import sys
 import threading
 from typing import Optional
 
@@ -98,7 +99,8 @@ class MainWindow(QMainWindow):
         self._load_token = 0
 
         self.setWindowTitle(APP_NAME)
-        self.setWindowIcon(QIcon(resource("icon.png")))
+        # Windows: the .ico holds every size the taskbar and Alt+Tab need.
+        self.setWindowIcon(QIcon(resource("icon.ico" if sys.platform == "win32" else "icon.png")))
         self.resize(1320, 840)
         self.setAcceptDrops(True)
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.14.1
+- Fixed: on Windows the taskbar showed a generic icon for PrintView3D (also when pinned). PrintView3D
+  gives itself a Windows app ID, and the taskbar takes the icon from a shortcut with that same ID; the
+  installer's shortcuts now carry it, and the window itself tells Windows its icon, name and how to
+  start it again (so pinning works with the portable zip too). The window icon now comes in every size.
+  If an old pin still shows the generic icon, unpin it and pin PrintView3D again.
+
 ## 0.14.0
 - **Open STEP files** (`.step`, `.stp`) ([#15](https://github.com/sevagjb/PrintView3D/issues/15)).
   - Shown in 3D through your installed FreeCAD, like FreeCAD documents: converted hidden in the
