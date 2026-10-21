@@ -146,7 +146,8 @@ def write_ts(path: str, lang: str, messages: list[Message]) -> None:
         # File names only, no line numbers: line numbers change with almost every code edit,
         # and then clash with translations made on Weblate at the same time (merge conflicts).
         for f in dict.fromkeys(f for f, _line in m.locations):
-            lines.append(f'        <location filename="{f}"/>')
+            # Written the way Weblate writes it, so neither side rewrites every line of the other.
+            lines.append(f'        <location filename="{f}"></location>')
         lines.append(f"        <source>{_esc(m.source)}</source>")
         if m.note:
             lines.append(f"        <extracomment>{_esc(m.note)}</extracomment>")
