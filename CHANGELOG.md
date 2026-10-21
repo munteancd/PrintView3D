@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.15.0
+- **Windows 11 transparency (Mica)**: new switch in Settings → Appearance. The toolbar, side panel
+  and status bar take a soft tint of the desktop wallpaper, in the dark or light variant that matches
+  the theme; the 3D view stays solid. Windows 11 only (off by default, takes effect after a restart);
+  Windows turns it off by itself with "Transparency effects" off, in battery saver, and shows a plain
+  colour while the window is not active.
+
 ## 0.14.3
 - The "v" of the version in the bottom-right corner is bold.
 - Note on the green dot: right after an update it now appears at once, from the check that found the

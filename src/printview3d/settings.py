@@ -13,6 +13,7 @@ import sys
 
 DEFAULTS = {
     "language": "en",
+    "mica": False,              # Windows 11: transparency effect (Mica) behind the main window
     "theme": "auto",            # "auto" = follow the system; or "dark", "gray", "light"           # "auto" = system language; otherwise a code from i18n.LANGUAGES
     "slicer_id": "",            # default slicer; empty = first installed one
     "slicer_paths": {},         # {slicer_id: exe} picked manually in Settings

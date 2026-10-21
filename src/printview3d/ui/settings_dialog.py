@@ -81,6 +81,17 @@ class SettingsDialog(QDialog):
         ka = QLabel(tr("Theme"))
         ka.setObjectName("formKey")
         la.addRow(ka, self.theme_combo)
+        from .. import win_mica
+        self.mica_check = QCheckBox(tr("Windows transparency (Mica)"))
+        self.mica_check.setChecked(bool(settings.get("mica", False)) and win_mica.supported())
+        self.mica_check.setEnabled(win_mica.supported())
+        la.addRow(self.mica_check)
+        mica_note = QLabel(tr("The toolbar and side panel take a soft tint of your desktop wallpaper. "
+                              "Windows 11 only; takes effect after restarting PrintView3D.")
+                           if win_mica.supported() else tr("Needs Windows 11."))
+        mica_note.setObjectName("muted")
+        mica_note.setWordWrap(True)
+        la.addRow(mica_note)
         self._add_page("appearance", tr("Appearance"), [ga])
 
         # ---------------- Slicer ----------------
@@ -576,6 +587,8 @@ class SettingsDialog(QDialog):
             self.settings.set("language", lang)
             # Takes effect immediately: every window re-sets its texts.
             i18n.apply_language(QApplication.instance(), lang)
+        if self.mica_check.isEnabled():
+            self.settings.set("mica", self.mica_check.isChecked())
         choice = self.theme_combo.currentData()
         if choice != self.settings.get("theme", "auto"):
             self.settings.set("theme", choice)
