@@ -77,7 +77,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--mica-selftest", action="store_true", help=argparse.SUPPRESS)
     # Testing only: another Windows 11 backdrop instead of Mica (mica-alt = stronger tint,
     # acrylic = blur of what lies behind). Implies --mica.
-    parser.add_argument("--backdrop", choices=["mica", "mica-alt", "acrylic"], help=argparse.SUPPRESS)
+    parser.add_argument("--backdrop", choices=["off", "mica", "mica-alt", "acrylic"], help=argparse.SUPPRESS)
     args, _unknown = parser.parse_known_args(argv if argv is not None else sys.argv[1:])
 
     if args.send_to_slicer is not None:
@@ -161,11 +161,12 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     from . import win_mica
-    use_mica = (args.mica or bool(args.backdrop) or settings.get("mica", False)) and win_mica.supported()
+    kind = args.backdrop or ("mica" if args.mica else win_mica.choice(settings))
+    use_mica = kind != "off" and win_mica.supported()
     if use_mica:
         win.prepare_mica()
     win.show()
-    mica_ok = win.enable_mica(args.backdrop or "mica") if use_mica else False
+    mica_ok = win.enable_mica(kind) if use_mica else False
     if args.mica_selftest:                      # CI: did Windows accept Mica?
         import json
         app.processEvents()

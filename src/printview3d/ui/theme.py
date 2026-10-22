@@ -133,17 +133,23 @@ def colors(name: str | None = None) -> dict[str, str]:
 # window is its child - and made the Settings window black in 0.15.0.
 MICA_CSS = """
     QMainWindow#mainWindow,
-    QToolBar#mainToolbar,
-    QStatusBar#mainStatusBar,
     QStackedWidget#centralStack,
     QStackedWidget#centralStack QStackedWidget,
     QStackedWidget#centralStack QSplitter,
     QStackedWidget#centralStack QScrollArea,
-    QStackedWidget#centralStack QScrollArea > QWidget,
-    QStackedWidget#centralStack QScrollArea > QWidget > QWidget {{ background: transparent; }}
-    QToolBar#mainToolbar {{ border-bottom: 1px solid {border}; }}
-    QStackedWidget#centralStack QGroupBox {{ background: {panel}; }}
+    QStackedWidget#centralStack QScrollArea > QWidget {{ background: transparent; }}
+    /* A frosted layer of the theme colour over the glass, so text stays readable on any
+       wallpaper (strongest in the light theme, where the glass is bright). */
+    QToolBar#mainToolbar {{ background: {bar}; border-bottom: 1px solid {border}; }}
+    QStatusBar#mainStatusBar {{ background: {bar}; }}
+    QStackedWidget#centralStack QScrollArea > QWidget > QWidget {{ background: {panel}; }}
+    QStackedWidget#centralStack QGroupBox {{ background: {box}; }}
+    QStackedWidget#centralStack QGroupBox::title {{ color: {title}; }}
+    QStackedWidget#centralStack QLabel#muted, QStackedWidget#centralStack QLabel#formKey {{ color: {muted}; }}
 """
+
+# How strong the frosted layer is: (toolbar/status bar, side panel, boxes in the side panel)
+_GLASS = {"light": (0.62, 0.72, 0.80), "dark": (0.35, 0.45, 0.40)}
 
 
 def is_dark(name: str | None = None) -> bool:
@@ -227,8 +233,19 @@ def apply_theme(app, choice: str = "auto", mica: bool = False) -> str:
             padding: 1px 8px; margin: 2px 4px;
         }}
         QLabel#versionBadge:hover {{ background: {t['button_hover']}; }}
-    """ + (MICA_CSS.format(border=_rgba(t['bar_border'], 0.6), panel=_rgba(t['window'], 0.35)) if mica else ""))
+    """ + (_mica_css(t, _current) if mica else ""))
     return _current
+
+
+def _mica_css(t: dict, name: str) -> str:
+    light = name == "light"
+    bar, panel, box = _GLASS["light" if light else "dark"]
+    return MICA_CSS.format(
+        bar=_rgba(t["bar"], bar), border=_rgba(t["bar_border"], 0.6),
+        panel=_rgba(t["window"], panel), box=_rgba(t["base"] if light else t["window"], box),
+        # On glass the light theme's grey labels need a little more contrast.
+        title="#2f343b" if light else t["group_title"],
+        muted="#454b53" if light else t["muted"])
 
 
 def _rgba(hex_color: str, alpha: float) -> str:

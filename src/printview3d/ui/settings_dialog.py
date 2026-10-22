@@ -85,12 +85,18 @@ class SettingsDialog(QDialog):
         ka.setObjectName("formKey")
         la.addRow(ka, self.theme_combo)
         from .. import win_mica
-        self.mica_check = QCheckBox(tr("Windows transparency (Mica)"))
-        self.mica_check.setChecked(bool(settings.get("mica", False)) and win_mica.supported())
-        self.mica_check.setEnabled(win_mica.supported())
-        la.addRow(self.mica_check)
-        mica_note = QLabel(tr("The toolbar and side panel take a soft tint of your desktop wallpaper. "
-                              "Windows 11 only; takes effect after restarting PrintView3D.")
+        self.backdrop_combo = QComboBox()
+        self.backdrop_combo.addItem(tr("Off"), "off")
+        self.backdrop_combo.addItem(tr("Mica (soft tint of the wallpaper)"), "mica")
+        self.backdrop_combo.addItem(tr("Acrylic (frosted glass)"), "acrylic")
+        self.backdrop_combo.setCurrentIndex(
+            max(0, self.backdrop_combo.findData(win_mica.choice(settings) if win_mica.supported() else "off")))
+        self.backdrop_combo.setEnabled(win_mica.supported())
+        kb = QLabel(tr("Window transparency"))
+        kb.setObjectName("formKey")
+        la.addRow(kb, self.backdrop_combo)
+        mica_note = QLabel(tr("Windows 11 only. Takes effect after restarting PrintView3D. Windows shows a "
+                              "plain colour while the window is not active.")
                            if win_mica.supported() else tr("Needs Windows 11."))
         mica_note.setObjectName("muted")
         mica_note.setWordWrap(True)
@@ -612,8 +618,8 @@ class SettingsDialog(QDialog):
             self.settings.set("language", lang)
             # Takes effect immediately: every window re-sets its texts.
             i18n.apply_language(QApplication.instance(), lang)
-        if self.mica_check.isEnabled():
-            self.settings.set("mica", self.mica_check.isChecked())
+        if self.backdrop_combo.isEnabled():
+            self.settings.set("backdrop", self.backdrop_combo.currentData())
         choice = self.theme_combo.currentData()
         if choice != self.settings.get("theme", "auto"):
             self.settings.set("theme", choice)      # already shown live (see _preview_theme)

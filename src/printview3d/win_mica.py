@@ -23,6 +23,16 @@ DWMSBT_TABBEDWINDOW = 4               # Mica Alt (stronger wallpaper tint)
 BACKDROPS = {"mica": DWMSBT_MAINWINDOW, "acrylic": DWMSBT_TRANSIENTWINDOW, "mica-alt": DWMSBT_TABBEDWINDOW}
 
 
+CHOICES = ("off", "mica", "acrylic")   # what Settings -> Appearance offers
+
+
+def choice(settings) -> str:
+    """The transparency chosen in Settings: "off", "mica" or "acrylic".
+    0.15 only had an on/off switch for Mica ("mica": true); that still counts as "mica"."""
+    value = settings.get("backdrop", "") or ("mica" if settings.get("mica", False) else "off")
+    return value if value in CHOICES else "off"
+
+
 def supported() -> bool:
     if sys.platform != "win32":
         return False

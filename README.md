@@ -317,6 +317,20 @@ model colours stay the same so they always match your slicer.
 
 ![The same G-code in the Dark, Gray, Graphite and Light themes](docs/screenshot-themes.png)
 
+#### Window transparency (Windows 11)
+
+**Settings → Appearance → Window transparency** lets the toolbar, side panel and status bar show
+what lies behind the window, in any theme:
+
+- **Mica**: a soft tint of your desktop wallpaper (as in File Explorer).
+- **Acrylic**: frosted glass that blurs the desktop and other windows behind it.
+- **Off** (default): solid, as before.
+
+The 3D view always stays solid. It takes effect after restarting PrintView3D. Windows draws the
+effect itself and shows a plain colour while the window is not active, and switches it off with
+*Transparency effects* off in Windows Settings or in battery saver. Windows 10 and other systems
+keep the normal look.
+
 ### Updates
 
 **Settings → Updates** shows your version and has **Check for updates now**. You can also switch on
