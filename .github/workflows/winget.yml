@@ -43,8 +43,13 @@ jobs:
           gh api "$base/$v" --silent 2>$null; $versionThere = ($LASTEXITCODE -eq 0)
           gh api $base --silent 2>$null;      $packageThere = ($LASTEXITCODE -eq 0)
           $global:LASTEXITCODE = 0
+          # Until Microsoft has approved the first version, releases do not send new ones: each would
+          # open another "New package" pull request next to the one waiting for review. A run by hand
+          # (Actions -> winget -> Run workflow) can still send a first version.
+          $waiting = (-not $packageThere) -and ("${{ github.event_name }}" -ne "workflow_dispatch")
+          if ($waiting) { Write-Output "::notice title=winget::PrintView3D is not in winget yet (first pull request still in review); $v is not sent." }
           "version=$v" >> $env:GITHUB_OUTPUT
-          "skip=$($versionThere.ToString().ToLower())" >> $env:GITHUB_OUTPUT
+          "skip=$(($versionThere -or $waiting).ToString().ToLower())" >> $env:GITHUB_OUTPUT
           $title = if ($packageThere) { "New version: sevagjb.PrintView3D version $v" } else { "New package: sevagjb.PrintView3D version $v" }
           "title=$title" >> $env:GITHUB_OUTPUT
           if ($versionThere) { Write-Output "::notice title=winget::PrintView3D $v is already in winget, nothing to send." }
