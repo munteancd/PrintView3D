@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.15.2
+- With Windows transparency (Mica) on, switching to the light theme (or back to dark) could leave the
+  title bar and the Mica backdrop dark until the window was clicked away or resized, so the side
+  panel showed dark text on a dark background. The window now redraws its frame and backdrop at once.
+
 ## 0.15.1
 - **Fixed: Settings turned black with Windows transparency (Mica) on.** The Mica style rules reached
   every window that belongs to the main window, dialogs included; they now name only the main
