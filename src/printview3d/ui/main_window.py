@@ -154,10 +154,10 @@ class MainWindow(QMainWindow):
         self.setAttribute(Qt.WA_TranslucentBackground, True)
         theme.apply_theme(QApplication.instance(), theme.setting(), mica=True)
 
-    def enable_mica(self) -> bool:
+    def enable_mica(self, kind: str = "mica") -> bool:
         """After show(): ask Windows for the Mica backdrop. Falls back to the normal look."""
         from .. import win_mica
-        ok = win_mica.apply(int(self.winId()), theme.is_dark())
+        ok = win_mica.apply(int(self.winId()), theme.is_dark(), kind)
         if not ok:                                   # Windows said no: solid backgrounds again
             self.mica = False
             self.setAttribute(Qt.WA_TranslucentBackground, False)
@@ -190,6 +190,7 @@ class MainWindow(QMainWindow):
     # =================================================================== UI
     def _build_toolbar(self):
         tb = QToolBar()
+        tb.setObjectName("mainToolbar")          # the Mica style rules name it (theme.MICA_CSS)
         tb.setObjectName("mainToolbar")
         tb.setMovable(False)
         tb.setIconSize(QSize(18, 18))
@@ -314,6 +315,7 @@ class MainWindow(QMainWindow):
         from pyvistaqt import QtInteractor
 
         self.stack = QStackedWidget()
+        self.stack.setObjectName("centralStack")  # the Mica style rules name it (theme.MICA_CSS)
 
         # ---- welcome page ----
         welcome = QWidget()
@@ -465,6 +467,7 @@ class MainWindow(QMainWindow):
 
     def _build_statusbar(self):
         sb = self.statusBar()
+        sb.setObjectName("mainStatusBar")        # the Mica style rules name it (theme.MICA_CSS)
         self.progress = QProgressBar()
         self.progress.setMaximumWidth(220)
         self.progress.setRange(0, 100)

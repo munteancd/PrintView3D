@@ -126,19 +126,23 @@ def colors(name: str | None = None) -> dict[str, str]:
 
 
 # Windows 11 Mica (Settings -> Appearance): the main window's own backgrounds become transparent,
-# so the backdrop Windows draws behind the window shows through (see win_mica.py). Only the main
-# window: dialogs stay solid. The 3D view is a separate OpenGL surface and stays solid anyway.
+# so the backdrop Windows draws behind the window shows through (see win_mica.py). The 3D view is a
+# separate OpenGL surface and stays solid anyway.
+# Every rule names one of the main window's own parts by its object name. A rule such as
+# "QMainWindow#mainWindow QScrollArea" would also reach dialogs - a dialog opened from the main
+# window is its child - and made the Settings window black in 0.15.0.
 MICA_CSS = """
     QMainWindow#mainWindow,
-    QMainWindow#mainWindow > QWidget,
-    QMainWindow#mainWindow QToolBar,
-    QMainWindow#mainWindow QStatusBar,
-    QMainWindow#mainWindow QStackedWidget,
-    QMainWindow#mainWindow QSplitter,
-    QMainWindow#mainWindow QScrollArea,
-    QMainWindow#mainWindow QScrollArea > QWidget > QWidget {{ background: transparent; }}
-    QMainWindow#mainWindow QToolBar {{ border-bottom: 1px solid {border}; }}
-    QMainWindow#mainWindow QGroupBox {{ background: {panel}; }}
+    QToolBar#mainToolbar,
+    QStatusBar#mainStatusBar,
+    QStackedWidget#centralStack,
+    QStackedWidget#centralStack QStackedWidget,
+    QStackedWidget#centralStack QSplitter,
+    QStackedWidget#centralStack QScrollArea,
+    QStackedWidget#centralStack QScrollArea > QWidget,
+    QStackedWidget#centralStack QScrollArea > QWidget > QWidget {{ background: transparent; }}
+    QToolBar#mainToolbar {{ border-bottom: 1px solid {border}; }}
+    QStackedWidget#centralStack QGroupBox {{ background: {panel}; }}
 """
 
 

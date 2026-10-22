@@ -83,10 +83,48 @@ def test_mica_makes_only_the_main_window_transparent(app):
     assert "transparent; }" not in app.styleSheet().split("QLabel#versionBadge:hover")[1]
     theme.apply_theme(app, "dark", mica=True)
     css = app.styleSheet()
-    assert "QMainWindow#mainWindow QToolBar" in css and "QMainWindow#mainWindow QStatusBar" in css
+    assert "QToolBar#mainToolbar" in css and "QStatusBar#mainStatusBar" in css and "#centralStack" in css
     assert "{ background: transparent; }" in css
     assert "{{" not in css                                    # the template was filled in
     theme.apply_theme(app, "dark")                            # back to normal for the other tests
+
+
+def test_mica_leaves_dialogs_solid(app):
+    """0.15.0: a dialog opened from the main window is its child, and the Mica rules made it
+    transparent (black on Windows). Only the main window's own named parts may be transparent."""
+    from PySide6.QtWidgets import (QDialog, QMainWindow, QScrollArea, QStackedWidget, QToolBar,
+                                   QVBoxLayout, QWidget)
+    from printview3d.ui import theme
+    theme.apply_theme(app, "light", mica=True)
+    try:
+        win = QMainWindow()
+        win.setObjectName("mainWindow")
+        stack = QStackedWidget()
+        stack.setObjectName("centralStack")
+        side = QScrollArea()
+        side.setWidget(QWidget())
+        stack.addWidget(side)
+        win.setCentralWidget(stack)
+        tb = QToolBar()
+        tb.setObjectName("mainToolbar")
+        win.addToolBar(tb)
+        dlg = QDialog(win)
+        lay = QVBoxLayout(dlg)
+        pages = QStackedWidget()
+        scroll = QScrollArea()
+        scroll.setWidget(QWidget())
+        pages.addWidget(scroll)
+        lay.addWidget(pages)
+
+        def alpha(w):
+            w.ensurePolished()
+            return w.palette().color(w.backgroundRole()).alpha()
+
+        assert alpha(win) == 0 and alpha(stack) == 0 and alpha(tb) == 0     # main window: see-through
+        for w in (dlg, pages, scroll, scroll.widget()):                     # dialog: solid
+            assert alpha(w) == 255, type(w).__name__
+    finally:
+        theme.apply_theme(app, "dark")
 
 
 def test_mica_not_offered_off_windows():

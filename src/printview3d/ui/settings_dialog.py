@@ -78,6 +78,9 @@ class SettingsDialog(QDialog):
         for key, name in theme.THEME_NAMES.items():
             self.theme_combo.addItem(tr(name), key)
         self.theme_combo.setCurrentIndex(max(0, self.theme_combo.findData(settings.get("theme", "auto"))))
+        # The theme changes live while choosing; Cancel puts back the one from when Settings opened.
+        self._theme_at_open = settings.get("theme", "auto")
+        self.theme_combo.currentIndexChanged.connect(self._preview_theme)
         ka = QLabel(tr("Theme"))
         ka.setObjectName("formKey")
         la.addRow(ka, self.theme_combo)
@@ -370,6 +373,28 @@ class SettingsDialog(QDialog):
         if row >= 0:
             self.nav.item(row).setIcon(theme.nav_icon("updates", dot=bool(rel)))
 
+    # ---------------------------------------------------------------- theme
+    def _apply_theme_now(self, choice: str):
+        """Switch every window (and the 3D view) to the theme, as the toolbar button does."""
+        parent = self.parent()
+        if hasattr(parent, "apply_theme"):
+            parent.apply_theme(choice)
+        else:
+            theme.apply_theme(QApplication.instance(), choice)
+        for row in range(self.nav.count()):                 # sidebar icons take the new text colour
+            key = self.nav.item(row).data(Qt.UserRole)
+            dot = key == "updates" and bool(getattr(self, "_available", None))
+            self.nav.item(row).setIcon(theme.nav_icon(key, dot=dot))
+
+    def _preview_theme(self):
+        self._apply_theme_now(self.theme_combo.currentData())
+
+    def reject(self):
+        """Cancel, Esc or the window's cross: back to the theme from when Settings opened."""
+        if self.theme_combo.currentData() != self._theme_at_open:
+            self._apply_theme_now(self._theme_at_open)
+        super().reject()
+
     @staticmethod
     def _when(ts: float) -> str:
         """'today 14:02' or '14 Nov 2026, 14:02' in the user's language."""
@@ -591,10 +616,5 @@ class SettingsDialog(QDialog):
             self.settings.set("mica", self.mica_check.isChecked())
         choice = self.theme_combo.currentData()
         if choice != self.settings.get("theme", "auto"):
-            self.settings.set("theme", choice)
-            parent = self.parent()
-            if hasattr(parent, "apply_theme"):
-                parent.apply_theme(choice)          # windows and the 3D view
-            else:
-                theme.apply_theme(QApplication.instance(), choice)
+            self.settings.set("theme", choice)      # already shown live (see _preview_theme)
         self.accept()
