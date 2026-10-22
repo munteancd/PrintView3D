@@ -1,0 +1,64 @@
+# Temporary (Mica fix): real Windows screenshots of PrintView3D with and without Mica,
+# pushed to a branch ci-shots-<run> so they can be looked at. Removed before merging.
+name: mica-shots
+on:
+  push:
+    branches: ['fix/mica-*']
+permissions:
+  contents: write
+jobs:
+  shots:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - name: Software OpenGL (Mesa llvmpipe), the runner has no graphics card
+        shell: pwsh
+        run: |
+          $rel = Invoke-RestMethod https://api.github.com/repos/pal1000/mesa-dist-win/releases/latest -Headers @{ Authorization = "Bearer ${{ github.token }}" }
+          $asset = $rel.assets | Where-Object { $_.name -match 'release-msvc\.7z$' } | Select-Object -First 1
+          Invoke-WebRequest $asset.browser_download_url -OutFile mesa.7z
+          7z x mesa.7z -omesa -y | Out-Null
+          Copy-Item mesa\x64\*.dll $env:pythonLocation -Force
+          Write-Output "::notice title=Mesa::$($asset.name) -> $env:pythonLocation"
+      - name: Colourful wallpaper, transparency effects on
+        shell: pwsh
+        run: |
+          Add-Type -AssemblyName System.Drawing
+          $wall = Join-Path $env:RUNNER_TEMP "wall.bmp"
+          $bmp = New-Object System.Drawing.Bitmap 1920, 1080
+          $g = [System.Drawing.Graphics]::FromImage($bmp)
+          $r = New-Object System.Drawing.Rectangle 0, 0, 1920, 1080
+          $br = New-Object System.Drawing.Drawing2D.LinearGradientBrush($r, [System.Drawing.Color]::FromArgb(40, 90, 220), [System.Drawing.Color]::FromArgb(230, 110, 60), 35)
+          $g.FillRectangle($br, $r); $bmp.Save($wall, [System.Drawing.Imaging.ImageFormat]::Bmp); $g.Dispose(); $bmp.Dispose()
+          Add-Type 'using System.Runtime.InteropServices; public class W { [DllImport("user32.dll", CharSet=CharSet.Unicode)] public static extern bool SystemParametersInfo(int a, int b, string c, int d); }'
+          [W]::SystemParametersInfo(20, 0, $wall, 3) | Out-Null
+          New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name EnableTransparency -Value 1 -PropertyType DWord -Force | Out-Null
+          Write-Output "build $([Environment]::OSVersion.Version.Build)"
+      - name: Screenshots
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          mkdir shots | Out-Null
+          $env:PYTHONUNBUFFERED = "1"
+          python tools/ci_mica_shots.py shots/1-start-dark-switch-light.png --theme dark --mica 1 --switch-to light *>> shots/log.txt
+          python tools/ci_mica_shots.py shots/2-start-light.png --theme light --mica 1 *>> shots/log.txt
+          python tools/ci_mica_shots.py shots/3-start-light-switch-dark.png --theme light --mica 1 --switch-to dark *>> shots/log.txt
+          $files = (Get-ChildItem shots | ForEach-Object { "$($_.Name) $($_.Length)" }) -join ' | '
+          Write-Output "::notice title=Shots::$files"
+          $log = (Get-Content shots/log.txt -Raw) -replace "`r", "" -replace "`n", "%0A"
+          Write-Output "::notice title=Log::$log"
+      - name: Push screenshots to ci-shots-${{ github.run_id }}
+        shell: pwsh
+        run: |
+          cd shots
+          git init -q -b shots
+          git config user.name "ci"; git config user.email "ci@users.noreply.github.com"
+          git add -A; git commit -q --allow-empty -m "screenshots ${{ github.sha }}"
+          $out = git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:refs/heads/ci-shots-${{ github.run_id }} 2>&1
+          Write-Output "::notice title=Push::$($out -join ' | ')"
