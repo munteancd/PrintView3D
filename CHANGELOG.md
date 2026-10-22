@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.16.1
+- **The title bar follows the theme** (Windows): PrintView3D now tells Qt whether its theme is light
+  or dark. Before, Qt followed Windows' own dark mode and overrode ours, so with Windows in dark mode
+  the light theme kept a dark title bar, and with transparency on a dark backdrop behind dark text.
+
 ## 0.16.0
 - **Window transparency: Off, Mica or Acrylic** (Settings → Appearance, Windows 11). New: **Acrylic**,
   frosted glass that blurs whatever lies behind the window (desktop, other windows). Mica stays the
