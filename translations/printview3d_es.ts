@@ -847,13 +847,28 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Windows transparency (Mica)</source>
-        <translation type="unfinished">Transparencia de Windows (Mica)</translation>
+        <source>Off</source>
+        <translation type="unfinished">Desactivado</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>The toolbar and side panel take a soft tint of your desktop wallpaper. Windows 11 only; takes effect after restarting PrintView3D.</source>
-        <translation type="unfinished">La barra de herramientas y el panel lateral toman un tono suave del fondo de escritorio. Solo Windows 11; se aplica al reiniciar PrintView3D.</translation>
+        <source>Mica (soft tint of the wallpaper)</source>
+        <translation type="unfinished">Mica (tono suave del fondo de escritorio)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Acrylic (frosted glass)</source>
+        <translation type="unfinished">Acrylic (vidrio esmerilado)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Window transparency</source>
+        <translation type="unfinished">Transparencia de la ventana</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Windows 11 only. Takes effect after restarting PrintView3D. Windows shows a plain colour while the window is not active.</source>
+        <translation type="unfinished">Solo Windows 11. Se aplica al reiniciar PrintView3D. Windows muestra un color liso mientras la ventana no está activa.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1334,6 +1349,14 @@
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Download update</source>
         <translation type="unfinished">Descargar actualización</translation>
+    </message>
+    <message>
+        <source>Windows transparency (Mica)</source>
+        <translation type="vanished">Transparencia de Windows (Mica)</translation>
+    </message>
+    <message>
+        <source>The toolbar and side panel take a soft tint of your desktop wallpaper. Windows 11 only; takes effect after restarting PrintView3D.</source>
+        <translation type="vanished">La barra de herramientas y el panel lateral toman un tono suave del fondo de escritorio. Solo Windows 11; se aplica al reiniciar PrintView3D.</translation>
     </message>
     <message>
         <source>PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, G-code and FreeCAD files.</source>

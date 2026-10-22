@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.16.0
+- **Window transparency: Off, Mica or Acrylic** (Settings → Appearance, Windows 11). New: **Acrylic**,
+  frosted glass that blurs whatever lies behind the window (desktop, other windows). Mica stays the
+  calm option, a soft tint of the wallpaper. The 0.15 Mica switch carries over.
+- **Readable on any wallpaper**: with Mica or Acrylic the toolbar, side panel and status bar get a
+  frosted layer in the theme's colour, strongest in the light theme, and the grey labels and box
+  headings are a little darker there.
+- With transparency on, switching to the light theme (or back to dark) could leave the switching to the light theme (or back to dark) could leave the
+  title bar and the Mica backdrop dark until the window was clicked away or resized, so the side
+  panel showed dark text on a dark background. The window now redraws its frame and backdrop at once.
+
 ## 0.15.1
 - **Fixed: Settings turned black with Windows transparency (Mica) on.** The Mica style rules reached
   every window that belongs to the main window, dialogs included; they now name only the main

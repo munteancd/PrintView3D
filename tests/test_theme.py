@@ -120,7 +120,8 @@ def test_mica_leaves_dialogs_solid(app):
             w.ensurePolished()
             return w.palette().color(w.backgroundRole()).alpha()
 
-        assert alpha(win) == 0 and alpha(stack) == 0 and alpha(tb) == 0     # main window: see-through
+        assert alpha(win) == 0 and alpha(stack) == 0                       # main window: see-through
+        assert 0 < alpha(tb) < 255                                          # toolbar: frosted layer
         for w in (dlg, pages, scroll, scroll.widget()):                     # dialog: solid
             assert alpha(w) == 255, type(w).__name__
     finally:
@@ -133,3 +134,28 @@ def test_mica_not_offered_off_windows():
     if sys.platform != "win32":
         assert not win_mica.supported()
         assert not win_mica.apply(0, True)
+
+
+def test_backdrop_choice_and_old_mica_switch(tmp_path):
+    from printview3d import win_mica
+    s = Settings(str(tmp_path / "s.json"))
+    assert win_mica.choice(s) == "off"                       # new install
+    s.set("mica", True)
+    assert win_mica.choice(s) == "mica"                      # 0.15's switch still counts
+    s.set("backdrop", "acrylic")
+    assert win_mica.choice(s) == "acrylic"
+    s.set("backdrop", "nonsense")
+    assert win_mica.choice(s) == "off"
+
+
+def test_glass_layer_is_stronger_in_the_light_theme(app):
+    import re
+    def alpha(css, selector):
+        block = css.split(selector, 1)[1].split("}", 1)[0]
+        return float(re.search(r"rgba\(\d+, \d+, \d+, ([\d.]+)\)", block).group(1))
+    theme.apply_theme(app, "light", mica=True)
+    light = alpha(app.styleSheet(), "QStackedWidget#centralStack QScrollArea > QWidget > QWidget {")
+    theme.apply_theme(app, "dark", mica=True)
+    dark = alpha(app.styleSheet(), "QStackedWidget#centralStack QScrollArea > QWidget > QWidget {")
+    assert light > dark >= 0.4
+    theme.apply_theme(app, "dark")

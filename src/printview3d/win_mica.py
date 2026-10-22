@@ -23,6 +23,16 @@ DWMSBT_TABBEDWINDOW = 4               # Mica Alt (stronger wallpaper tint)
 BACKDROPS = {"mica": DWMSBT_MAINWINDOW, "acrylic": DWMSBT_TRANSIENTWINDOW, "mica-alt": DWMSBT_TABBEDWINDOW}
 
 
+CHOICES = ("off", "mica", "acrylic")   # what Settings -> Appearance offers
+
+
+def choice(settings) -> str:
+    """The transparency chosen in Settings: "off", "mica" or "acrylic".
+    0.15 only had an on/off switch for Mica ("mica": true); that still counts as "mica"."""
+    value = settings.get("backdrop", "") or ("mica" if settings.get("mica", False) else "off")
+    return value if value in CHOICES else "off"
+
+
 def supported() -> bool:
     if sys.platform != "win32":
         return False
@@ -39,12 +49,30 @@ def _set_int(hwnd: int, attr: int, value: int) -> bool:
         ctypes.c_void_p(hwnd), ctypes.c_uint(attr), ctypes.byref(v), ctypes.sizeof(v)) == 0
 
 
+_kinds: dict[int, int] = {}            # hwnd -> backdrop type asked for (to ask again on a theme change)
+
+
+def _refresh_frame(hwnd: int) -> None:
+    """Windows keeps showing the old title bar and backdrop after a dark/light change until the
+    window is deactivated or resized. Ask it to redraw the frame now."""
+    import ctypes
+    user32 = ctypes.windll.user32
+    SWP = 0x0001 | 0x0002 | 0x0004 | 0x0010 | 0x0020      # NOSIZE NOMOVE NOZORDER NOACTIVATE FRAMECHANGED
+    user32.SetWindowPos(ctypes.c_void_p(hwnd), None, 0, 0, 0, 0, SWP)
+    RDW = 0x0001 | 0x0080 | 0x0100 | 0x0400               # INVALIDATE ALLCHILDREN UPDATENOW FRAME
+    user32.RedrawWindow(ctypes.c_void_p(hwnd), None, None, RDW)
+
+
 def set_dark(hwnd: int, dark: bool) -> bool:
     """Dark or light Mica (and title bar), to match the theme."""
     if not supported():
         return False
     try:
-        return _set_int(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, 1 if dark else 0)
+        ok = _set_int(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, 1 if dark else 0)
+        if hwnd in _kinds:                                 # backdrop already on: ask again, then redraw
+            _set_int(hwnd, DWMWA_SYSTEMBACKDROP_TYPE, _kinds[hwnd])
+            _refresh_frame(hwnd)
+        return ok
     except Exception:  # noqa: BLE001
         return False
 
@@ -63,7 +91,11 @@ def apply(hwnd: int, dark: bool, kind: str = "mica") -> bool:
         set_dark(hwnd, dark)
         # The "glass" frame covers the whole window, so the backdrop shows behind our content.
         ctypes.windll.dwmapi.DwmExtendFrameIntoClientArea(ctypes.c_void_p(hwnd), ctypes.byref(MARGINS(-1, -1, -1, -1)))
-        return _set_int(hwnd, DWMWA_SYSTEMBACKDROP_TYPE, BACKDROPS.get(kind, DWMSBT_MAINWINDOW))
+        value = BACKDROPS.get(kind, DWMSBT_MAINWINDOW)
+        ok = _set_int(hwnd, DWMWA_SYSTEMBACKDROP_TYPE, value)
+        if ok:
+            _kinds[hwnd] = value
+        return ok
     except Exception:  # noqa: BLE001 - never let a visual effect break the program
         return False
 
