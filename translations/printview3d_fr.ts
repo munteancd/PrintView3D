@@ -4,6 +4,58 @@
 <context>
     <name>PrintView3D</name>
     <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Export STL</source>
+        <translation type="unfinished">Exporter en STL</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>Choose the objects to export.</source>
+        <translation type="unfinished">Choisissez les objets à exporter.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>Object</source>
+        <translation type="unfinished">Objet</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Triangles</source>
+        <translation type="unfinished">Triangles</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>Save as</source>
+        <translation type="unfinished">Enregistrer en tant que</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>One combined STL</source>
+        <translation type="unfinished">Un seul STL combiné</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>One STL per object</source>
+        <translation type="unfinished">Un STL par objet</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>Each file is named after its object and saved in a folder you choose.</source>
+        <translation type="unfinished">Chaque fichier porte le nom de son objet et est enregistré dans le dossier de votre choix.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>Raw geometry only: no modifiers, negative parts, or support blockers and enforcers, and no colours, materials or print settings. Sizes in millimetres, saved as binary STL.</source>
+        <translation type="unfinished">Géométrie brute uniquement : sans modificateurs, pièces négatives, bloqueurs ni forceurs de supports, et sans couleurs, matériaux ni réglages d&apos;impression. Dimensions en millimètres, enregistré en STL binaire.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>Export…</source>
+        <translation type="unfinished">Exporter…</translation>
+    </message>
+    <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Outer wall</source>
         <translation type="unfinished">Paroi externe</translation>
@@ -321,6 +373,11 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Save the objects of this 3MF project as STL files (Ctrl+E)</source>
+        <translation type="unfinished">Enregistrer les objets de ce projet 3MF en fichiers STL (Ctrl+E)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Plate</source>
         <extracomment>Toolbar toggle: show or hide the printer&apos;s build plate / bed grid.</extracomment>
         <translation type="unfinished">Plateau</translation>
@@ -482,11 +539,6 @@
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Very small: the file may use metres instead of millimetres. Your slicer can scale it.</source>
         <translation type="unfinished">Très petit : le fichier utilise peut-être des mètres au lieu de millimètres. Votre trancheur peut le mettre à l&apos;échelle.</translation>
-    </message>
-    <message>
-        <location filename="../src/printview3d/ui/main_window.py"></location>
-        <source>Triangles</source>
-        <translation type="unfinished">Triangles</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -741,6 +793,46 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Reading the objects of {name}…</source>
+        <translation type="unfinished">Lecture des objets de {name}…</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Could not export STL</source>
+        <translation type="unfinished">Impossible d&apos;exporter en STL</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>This 3MF file contains no printable objects to export.</source>
+        <translation type="unfinished">Ce fichier 3MF ne contient aucun objet imprimable à exporter.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Saved {path}</source>
+        <translation type="unfinished">{path} enregistré</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Choose a folder for the STL files</source>
+        <translation type="unfinished">Choisissez un dossier pour les fichiers STL</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>These files already exist in this folder:</source>
+        <translation type="unfinished">Ces fichiers existent déjà dans ce dossier :</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Replace</source>
+        <translation type="unfinished">Remplacer</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Saved {n} STL files in {folder}</source>
+        <translation type="unfinished">{n} fichiers STL enregistrés dans {folder}</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Save screenshot</source>
         <translation type="unfinished">Enregistrer la capture</translation>
     </message>
@@ -748,11 +840,6 @@
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PNG image</source>
         <translation type="unfinished">Image PNG</translation>
-    </message>
-    <message>
-        <location filename="../src/printview3d/ui/main_window.py"></location>
-        <source>Saved {path}</source>
-        <translation type="unfinished">{path} enregistré</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -823,7 +910,7 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PrintView3D could not restart by itself. Close it and start it again.</source>
-        <translation type="unfinished">PrintView3D n'a pas pu redémarrer tout seul. Fermez-le et relancez-le.</translation>
+        <translation type="unfinished">PrintView3D n&apos;a pas pu redémarrer tout seul. Fermez-le et relancez-le.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -954,7 +1041,7 @@
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Off: a file you double-click while PrintView3D is open is shown in the window that is already open. On: every file gets its own window. Starting PrintView3D without a file always opens a new window.</source>
-        <translation type="unfinished">Désactivé : un fichier ouvert par double-clic pendant que PrintView3D est ouvert s'affiche dans la fenêtre déjà ouverte. Activé : chaque fichier a sa propre fenêtre. Lancer PrintView3D sans fichier ouvre toujours une nouvelle fenêtre.</translation>
+        <translation type="unfinished">Désactivé : un fichier ouvert par double-clic pendant que PrintView3D est ouvert s&apos;affiche dans la fenêtre déjà ouverte. Activé : chaque fichier a sa propre fenêtre. Lancer PrintView3D sans fichier ouvre toujours une nouvelle fenêtre.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1290,17 +1377,17 @@
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>The new window transparency is used after PrintView3D restarts.</source>
-        <translation type="unfinished">La nouvelle transparence de la fenêtre s'applique après le redémarrage de PrintView3D.</translation>
+        <translation type="unfinished">La nouvelle transparence de la fenêtre s&apos;applique après le redémarrage de PrintView3D.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>The new graphics card setting is used after PrintView3D restarts.</source>
-        <translation type="unfinished">Le nouveau réglage de la carte graphique s'applique après le redémarrage de PrintView3D.</translation>
+        <translation type="unfinished">Le nouveau réglage de la carte graphique s&apos;applique après le redémarrage de PrintView3D.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>The new window transparency and graphics card setting are used after PrintView3D restarts.</source>
-        <translation type="unfinished">La nouvelle transparence de la fenêtre et le nouveau réglage de la carte graphique s'appliquent après le redémarrage de PrintView3D.</translation>
+        <translation type="unfinished">La nouvelle transparence de la fenêtre et le nouveau réglage de la carte graphique s&apos;appliquent après le redémarrage de PrintView3D.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>

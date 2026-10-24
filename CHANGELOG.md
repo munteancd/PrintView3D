@@ -1,6 +1,15 @@
 # Changelog
 
-## Unreleased
+## 0.17.0
+- **Export STL from 3MF** (toolbar button **Export STL**, `Ctrl+E`, shown for 3MF files): a dialog
+  lists every object with its name and triangle count, all ticked. Save them as **one combined STL**
+  or **one STL per object**, each file named after its object, in a folder you pick (PrintView3D asks
+  before replacing existing files). A 3MF with a single object goes straight to the Save dialog.
+  The STL holds raw geometry only: no modifiers, negative parts, or support blockers and enforcers
+  (as recorded by Creality Print, OrcaSlicer, Bambu Studio and PrusaSlicer), and no colours,
+  materials or print settings. Sizes in millimetres, saved as binary STL.
+- 3MF objects that have no name in the model itself now take their name from the slicer's object
+  settings (Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer) instead of "Object 1", "Object 2".
 - **Restart now / Later**: changing **Window transparency** (Settings → Appearance) or **Use the
   high-performance graphics card** (Settings → Viewer) only takes effect after a restart, so OK now
   asks **Restart now** or **Later**. Restart now closes PrintView3D and opens it again with the same

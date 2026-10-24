@@ -12,6 +12,7 @@ referenced from the main model through the 3MF "production" extension).
 from __future__ import annotations
 
 import json
+import os
 import re
 import struct
 import zipfile
@@ -210,76 +211,183 @@ def _mesh_arrays(mesh_el) -> tuple[np.ndarray, np.ndarray]:
     return verts.reshape(-1, 3), faces.reshape(-1, 3)
 
 
+# --------------------------------------------------------------------------
+# Part types written by slicers
+#
+# A slicer project can hold more than printable geometry: modifiers (a box
+# that changes settings inside it), negative parts (cut away from the model)
+# and support blockers / enforcers. They are stored as ordinary meshes, and
+# the slicer records what each one is in its own settings file:
+#   - Creality Print, OrcaSlicer, Bambu Studio: Metadata/model_settings.config
+#     <object id="..."><part id="..." subtype="normal_part | modifier_part |
+#     negative_part | support_blocker | support_enforcer">, where the object id
+#     is the build item's object and the part id the component's object.
+#   - PrusaSlicer / SuperSlicer: Metadata/Slic3r_PE_model.config
+#     <object id="..."><volume firstid=".." lastid=".."> with a "volume_type"
+#     (ModelPart, ParameterModifier, NegativeVolume, SupportBlocker,
+#     SupportEnforcer) or the older "modifier" = 1, as triangle ranges of the
+#     object's single mesh.
+#   - The 3MF core itself: <object type="support"> or type="other".
+# --------------------------------------------------------------------------
+NON_MODEL_TYPES = ("support", "other")
+
+
+@dataclass
+class _SlicerParts:
+    names: dict = field(default_factory=dict)       # build object id -> name
+    subtypes: dict = field(default_factory=dict)    # (object id, part id) -> subtype
+    keep_ranges: dict = field(default_factory=dict)  # object id -> [(first, last)] model-part triangles
+
+
+def _read_slicer_parts(z: zipfile.ZipFile, lower: dict) -> _SlicerParts:
+    sp = _SlicerParts()
+    name = lower.get("metadata/model_settings.config")
+    if name:
+        try:
+            root = _parse_xml(z.read(name))
+            for obj in root.iter("object"):
+                oid = obj.get("id")
+                for md in obj.findall("metadata"):
+                    if md.get("key") == "name" and md.get("value"):
+                        sp.names[oid] = md.get("value")
+                for part in obj.iter("part"):
+                    sp.subtypes[(oid, part.get("id"))] = part.get("subtype") or "normal_part"
+        except (ET.ParseError, ValueError):
+            pass
+    name = lower.get("metadata/slic3r_pe_model.config")
+    if name:
+        try:
+            root = _parse_xml(z.read(name))
+            for obj in root.iter("object"):
+                oid = obj.get("id")
+                keep, any_volume = [], False
+                for md in obj.findall("metadata"):
+                    if md.get("key") == "name" and md.get("value"):
+                        sp.names.setdefault(oid, md.get("value"))
+                for vol in obj.iter("volume"):
+                    any_volume = True
+                    meta = {md.get("key"): md.get("value") for md in vol.iter("metadata")}
+                    vtype = meta.get("volume_type")
+                    if vtype is None:
+                        vtype = "ParameterModifier" if meta.get("modifier") == "1" else "ModelPart"
+                    if vtype == "ModelPart":
+                        try:
+                            keep.append((int(vol.get("firstid")), int(vol.get("lastid"))))
+                        except (TypeError, ValueError):
+                            pass
+                if any_volume:
+                    sp.keep_ranges[oid] = keep
+        except (ET.ParseError, ValueError):
+            pass
+    return sp
+
+
+def _read_3mf_objects(z: zipfile.ZipFile, raw: bool = False,
+                      progress: Optional[Callable[[float], None]] = None):
+    """Read the build items of a 3MF as (name, vertices, faces), in millimetres and placed
+    on the plate. raw=True leaves out modifiers, negative parts and support blockers /
+    enforcers (see above); the viewer shows everything (raw=False).
+
+    Returns (objects, root element of the main model, {lowercase name: zip name})."""
+    names = z.namelist()
+    lower = {n.lower(): n for n in names}
+    root_path = _find_root_model(z)
+    slicer = _read_slicer_parts(z, lower)   # object names (both) and part types (raw only)
+
+    parts_cache: dict[str, tuple[dict, float, ET.Element]] = {}
+
+    def get_part(part_path: str):
+        part_path = _norm(part_path)
+        if part_path not in parts_cache:
+            real = lower.get(part_path.lower(), part_path)
+            root = _parse_xml(z.read(real))
+            scale = UNIT_SCALE.get(root.get("unit", "millimeter"), 1.0)
+            objects = {}
+            res = root.find(C + "resources")
+            if res is not None:
+                for obj in res.iter(C + "object"):
+                    objects[obj.get("id")] = obj
+            parts_cache[part_path] = (objects, scale, root)
+        return parts_cache[part_path]
+
+    def collect(part_path, obj_id, matrix, out_v, out_f, top_id, depth=0):
+        if depth > 16:
+            return
+        objects, scale, _ = get_part(part_path)
+        obj = objects.get(obj_id)
+        if obj is None:
+            return
+        if raw:     # the viewer shows everything, as the slicer does
+            if obj.get("type", "model") in NON_MODEL_TYPES:
+                return
+            if depth > 0 and slicer.subtypes.get((top_id, obj_id), "normal_part") != "normal_part":
+                return
+        mesh = obj.find(C + "mesh")
+        if mesh is not None:
+            v, f = _mesh_arrays(mesh)
+            if raw and depth == 0 and _norm(part_path) == _norm(root_path) and obj_id in slicer.keep_ranges:
+                keep = np.zeros(len(f), bool)
+                for first, last in slicer.keep_ranges[obj_id]:
+                    keep[max(first, 0):last + 1] = True
+                f = f[keep]
+            if len(v) and len(f):
+                v = v * scale
+                vh = np.hstack([v, np.ones((len(v), 1))])
+                v = (vh @ matrix)[:, :3]
+                out_f.append(f + sum(len(a) for a in out_v))
+                out_v.append(v.astype(np.float32))
+        comps = obj.find(C + "components")
+        if comps is not None:
+            for c in comps.iter(C + "component"):
+                sub_path = _path_attr(c) or part_path
+                m = _parse_transform(c.get("transform")) @ matrix
+                collect(sub_path, c.get("objectid"), m, out_v, out_f, top_id, depth + 1)
+
+    objects, _, root = get_part(root_path)
+    build = root.find(C + "build")
+    items = list(build.iter(C + "item")) if build is not None else []
+    if not items:   # Some exporters omit <build>: show every mesh object.
+        items = [ET.Element("item", {"objectid": oid}) for oid in objects]
+
+    found = []
+    for i, item in enumerate(items):
+        if progress:
+            progress(0.1 + 0.8 * i / max(1, len(items)))
+        item_path = _path_attr(item) or root_path
+        oid = item.get("objectid")
+        out_v, out_f = [], []
+        collect(item_path, oid, _parse_transform(item.get("transform")), out_v, out_f, oid)
+        if not out_v:
+            continue
+        obj_el = get_part(item_path)[0].get(oid)
+        name = ((obj_el.get("name") if obj_el is not None else None)
+                or slicer.names.get(oid) or f"Object {i + 1}")
+        found.append((name, np.vstack(out_v), np.vstack(out_f)))
+    return found, root, lower
+
+
+def read_3mf_for_export(path: str, progress: Optional[Callable[[float], None]] = None) -> list[MeshPart]:
+    """The objects of a 3MF as raw geometry for STL export: printable parts only (no
+    modifiers, negative parts or support blockers / enforcers), no colours or settings,
+    in millimetres and placed as in the file."""
+    with zipfile.ZipFile(path) as z:
+        found, _, _ = _read_3mf_objects(z, raw=True, progress=progress)
+    if progress:
+        progress(1.0)
+    return [MeshPart(name, v, f) for name, v, f in found]
+
+
 def load_3mf(path: str, progress: Optional[Callable[[float], None]] = None) -> ModelData:
     with zipfile.ZipFile(path) as z:
         names = z.namelist()
-        lower = {n.lower(): n for n in names}
-        root_path = _find_root_model(z)
-
-        parts_cache: dict[str, tuple[dict, float, ET.Element]] = {}
-
-        def get_part(part_path: str):
-            part_path = _norm(part_path)
-            if part_path not in parts_cache:
-                real = lower.get(part_path.lower(), part_path)
-                root = _parse_xml(z.read(real))
-                scale = UNIT_SCALE.get(root.get("unit", "millimeter"), 1.0)
-                objects = {}
-                res = root.find(C + "resources")
-                if res is not None:
-                    for obj in res.iter(C + "object"):
-                        objects[obj.get("id")] = obj
-                parts_cache[part_path] = (objects, scale, root)
-            return parts_cache[part_path]
-
-        def collect(part_path, obj_id, matrix, out_v, out_f, depth=0):
-            if depth > 16:
-                return
-            objects, scale, _ = get_part(part_path)
-            obj = objects.get(obj_id)
-            if obj is None:
-                return
-            mesh = obj.find(C + "mesh")
-            if mesh is not None:
-                v, f = _mesh_arrays(mesh)
-                if len(v):
-                    v = v * scale
-                    vh = np.hstack([v, np.ones((len(v), 1))])
-                    v = (vh @ matrix)[:, :3]
-                    out_f.append(f + sum(len(a) for a in out_v))
-                    out_v.append(v.astype(np.float32))
-            comps = obj.find(C + "components")
-            if comps is not None:
-                for c in comps.iter(C + "component"):
-                    sub_path = _path_attr(c) or part_path
-                    m = _parse_transform(c.get("transform")) @ matrix
-                    collect(sub_path, c.get("objectid"), m, out_v, out_f, depth + 1)
-
-        objects, _, root = get_part(root_path)
+        found, root, lower = _read_3mf_objects(z, raw=False, progress=progress)
         meta = {}
         for md in root.iter(C + "metadata"):
             n = md.get("name")
             if n in ("Title", "Designer", "Application", "Description") and (md.text or "").strip():
                 meta[{"Application": "Created with"}.get(n, n)] = md.text.strip()
 
-        parts: list[MeshPart] = []
-        build = root.find(C + "build")
-        items = list(build.iter(C + "item")) if build is not None else []
-        if not items:   # Some exporters omit <build>: show every mesh object.
-            items = [ET.Element("item", {"objectid": oid}) for oid in objects]
-
-        for i, item in enumerate(items):
-            if progress:
-                progress(0.1 + 0.8 * i / max(1, len(items)))
-            item_path = _path_attr(item) or root_path
-            oid = item.get("objectid")
-            out_v, out_f = [], []
-            collect(item_path, oid, _parse_transform(item.get("transform")), out_v, out_f)
-            if not out_v:
-                continue
-            obj_el = get_part(item_path)[0].get(oid)
-            name = (obj_el.get("name") if obj_el is not None else None) or f"Object {i + 1}"
-            parts.append(MeshPart(name, np.vstack(out_v), np.vstack(out_f)))
+        parts = [MeshPart(name, v, f) for name, v, f in found]
 
         if not parts:
             raise ValueError("This 3MF file contains no printable objects.")
@@ -332,3 +440,67 @@ def load_3mf(path: str, progress: Optional[Callable[[float], None]] = None) -> M
 def read_embedded_gcode(path: str, member: str) -> str:
     with zipfile.ZipFile(path) as z:
         return z.read(member).decode("utf-8", errors="replace")
+
+
+# ==========================================================================
+# Writing STL
+# ==========================================================================
+STL_HEADER = b"PrintView3D export"
+
+
+def write_binary_stl(parts: list[MeshPart], path: str) -> str:
+    """Write the parts as one binary STL: triangles with facet normals, coordinates as they
+    are (millimetres), nothing else (no colours, names or settings)."""
+    if parts:
+        tris = np.concatenate([p.vertices[p.faces].astype(np.float32) for p in parts if len(p.faces)]
+                              or [np.zeros((0, 3, 3), np.float32)])
+    else:
+        tris = np.zeros((0, 3, 3), np.float32)
+    rec = np.zeros(len(tris), dtype=[("n", "<f4", 3), ("v", "<f4", (3, 3)), ("a", "<u2")])
+    rec["v"] = tris
+    if len(tris):
+        t = tris.astype(np.float64)
+        n = np.cross(t[:, 1] - t[:, 0], t[:, 2] - t[:, 0])
+        length = np.linalg.norm(n, axis=1)
+        ok = length > 0
+        n[ok] /= length[ok, None]
+        n[~ok] = 0.0
+        rec["n"] = n
+    folder = os.path.dirname(os.path.abspath(path))
+    os.makedirs(folder, exist_ok=True)
+    tmp = path + ".part"
+    with open(tmp, "wb") as f:
+        # A binary STL header must not start with "solid" (that marks an ASCII STL).
+        f.write(STL_HEADER.ljust(80, b" "))
+        f.write(np.uint32(len(tris)).astype("<u4").tobytes())
+        f.write(rec.tobytes())
+    os.replace(tmp, path)
+    return path
+
+
+_BAD_FILE_CHARS = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
+_RESERVED = {"con", "prn", "aux", "nul", *(f"com{i}" for i in range(1, 10)), *(f"lpt{i}" for i in range(1, 10))}
+
+
+def safe_file_name(name: str, fallback: str = "object") -> str:
+    """An object name made safe as a file name on Windows, Linux and macOS."""
+    s = _BAD_FILE_CHARS.sub("_", name or "").strip().rstrip(". ")
+    if s.lower().endswith(".stl"):
+        s = s[:-4].rstrip(". ")
+    if not s or s.split(".")[0].lower() in _RESERVED:
+        s = (s + "_") if s else fallback
+    return s[:120]
+
+
+def stl_file_names(names: list[str]) -> list[str]:
+    """One distinct "<name>.stl" per object; repeated names get " (2)", " (3)", ..."""
+    out, used = [], set()
+    for name in names:
+        base = safe_file_name(name)
+        cand, k = base, 2
+        while cand.lower() in used:
+            cand = f"{base} ({k})"
+            k += 1
+        used.add(cand.lower())
+        out.append(cand + ".stl")
+    return out

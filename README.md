@@ -35,7 +35,7 @@ without exporting an STL first.
 | | |
 |---|---|
 | **STL** | Smooth-shaded model on a build plate, with size, triangle count and volume. |
-| **3MF** | Every object on the plate, including projects from Creality Print, OrcaSlicer and Bambu Studio. Show or hide each object, see the project's printer and filament settings and its thumbnail. If the project is already sliced, view its toolpaths without re-slicing. |
+| **3MF** | Every object on the plate, including projects from Creality Print, OrcaSlicer and Bambu Studio. Show or hide each object, see the project's printer and filament settings and its thumbnail. If the project is already sliced, view its toolpaths without re-slicing. **Export STL**: save the objects as plain STL files, combined or one per object. |
 | **G-code** | Toolpaths coloured by type (walls, infill, top/bottom, supports, bridges, travel…), a layer slider, "show only this layer", print time, filament use and the slicer's preview picture. |
 | **FreeCAD** | Open `.FCStd` documents to look at them: shown in 3D exactly as FreeCAD displays them (visible bodies only), with one click to open in FreeCAD or send to your slicer as STL. Uses your installed FreeCAD; without it you still see the preview picture. [Details](#freecad-files). |
 | **STEP** | Open `.step` / `.stp` CAD files: shown in 3D with the help of your installed FreeCAD (converted in the background, remembered afterwards), with the CAD program, author and date from the file. OrcaSlicer, PrusaSlicer and Bambu Studio get the STEP file itself; other slicers get an STL. [Details](#step-files). |
@@ -230,6 +230,7 @@ Looking from underneath? The plate gets out of the way so you can see the bottom
 |---|---|
 | `Ctrl+O` | Open a file |
 | `Ctrl+P` | Open the file in your default slicer |
+| `Ctrl+E` | Export STL (3MF projects) |
 | `Ctrl+T` | Next theme (Dark → Gray → Graphite → Light) |
 | `F` · `1` · `2` · `3` · `4` | Fit · Iso · Top · Front · Right view |
 | `↑` / `↓` | Next / previous layer (G-code) |
@@ -271,6 +272,21 @@ Flatpak, AppImage). If yours is elsewhere, choose it in **Settings → FreeCAD**
 <td width="50%"><img src="docs/screenshot-freecad-preview.png" alt="The same file without FreeCAD: the preview picture"><br><sub>Without FreeCAD: the preview picture saved in the file.</sub></td>
 </tr>
 </table>
+
+### Export STL from 3MF
+
+With a 3MF project open, **Export STL** in the toolbar (`Ctrl+E`) saves its objects as plain STL
+files, for example to share a model or open it in a program that does not read 3MF.
+
+- A dialog lists every object with its name and triangle count, all ticked; untick what you don't
+  need.
+- **One combined STL**: the ticked objects in one file, placed as they are on the plate.
+- **One STL per object**: each file is named after its object and saved into a folder you choose
+  (PrintView3D asks before replacing files that are already there).
+- A 3MF with only one object goes straight to the Save dialog.
+- **Raw geometry only:** modifiers, negative parts and support blockers / enforcers are left out
+  (as recorded by Creality Print, OrcaSlicer, Bambu Studio and PrusaSlicer), and so are colours,
+  materials and print settings. Sizes are in millimetres; the files are binary STL.
 
 ### STEP files
 
@@ -504,7 +520,7 @@ run_from_source.bat                    :: start from the source code, no packagi
 src/printview3d/
   app.py              entry point and command-line options
   loaders/gcode.py    G-code reader (layers, feature types, print info, thumbnails)
-  loaders/mesh.py     STL and 3MF readers
+  loaders/mesh.py     STL and 3MF readers, STL writer (Export STL)
   slicer.py           list of slicers, detection and launching
   file_assoc.py       "Open with" / default app (assoc_windows.py: registry, assoc_linux.py: freedesktop)
   gpu.py              graphics-card info and high-performance GPU setting

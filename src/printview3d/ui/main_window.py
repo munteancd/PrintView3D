@@ -25,13 +25,14 @@ from ..gpu import renderer_info
 from ..i18n import count, ltr, num, tr
 from ..loaders import (
     FEATURES, GcodeData, ModelData, SEND_AS_STL, SUPPORTED_EXTENSIONS, file_kind, load_file,
-    parse_gcode_text, read_embedded_gcode,
+    parse_gcode_text, read_3mf_for_export, read_embedded_gcode, stl_file_names, write_binary_stl,
 )
 from ..loaders.gcode import FEATURE_INDEX
 from ..settings import Settings
 from .labels import feature_label, meta_label, meta_value
 from . import theme, update_ui
 from .. import updates as up
+from .export_stl import ExportStlDialog
 from .scene import Scene
 from .settings_dialog import SettingsDialog
 
@@ -77,6 +78,11 @@ class _LoadSignals(QObject):
     failed = Signal(int, str)
 
 
+class _ExportSignals(QObject):
+    done = Signal(str, object)      # path, list of MeshPart
+    failed = Signal(str, str)       # path, error
+
+
 class _KeySwallower(QObject):
     """Stops VTK's built-in single-letter shortcuts (wireframe, quit, ...)."""
 
@@ -115,6 +121,9 @@ class MainWindow(QMainWindow):
         self._signals.progress.connect(self._on_progress)
         self._signals.done.connect(self._on_loaded)
         self._signals.failed.connect(self._on_failed)
+        self._export_signals = _ExportSignals()
+        self._export_signals.done.connect(self._on_export_read)
+        self._export_signals.failed.connect(self._on_export_failed)
 
         self._build_toolbar()
         self._build_central()
@@ -223,6 +232,11 @@ class MainWindow(QMainWindow):
         self.slicer_btn.setMenu(self.slicer_menu)
         self.slicer_btn.setPopupMode(QToolButton.MenuButtonPopup)
         tb.addWidget(self.slicer_btn)
+        # 3MF projects only: save the objects as plain STL files.
+        self.act_export_stl = QAction(self, triggered=self.export_stl)
+        self.act_export_stl.setShortcut(QKeySequence("Ctrl+E"))
+        self.act_export_stl.setVisible(False)
+        tb.addAction(self.act_export_stl)
         tb.addSeparator()
 
         self.view_actions = []
@@ -510,6 +524,8 @@ class MainWindow(QMainWindow):
         for act, key, view in self.view_actions:
             act.setText(view_names[view])
             act.setToolTip(tr("{view} view ({key})").format(view=view_names[view], key=key))
+        self.act_export_stl.setText(tr("Export STL"))
+        self.act_export_stl.setToolTip(tr("Save the objects of this 3MF project as STL files (Ctrl+E)"))
         self.act_bed.setText(tr("Plate"))
         self.act_bed.setToolTip(tr("Show / hide the build plate grid"))
         self.act_screenshot.setText(tr("Screenshot"))
@@ -720,6 +736,8 @@ class MainWindow(QMainWindow):
         self.scene.set_bed_visible(self.act_bed.isChecked())
         self.scene.set_view("iso")
         self._update_slicer_button()
+        self.act_export_stl.setVisible(kind == "3mf")
+        self.act_export_stl.setEnabled(True)
         msg = tr("Opened {path}").format(path=path)
         if kind in ("freecad", "step") and not getattr(data, "parts", None):
             msg = self._freecad_status_text(data)
@@ -1143,6 +1161,95 @@ class MainWindow(QMainWindow):
             return
         what = os.path.basename(file_to_send) if file_to_send else name
         self.statusBar().showMessage(tr("Opening {file} in {slicer}…").format(file=what, slicer=name), 6000)
+
+    # ------------------------------------------------------------ export STL
+    def export_stl(self):
+        """Export STL (3MF projects): read the objects again as raw geometry, then let the
+        user choose which and how. The file is read in the background; big projects take a moment."""
+        path = self.current_path
+        if self.current_kind != "3mf" or not path or not self.act_export_stl.isEnabled():
+            return
+        self.act_export_stl.setEnabled(False)
+        self.statusBar().showMessage(tr("Reading the objects of {name}…").format(name=os.path.basename(path)))
+
+        def work():
+            try:
+                self._export_signals.done.emit(path, read_3mf_for_export(path))
+            except Exception as e:  # noqa: BLE001 - show any error to the user
+                self._export_signals.failed.emit(path, f"{type(e).__name__}: {e}")
+
+        threading.Thread(target=work, daemon=True).start()
+
+    def _on_export_failed(self, path: str, msg: str):
+        self.act_export_stl.setEnabled(True)
+        self.statusBar().clearMessage()
+        if path == self.current_path:
+            QMessageBox.critical(self, tr("Could not export STL"), msg)
+
+    def _on_export_read(self, path: str, parts):
+        self.act_export_stl.setEnabled(True)
+        self.statusBar().clearMessage()
+        if path != self.current_path:           # another file was opened meanwhile
+            return
+        if not parts:
+            QMessageBox.information(self, tr("Export STL"),
+                                    tr("This 3MF file contains no printable objects to export."))
+            return
+        if len(parts) == 1:                     # nothing to choose: straight to Save
+            self._save_combined_stl(parts)
+            return
+        dlg = ExportStlDialog(parts, self)
+        if dlg.exec() != ExportStlDialog.Accepted:
+            return
+        chosen = dlg.selected_parts()
+        if dlg.per_object():
+            self._save_stl_per_object(chosen)
+        else:
+            self._save_combined_stl(chosen)
+
+    def _save_combined_stl(self, parts):
+        folder = os.path.dirname(self.current_path or "") or os.path.expanduser("~")
+        base = os.path.splitext(os.path.basename(self.current_path or "model"))[0]
+        if len(parts) == 1 and self.model is not None and len(self.model.parts) > 1:
+            base = os.path.splitext(stl_file_names([parts[0].name])[0])[0]
+        out, _ = QFileDialog.getSaveFileName(self, tr("Export STL"), os.path.join(folder, base + ".stl"),
+                                             tr("STL models") + " (*.stl)")
+        if not out:
+            return
+        if not out.lower().endswith(".stl"):
+            out += ".stl"
+        try:
+            write_binary_stl(parts, out)
+        except OSError as e:
+            QMessageBox.critical(self, tr("Could not export STL"), str(e))
+            return
+        self.statusBar().showMessage(tr("Saved {path}").format(path=out), 8000)
+
+    def _save_stl_per_object(self, parts):
+        start = os.path.dirname(self.current_path or "") or os.path.expanduser("~")
+        folder = QFileDialog.getExistingDirectory(self, tr("Choose a folder for the STL files"), start)
+        if not folder:
+            return
+        names = stl_file_names([p.name for p in parts])
+        existing = [n for n in names if os.path.exists(os.path.join(folder, n))]
+        if existing:
+            shown = "\n".join(existing[:10]) + ("\n…" if len(existing) > 10 else "")
+            box = QMessageBox(QMessageBox.Question, tr("Export STL"),
+                              tr("These files already exist in this folder:") + "\n\n" + shown, parent=self)
+            replace = box.addButton(tr("Replace"), QMessageBox.AcceptRole)
+            box.addButton(QMessageBox.Cancel)
+            box.setDefaultButton(QMessageBox.Cancel)
+            box.exec()
+            if box.clickedButton() is not replace:
+                return
+        try:
+            for part, name in zip(parts, names):
+                write_binary_stl([part], os.path.join(folder, name))
+        except OSError as e:
+            QMessageBox.critical(self, tr("Could not export STL"), str(e))
+            return
+        self.statusBar().showMessage(tr("Saved {n} STL files in {folder}").format(
+            n=count(len(parts)), folder=folder), 8000)
 
     def save_screenshot(self):
         if self.stack.currentIndex() != 1:
