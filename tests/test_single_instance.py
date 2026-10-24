@@ -1,6 +1,7 @@
 """One window: a second start hands its file to the PrintView3D already open; restart command."""
 
 import os
+import subprocess
 import sys
 import time
 import uuid
@@ -39,6 +40,15 @@ def _wait(app, cond, seconds=3.0):
         time.sleep(0.01)
 
 
+def _send_from_other_process(name: str, path: str) -> "subprocess.Popen":
+    """A second PrintView3D start, as a double-click makes it: its own process."""
+    src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src")
+    code = ("import sys; from printview3d import single_instance as si; "
+            "sys.exit(0 if si.send_to_running(sys.argv[1], name=sys.argv[2]) else 3)")
+    env = dict(os.environ, PYTHONPATH=os.path.abspath(src), QT_QPA_PLATFORM="offscreen")
+    return subprocess.Popen([sys.executable, "-c", code, path, name], env=env)
+
+
 def test_second_start_hands_file_to_first(qapp, tmp_path):
     name = "PrintView3D-test-" + uuid.uuid4().hex[:8]
     got = []
@@ -46,14 +56,29 @@ def test_second_start_hands_file_to_first(qapp, tmp_path):
     assert server.listen()
     try:
         path = str(tmp_path / "cube.3mf")
-        assert si.send_to_running(path, name=name)
-        _wait(qapp, lambda: got)
+        sender = _send_from_other_process(name, path)
+        _wait(qapp, lambda: sender.poll() is not None and got, seconds=20)
+        assert sender.wait(5) == 0, "the second start did not get an ok"
         assert got == [os.path.abspath(path)]
         # Only one window may listen: a second server does not take the name over.
         other = si.FileServer(lambda p: None, name=name)
         assert not other.listen()
     finally:
         server.close()
+
+
+def test_no_reply_means_not_delivered(qapp, tmp_path):
+    """Something listens but never answers (a stuck window): the start opens its own window."""
+    from PySide6.QtNetwork import QLocalServer
+    name = "PrintView3D-test-" + uuid.uuid4().hex[:8]
+    mute = QLocalServer()
+    assert mute.listen(name)
+    try:
+        sender = _send_from_other_process(name, str(tmp_path / "a.stl"))
+        _wait(qapp, lambda: sender.poll() is not None, seconds=20)
+        assert sender.wait(5) == 3
+    finally:
+        mute.close()
 
 
 def test_nobody_running(qapp, tmp_path):

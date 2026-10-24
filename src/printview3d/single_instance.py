@@ -18,7 +18,8 @@ import re
 import sys
 
 CONNECT_TIMEOUT_MS = 500
-SEND_TIMEOUT_MS = 1000
+REPLY_TIMEOUT_MS = 3000         # no "ok" in this time: the open window is stuck, open a new one
+ACK = b"ok\n"
 
 
 def server_name() -> str:
@@ -62,11 +63,15 @@ def send_to_running(path: str, name: str | None = None) -> bool:
         except Exception:  # noqa: BLE001
             pass
     sock.write(encode(path))
-    ok = sock.waitForBytesWritten(SEND_TIMEOUT_MS)
-    sock.disconnectFromServer()
-    if sock.state() != QLocalSocket.UnconnectedState:
-        sock.waitForDisconnected(SEND_TIMEOUT_MS)
-    return ok
+    sock.flush()
+    # Delivered only when the open window answers "ok". (waitForBytesWritten() alone is not
+    # proof: on Windows it returns False when the pipe already took the bytes at once, and the
+    # message could still be lost if this start closed the pipe before it was read.)
+    reply = bytearray()
+    while ACK not in reply and sock.waitForReadyRead(REPLY_TIMEOUT_MS):
+        reply.extend(bytes(sock.readAll()))
+    sock.abort()
+    return ACK in reply
 
 
 class FileServer:
@@ -100,6 +105,8 @@ class FileServer:
         self.server.close()
 
     def _accept(self):
+        from PySide6.QtCore import QTimer
+
         while self.server.hasPendingConnections():
             sock = self.server.nextPendingConnection()
             buf = bytearray()
@@ -111,7 +118,10 @@ class FileServer:
                     buf.clear()
                     path = decode(line)
                     if path:
-                        self.on_file(path)
+                        sock.write(ACK)            # answer first, so the other start can exit
+                        sock.flush()
+                        # Load once this connection is done; on_file may open dialogs.
+                        QTimer.singleShot(0, lambda p=path: self.on_file(p))
                     sock.disconnectFromServer()
 
             sock.readyRead.connect(read)
