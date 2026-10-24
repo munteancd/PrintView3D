@@ -40,6 +40,7 @@ hiddenimports = (
     + [
         "qtpy", "qtpy.QtCore", "qtpy.QtGui", "qtpy.QtWidgets",
         "vtkmodules.util.numpy_support", "certifi",
+        "PySide6.QtNetwork",              # single_instance: one window for double-clicked files
     ]
 )
 

@@ -815,6 +815,17 @@
         <translation>مسح القائمة</translation>
     </message>
     <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Restart needed</source>
+        <translation>يلزم إعادة التشغيل</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>PrintView3D could not restart by itself. Close it and start it again.</source>
+        <translation type="unfinished">تعذّر على PrintView3D إعادة التشغيل تلقائيًا. أغلقه ثم شغّله من جديد.</translation>
+    </message>
+    <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Language</source>
         <translation>اللغة</translation>
@@ -929,6 +940,21 @@
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Found automatically</source>
         <translation>يتم العثور عليه تلقائيًا</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Opening files</source>
+        <translation type="unfinished">فتح الملفات</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Open each file in a new window</source>
+        <translation type="unfinished">فتح كل ملف في نافذة جديدة</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Off: a file you double-click while PrintView3D is open is shown in the window that is already open. On: every file gets its own window. Starting PrintView3D without a file always opens a new window.</source>
+        <translation type="unfinished">عند الإيقاف: يُعرض الملف الذي تنقر عليه نقرًا مزدوجًا أثناء فتح PrintView3D في النافذة المفتوحة بالفعل. عند التشغيل: يحصل كل ملف على نافذة خاصة به. تشغيل PrintView3D بدون ملف يفتح دائمًا نافذة جديدة.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1258,18 +1284,38 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Restart needed</source>
-        <translation>يلزم إعادة التشغيل</translation>
-    </message>
-    <message>
-        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Restart PrintView3D to switch graphics card.</source>
-        <translation>أعد تشغيل PrintView3D لتبديل بطاقة الرسوميات.</translation>
-    </message>
-    <message>
-        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Could not change graphics setting</source>
         <translation>تعذّر تغيير إعداد الرسوميات</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>The new window transparency is used after PrintView3D restarts.</source>
+        <translation type="unfinished">تُطبَّق شفافية النافذة الجديدة بعد إعادة تشغيل PrintView3D.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>The new graphics card setting is used after PrintView3D restarts.</source>
+        <translation type="unfinished">يُطبَّق إعداد بطاقة الرسوميات الجديد بعد إعادة تشغيل PrintView3D.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>The new window transparency and graphics card setting are used after PrintView3D restarts.</source>
+        <translation type="unfinished">تُطبَّق شفافية النافذة وإعداد بطاقة الرسوميات الجديدان بعد إعادة تشغيل PrintView3D.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>The open file opens again after the restart.</source>
+        <translation type="unfinished">يُفتح الملف المفتوح مرة أخرى بعد إعادة التشغيل.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Restart now</source>
+        <translation type="unfinished">إعادة التشغيل الآن</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Later</source>
+        <translation type="unfinished">لاحقًا</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/theme.py"></location>
@@ -1349,6 +1395,10 @@
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Download update</source>
         <translation>تنزيل التحديث</translation>
+    </message>
+    <message>
+        <source>Restart PrintView3D to switch graphics card.</source>
+        <translation type="vanished">أعد تشغيل PrintView3D لتبديل بطاقة الرسوميات.</translation>
     </message>
     <message>
         <source>Windows transparency (Mica)</source>
