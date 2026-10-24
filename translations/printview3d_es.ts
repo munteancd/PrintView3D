@@ -4,6 +4,58 @@
 <context>
     <name>PrintView3D</name>
     <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Export STL</source>
+        <translation type="unfinished">Exportar STL</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>Choose the objects to export.</source>
+        <translation type="unfinished">Elige los objetos que quieres exportar.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>Object</source>
+        <translation type="unfinished">Objeto</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Triangles</source>
+        <translation type="unfinished">Triángulos</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>Save as</source>
+        <translation type="unfinished">Guardar como</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>One combined STL</source>
+        <translation type="unfinished">Un único STL combinado</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>One STL per object</source>
+        <translation type="unfinished">Un STL por objeto</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>Each file is named after its object and saved in a folder you choose.</source>
+        <translation type="unfinished">Cada archivo lleva el nombre de su objeto y se guarda en la carpeta que elijas.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>Raw geometry only: no modifiers, negative parts, or support blockers and enforcers, and no colours, materials or print settings. Sizes in millimetres, saved as binary STL.</source>
+        <translation type="unfinished">Solo la geometría pura: sin modificadores, partes negativas ni bloqueadores o forzadores de soportes, y sin colores, materiales ni ajustes de impresión. Medidas en milímetros, guardado como STL binario.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <source>Export…</source>
+        <translation type="unfinished">Exportar…</translation>
+    </message>
+    <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Outer wall</source>
         <translation type="unfinished">Pared exterior</translation>
@@ -321,6 +373,11 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Save the objects of this 3MF project as STL files (Ctrl+E)</source>
+        <translation type="unfinished">Guardar los objetos de este proyecto 3MF como archivos STL (Ctrl+E)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Plate</source>
         <extracomment>Toolbar toggle: show or hide the printer&apos;s build plate / bed grid.</extracomment>
         <translation type="unfinished">Cama</translation>
@@ -482,11 +539,6 @@
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Very small: the file may use metres instead of millimetres. Your slicer can scale it.</source>
         <translation type="unfinished">Muy pequeño: puede que el archivo use metros en lugar de milímetros. Tu laminador puede escalarlo.</translation>
-    </message>
-    <message>
-        <location filename="../src/printview3d/ui/main_window.py"></location>
-        <source>Triangles</source>
-        <translation type="unfinished">Triángulos</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -741,6 +793,46 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Reading the objects of {name}…</source>
+        <translation type="unfinished">Leyendo los objetos de {name}…</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Could not export STL</source>
+        <translation type="unfinished">No se pudo exportar el STL</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>This 3MF file contains no printable objects to export.</source>
+        <translation type="unfinished">Este archivo 3MF no contiene objetos imprimibles para exportar.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Saved {path}</source>
+        <translation type="unfinished">Guardado {path}</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Choose a folder for the STL files</source>
+        <translation type="unfinished">Elige una carpeta para los archivos STL</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>These files already exist in this folder:</source>
+        <translation type="unfinished">Estos archivos ya existen en esta carpeta:</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Replace</source>
+        <translation type="unfinished">Reemplazar</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Saved {n} STL files in {folder}</source>
+        <translation type="unfinished">{n} archivos STL guardados en {folder}</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Save screenshot</source>
         <translation type="unfinished">Guardar captura</translation>
     </message>
@@ -748,11 +840,6 @@
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PNG image</source>
         <translation type="unfinished">Imagen PNG</translation>
-    </message>
-    <message>
-        <location filename="../src/printview3d/ui/main_window.py"></location>
-        <source>Saved {path}</source>
-        <translation type="unfinished">Guardado {path}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>

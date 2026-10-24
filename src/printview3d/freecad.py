@@ -245,16 +245,8 @@ def load_step(path: str, progress=None, install: Optional[FreeCADInstall] = None
 
 def export_stl(parts: list[MeshPart], path: str) -> str:
     """Write the parts as one binary STL (for sending a model to a slicer that cannot read its format)."""
-    import numpy as np
-    tris = np.concatenate([p.vertices[p.faces].astype("<f4") for p in parts]) if parts else np.zeros((0, 3, 3), "<f4")
-    rec = np.zeros(len(tris), dtype=[("n", "<f4", 3), ("v", "<f4", (3, 3)), ("a", "<u2")])
-    rec["v"] = tris
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "wb") as f:
-        f.write(b"PrintView3D export".ljust(80, b" "))
-        f.write(np.uint32(len(tris)).tobytes())
-        f.write(rec.tobytes())
-    return path
+    from .loaders.mesh import write_binary_stl
+    return write_binary_stl(parts, path)
 
 
 def open_in_freecad(install: FreeCADInstall, path: str) -> None:

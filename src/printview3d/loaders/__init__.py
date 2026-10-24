@@ -4,7 +4,10 @@ import os
 
 from .gcode import FEATURES, GcodeData, parse_gcode_file, parse_gcode_text
 from .formats import load_gltf, load_obj, load_off, load_ply
-from .mesh import MeshPart, ModelData, load_3mf, load_stl, read_embedded_gcode
+from .mesh import (
+    MeshPart, ModelData, load_3mf, load_stl, read_3mf_for_export, read_embedded_gcode, stl_file_names,
+    write_binary_stl,
+)
 
 # extension -> kind
 _KINDS = {
@@ -45,5 +48,5 @@ __all__ = [
     "FEATURES", "FREECAD_EXTENSIONS", "GcodeData", "MeshPart", "ModelData", "SEND_AS_STL",
     "SUPPORTED_EXTENSIONS", "file_kind", "load_file", "load_3mf", "load_gltf", "load_obj", "load_off",
     "load_ply", "load_stl", "parse_gcode_file",
-    "parse_gcode_text", "read_embedded_gcode",
+    "parse_gcode_text", "read_3mf_for_export", "read_embedded_gcode", "stl_file_names", "write_binary_stl",
 ]
