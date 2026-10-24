@@ -6,6 +6,7 @@ Usage:
     PrintView3D.exe file --send-to-slicer [ID]   open file in the default (or given) slicer and exit
     PrintView3D.exe --lang ar                    start in a given language (en, ar, nl, de, fr, es)
     PrintView3D.exe --theme light                start with a colour theme (auto, dark, gray, graphite, light)
+    PrintView3D.exe file --new-window            open in a new window, even if PrintView3D is already open
     PrintView3D.exe --register                   add to "Open with" / applications menu and exit
     PrintView3D.exe --unregister                 remove file associations and exit
 """
@@ -71,6 +72,8 @@ def main(argv: list[str] | None = None) -> int:
                         help="colour theme for this run")
     parser.add_argument("--register", action="store_true",
                         help='add PrintView3D to "Open with" (and the Linux applications menu) and exit')
+    parser.add_argument("--new-window", action="store_true",
+                        help="open FILE in a new window instead of the PrintView3D window already open")
     parser.add_argument("--taskbar-selftest", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--after-update", action="store_true", help=argparse.SUPPRESS)  # started by Setup
     parser.add_argument("--mica", action="store_true", help=argparse.SUPPRESS)          # force Mica (tests)
@@ -136,6 +139,15 @@ def main(argv: list[str] | None = None) -> int:
     from .settings import Settings
     settings = Settings()
     i18n.apply_language(app, args.lang or settings.get("language", "en"))
+    # One window (Settings -> Files): a file opened while PrintView3D is already open goes to that
+    # window. Not for the test and screenshot runs, and not on macOS, which does this itself.
+    one_window = (sys.platform != "darwin" and not args.screenshot and not args.mica_selftest
+                  and not args.taskbar_selftest)
+    if one_window and args.file and not args.new_window and not settings.get("new_window", False):
+        from . import single_instance
+        if single_instance.send_to_running(args.file):
+            return 0
+
     theme.apply_theme(app, args.theme or settings.get("theme", "auto"))
 
     win = MainWindow(settings)
@@ -167,6 +179,7 @@ def main(argv: list[str] | None = None) -> int:
         win.prepare_mica()
     win.show()
     mica_ok = win.enable_mica(kind) if use_mica else False
+    win.backdrop_at_start = kind if use_mica else "off"     # Settings asks to restart when changed
     if args.mica_selftest:                      # CI: did Windows accept Mica, and follow a live switch?
         import json
         import time
@@ -216,6 +229,8 @@ def main(argv: list[str] | None = None) -> int:
             for ms in (3000, 8000):
                 QTimer.singleShot(ms, refresh_icon)
     win.start_update_checks()
+    if one_window:
+        win.start_file_server()
     # macOS: files opened from Finder (double-click, Open With, drop on the Dock icon)
     # arrive as a FileOpen event, not on the command line.
     app.installEventFilter(_FileOpener(app, win))

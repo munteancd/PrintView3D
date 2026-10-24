@@ -26,6 +26,7 @@ DEFAULTS = {
     "update_last_ok": 0,        # time of the last check that reached GitHub
     "update_latest": {},        # newest release seen on GitHub (version, notes, download)
     "update_skip": "",          # version the user chose to skip
+    "new_window": False,         # Settings -> Files: True = every file in its own window
     "recent_files": [],
     "show_travel": False,
     "show_bed": True,

@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
 from .. import APP_NAME, __version__
 from .. import freecad as fc
 from .. import slicer as sl
+from .. import gpu
 from ..gpu import renderer_info
 from ..i18n import count, ltr, num, tr
 from ..loaders import (
@@ -101,6 +102,10 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(APP_NAME)
         self.setObjectName("mainWindow")
         self.mica = False                   # Windows 11 Mica, switched on by enable_mica() at start
+        # What this window started with; Settings offers a restart when these are changed.
+        self.backdrop_at_start = "off"      # set by app.main() after enable_mica()
+        self.gpu_at_start = gpu.high_performance_enabled()
+        self.file_server = None             # files from later starts (see start_file_server)
         # Windows: the .ico holds every size the taskbar and Alt+Tab need.
         self.setWindowIcon(QIcon(resource("icon.ico" if sys.platform == "win32" else "icon.png")))
         self.resize(1320, 840)
@@ -1155,6 +1160,10 @@ class MainWindow(QMainWindow):
         dlg = SettingsDialog(self.settings, self, renderer_info(self.plotter), page=page)
         accepted = dlg.exec()
         self.refresh_update_badge()
+        if accepted and dlg.restart_now:
+            # After the dialog has closed, so nothing of it is left when the window goes.
+            QTimer.singleShot(0, self.restart)
+            return
         if accepted:
             self._update_slicer_button()
             # FreeCAD just chosen: show the open FreeCAD file in 3D now.
@@ -1270,6 +1279,39 @@ class MainWindow(QMainWindow):
             if p.lower().endswith(SUPPORTED_EXTENSIONS):
                 self.load(p)
                 return
+
+    # ------------------------------------------------------------ one window
+    def start_file_server(self):
+        """Take files opened while this window is open (double-click, "Open with")."""
+        from ..single_instance import FileServer
+        if self.file_server is None:
+            self.file_server = FileServer(self._file_from_other_start, parent=self)
+        self.file_server.listen()
+
+    def _file_from_other_start(self, path: str):
+        """A file double-clicked while PrintView3D was already open: show it here, in front."""
+        if self.isMinimized():
+            self.showNormal()
+        self.raise_()
+        self.activateWindow()
+        self.load(path)
+
+    # ------------------------------------------------------------ restart
+    def restart(self):
+        """Start PrintView3D again with the open file, then close this one."""
+        from PySide6.QtCore import QProcess
+        from .. import restart
+        program, args = restart.command(self.current_path)
+        if self.file_server is not None:            # so the new start can take over
+            self.file_server.close()
+        if not QProcess.startDetached(program, args):
+            if self.file_server is not None:
+                self.file_server.listen()
+            QMessageBox.warning(self, tr("Restart needed"),
+                                tr("PrintView3D could not restart by itself. Close it and start it again."))
+            return
+        self.close()
+        QApplication.quit()
 
     def closeEvent(self, e):
         try:

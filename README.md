@@ -6,7 +6,8 @@
 
 <p align="center">
   A fast, free viewer for <b>STL</b>, <b>3MF</b>, <b>G-code</b>, <b>FreeCAD</b>, <b>STEP</b>, <b>OBJ</b>, <b>PLY</b> and <b>glTF</b> files on <b>Windows</b>, <b>Linux</b> and <b>macOS</b>,<br>
-  with a one-click button that opens the file in <b>your slicer</b>.
+  with a one-click button that opens the file in <b>your slicer</b>.<br>
+  Open a <b>FreeCAD</b> file and send it as a model straight to your slicer, no export step needed.
 </p>
 
 <p align="center">
@@ -24,6 +25,8 @@
 Microsoft retired its **3D Viewer** app, and Linux never had a good one. PrintView3D fills the gap, made for people who 3D-print:
 it shows models *and* sliced G-code, tells you the size, print time and filament use, and sends the
 file to Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura and others with one click.
+Designing in FreeCAD? Open the `.FCStd` file and send it to your slicer as a model directly,
+without exporting an STL first.
 
 ---
 
@@ -43,6 +46,7 @@ file to Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura and others w
 | **Themes** | Automatic (follows your system), Dark, Gray, Graphite (warm, easy on the eyes) or Light, for the window and the 3D view. Switch with one click on ◐ or `Ctrl+T`. Toolpath colours stay the same in every theme. |
 | **Thumbnails** | Windows File Explorer shows previews of 3MF, STL, G-code and FreeCAD files (installed with PrintView3D, optional). |
 | **Updates** | **Check for updates** in Settings, or once a day if you allow it. On Windows one click downloads, checks and installs the new version. The version in the corner gets a red dot when an update is ready. [What is sent](#updates-and-privacy). |
+| **One window** | A file you double-click while PrintView3D is open is shown in that window, instead of opening another one. Prefer a window per file? **Settings → Files → Open each file in a new window**. |
 | **Comfortable to use** | Slicer-style camera, drag & drop, recent files, screenshots. |
 
 <table>
@@ -205,6 +209,11 @@ into Applications to replace the old one. Intel Macs: not built yet;
 **Open a file:** double-click it (if PrintView3D is the default), drag it onto the window, use
 **Open**, or pick it from **Recent**. Try the files in [`examples/`](examples) to get started.
 
+**One window:** a file you double-click while PrintView3D is already open is shown in that window,
+which comes to the front. To give every file its own window (to compare two models side by side),
+tick **Settings → Files → Open each file in a new window**. Starting PrintView3D from the Start
+menu or applications menu, without a file, always opens a new window.
+
 ### Mouse
 
 | Action | What it does |
@@ -326,7 +335,8 @@ what lies behind the window, in any theme:
 - **Acrylic**: frosted glass that blurs the desktop and other windows behind it.
 - **Off** (default): solid, as before.
 
-The 3D view always stays solid. It takes effect after restarting PrintView3D. Windows draws the
+The 3D view always stays solid. It takes effect after a restart: when you click OK, PrintView3D
+asks **Restart now** (it closes and opens again, with the same file) or **Later**. Windows draws the
 effect itself and shows a plain colour while the window is not active, and switches it off with
 *Transparency effects* off in Windows Settings or in battery saver. Windows 10 and other systems
 keep the normal look.
@@ -366,7 +376,8 @@ click *Check for updates now* or have switched on the daily check:
 
 Many laptops have two graphics chips and run programs on the slower one by default.
 **Settings → Viewer → Graphics** shows which one PrintView3D uses. If it says *Intel*, tick
-**Use the high-performance graphics card** and restart PrintView3D.
+**Use the high-performance graphics card** and click OK; choose **Restart now** (or **Later**, and
+it switches the next time you start PrintView3D).
 
 ---
 
@@ -513,7 +524,8 @@ attached.
 ### Command line
 
 ```
-PrintView3D.exe model.stl                          open a file
+PrintView3D.exe model.stl                          open a file (in the window already open, if any)
+PrintView3D.exe model.stl --new-window             open a file in a new window
 PrintView3D.exe part.gcode --screenshot out.png    save a picture and exit
                      [--layer 25] [--view iso|top|front|right]
 PrintView3D.exe model.stl --send-to-slicer         open the file in your default slicer and exit

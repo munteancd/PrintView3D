@@ -32,6 +32,7 @@ class SettingsDialog(QDialog):
     def __init__(self, settings, parent=None, gpu_info=None, page: str = ""):
         super().__init__(parent)
         self.settings = settings
+        self.restart_now = False            # OK chose "Restart now" (MainWindow.open_settings restarts)
         self.setWindowTitle(tr("Settings"))
         self.setWindowFlag(Qt.WindowContextHelpButtonHint, False)
         outer = QVBoxLayout(self)
@@ -171,6 +172,19 @@ class SettingsDialog(QDialog):
         self.slicer_combo.currentIndexChanged.connect(self._slicer_changed)
         self.slicer_edit.textChanged.connect(self._update_slicer_status)
 
+        # ---------------- Opening files ----------------
+        go = QGroupBox(tr("Opening files"))
+        lo = QVBoxLayout(go)
+        self.new_window_cb = QCheckBox(tr("Open each file in a new window"))
+        self.new_window_cb.setChecked(bool(settings.get("new_window", False)))
+        lo.addWidget(self.new_window_cb)
+        nw_note = QLabel(tr("Off: a file you double-click while PrintView3D is open is shown in the window "
+                            "that is already open. On: every file gets its own window. Starting "
+                            "PrintView3D without a file always opens a new window."))
+        nw_note.setObjectName("muted")
+        nw_note.setWordWrap(True)
+        lo.addWidget(nw_note)
+
         # ---------------- File associations ----------------
         g2 = QGroupBox(tr("Default program for 3D files"))
         l2 = QVBoxLayout(g2)
@@ -210,7 +224,9 @@ class SettingsDialog(QDialog):
         self.assoc_note.setWordWrap(True)
         self.assoc_note.setObjectName("muted")
         l2.addWidget(self.assoc_note)
-        self._add_page("files", tr("Files"), [g2])
+        # macOS gives files to the open PrintView3D by itself, so the choice does not apply there.
+        self._add_page("files", tr("Files"), [g2] if sys.platform == "darwin" else [go, g2],
+                       keep_titles=sys.platform != "darwin")
 
         # ---------------- Viewer ----------------
         g3 = QGroupBox(tr("Viewer"))
@@ -605,12 +621,15 @@ class SettingsDialog(QDialog):
         self.settings.set("freecad_path", self.freecad_edit.text().strip())
         self.settings.set("show_travel", self.travel_cb.isChecked())
         self.settings.set("show_bed", self.bed_cb.isChecked())
+        self.settings.set("new_window", self.new_window_cb.isChecked())
         self._save_update_choice()
+        parent = self.parent()
+        restart_for = []                    # settings changed now that only apply after a restart
         if gpu.is_supported() and self.gpu_cb.isChecked() != gpu.high_performance_enabled():
             try:
                 gpu.set_high_performance(self.gpu_cb.isChecked())
-                QMessageBox.information(self, tr("Restart needed"),
-                                        tr("Restart PrintView3D to switch graphics card."))
+                if self.gpu_cb.isChecked() != getattr(parent, "gpu_at_start", not self.gpu_cb.isChecked()):
+                    restart_for.append("gpu")
             except OSError as e:
                 QMessageBox.warning(self, tr("Could not change graphics setting"), str(e))
         lang = self.lang_combo.currentData()
@@ -619,8 +638,37 @@ class SettingsDialog(QDialog):
             # Takes effect immediately: every window re-sets its texts.
             i18n.apply_language(QApplication.instance(), lang)
         if self.backdrop_combo.isEnabled():
-            self.settings.set("backdrop", self.backdrop_combo.currentData())
+            from .. import win_mica
+            backdrop = self.backdrop_combo.currentData()
+            before = win_mica.choice(self.settings)
+            self.settings.set("backdrop", backdrop)
+            if backdrop != before and backdrop != getattr(parent, "backdrop_at_start", before):
+                restart_for.append("backdrop")
         choice = self.theme_combo.currentData()
         if choice != self.settings.get("theme", "auto"):
             self.settings.set("theme", choice)      # already shown live (see _preview_theme)
+        if restart_for:
+            self.restart_now = self._ask_restart(restart_for)
         self.accept()
+
+    def _ask_restart(self, what: list[str]) -> bool:
+        """Restart now / Later. True for Restart now."""
+        if what == ["backdrop"]:
+            text = tr("The new window transparency is used after PrintView3D restarts.")
+        elif what == ["gpu"]:
+            text = tr("The new graphics card setting is used after PrintView3D restarts.")
+        else:
+            text = tr("The new window transparency and graphics card setting are used after "
+                      "PrintView3D restarts.")
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Question)
+        box.setWindowTitle(tr("Restart needed"))
+        box.setText(text)
+        if getattr(self.parent(), "current_path", None):
+            box.setInformativeText(tr("The open file opens again after the restart."))
+        now = box.addButton(tr("Restart now"), QMessageBox.AcceptRole)
+        later = box.addButton(tr("Later"), QMessageBox.RejectRole)
+        box.setDefaultButton(now)
+        box.setEscapeButton(later)
+        box.exec()
+        return box.clickedButton() is now

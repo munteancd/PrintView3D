@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+- **Restart now / Later**: changing **Window transparency** (Settings → Appearance) or **Use the
+  high-performance graphics card** (Settings → Viewer) only takes effect after a restart, so OK now
+  asks **Restart now** or **Later**. Restart now closes PrintView3D and opens it again with the same
+  file; Later keeps it for the next start. Changing it back to what is running asks nothing.
+- **One window**: a file you double-click (or open with "Open with") while PrintView3D is open is
+  shown in that window, which comes to the front, instead of in a second window. New option
+  **Settings → Files → Open each file in a new window** for the old behaviour. Starting
+  PrintView3D without a file still opens a new window; `--new-window` on the command line opens
+  a file in a new window once. (macOS already did this.)
+- Project description: a file opened from FreeCAD can be sent as a model directly to your slicer.
+
 ## 0.16.1
 - **The title bar follows the theme** (Windows): PrintView3D now tells Qt whether its theme is light
   or dark. Before, Qt followed Windows' own dark mode and overrode ours, so with Windows in dark mode
