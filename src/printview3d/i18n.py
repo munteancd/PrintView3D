@@ -8,7 +8,7 @@ How it works
   Texts that are defined before the app runs (tables, constants) are marked
   with tr_noop() and passed through tr() when they are displayed.
 * tools/i18n.py collects all of them into translations/printview3d_<lang>.ts
-  (Qt's standard format, editable with Qt Linguist or Weblate) and compiles
+  (Qt's standard format, editable with Qt Linguist or any text editor) and compiles
   them to resources/translations/*.qm, which the app loads at runtime.
 * Qt's own texts (OK / Cancel buttons, file dialogs) come from the
   qtbase_<lang>.qm files that ship with Qt.

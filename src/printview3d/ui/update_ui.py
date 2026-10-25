@@ -70,6 +70,32 @@ def show_whats_new(parent, rel: up.Release):
     dlg.exec()
 
 
+def show_updated(parent, previous: str) -> None:
+    """Once after an update: what changed since `previous`, from the bundled changelog."""
+    sections = up.notes_since(previous)
+    if not sections:
+        return
+    shown = sections[: up.MAX_NOTES_SHOWN]
+    notes = "\n\n".join(f"## {version}\n\n{text}" for version, text in shown)
+    dlg = QDialog(parent)
+    dlg.setWindowTitle(tr("What's new in {version}").format(version=__version__))
+    v = QVBoxLayout(dlg)
+    head = QLabel(tr("PrintView3D was updated to {version}.").format(version=f"<b>{__version__}</b>"))
+    v.addWidget(head)
+    text = QTextBrowser()
+    text.setOpenExternalLinks(True)
+    text.setMarkdown(notes)
+    v.addWidget(text, 1)
+    more = QLabel(f'<a href="{up.CHANGELOG_URL}">{tr("All changes")}</a>')
+    more.setOpenExternalLinks(True)
+    v.addWidget(more)
+    bb = QDialogButtonBox(QDialogButtonBox.Close)
+    bb.rejected.connect(dlg.reject)
+    v.addWidget(bb)
+    dlg.resize(620, 520)
+    dlg.exec()
+
+
 class _Download(QObject):
     progress = Signal(float)
     done = Signal(str, str)          # path, error

@@ -863,6 +863,27 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Thanks for installing PrintView3D</source>
+        <translation type="unfinished">Bedankt voor het installeren van PrintView3D</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>PrintView3D is free and open source.</source>
+        <translation type="unfinished">PrintView3D is gratis en open source.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>If you like it, please give it a star on GitHub. Stars help other people find PrintView3D and show that the project is alive.</source>
+        <translation type="unfinished">Vind je het goed? Geef het dan een ster op GitHub. Sterren helpen anderen PrintView3D te vinden en laten zien dat het project leeft.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Star on GitHub</source>
+        <extracomment>Button: opens the project page on GitHub, where people can &apos;star&apos; (like) it.</extracomment>
+        <translation type="unfinished">Ster geven op GitHub</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>No, thanks</source>
         <translation type="unfinished">Nee, bedankt</translation>
     </message>
@@ -929,8 +950,14 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Missing or wrong translation? You can help translate PrintView3D — see &quot;Translations&quot; on the project page.</source>
-        <translation type="unfinished">Ontbrekende of foute vertaling? Je kunt helpen PrintView3D te vertalen — zie &quot;Translations&quot; op de projectpagina.</translation>
+        <source>How to translate on GitHub</source>
+        <translation type="unfinished">Zo vertaal je op GitHub</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Missing or wrong translation? Anyone can correct it on GitHub: {guide}</source>
+        <extracomment>Settings → Language. {guide} becomes the link &apos;How to translate on GitHub&apos;.</extracomment>
+        <translation type="unfinished">Ontbrekende of foute vertaling? Iedereen kan die op GitHub verbeteren: {guide}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1245,6 +1272,18 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Like PrintView3D? {star} It helps other people find it.</source>
+        <extracomment>Settings → About. {star} becomes the link &apos;Give it a star on GitHub.&apos;</extracomment>
+        <translation type="unfinished">Vind je PrintView3D goed? {star} Zo vinden anderen het ook.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Give it a star on GitHub.</source>
+        <extracomment>Link text. A &apos;star&apos; on GitHub is like a &apos;like&apos; or bookmark.</extracomment>
+        <translation type="unfinished">Geef het een ster op GitHub.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Built with Python, Qt (PySide6) and PyVista / VTK.</source>
         <translation type="unfinished">Gemaakt met Python, Qt (PySide6) en PyVista / VTK.</translation>
     </message>
@@ -1450,6 +1489,16 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
+        <source>PrintView3D was updated to {version}.</source>
+        <translation type="unfinished">PrintView3D is bijgewerkt naar {version}.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/update_ui.py"></location>
+        <source>All changes</source>
+        <translation type="unfinished">Alle wijzigingen</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Downloading PrintView3D {version}…</source>
         <translation type="unfinished">PrintView3D {version} downloaden…</translation>
     </message>
@@ -1482,6 +1531,10 @@
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Download update</source>
         <translation type="unfinished">Update downloaden</translation>
+    </message>
+    <message>
+        <source>Missing or wrong translation? You can help translate PrintView3D — see &quot;Translations&quot; on the project page.</source>
+        <translation type="vanished">Ontbrekende of foute vertaling? Je kunt helpen PrintView3D te vertalen — zie &quot;Translations&quot; op de projectpagina.</translation>
     </message>
     <message>
         <source>Restart PrintView3D to switch graphics card.</source>

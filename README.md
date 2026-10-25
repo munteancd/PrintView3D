@@ -325,6 +325,7 @@ the first time, then remembered until the file changes.
 **Settings → Language** switches the whole program immediately, including file dialogs and
 standard buttons. English is the default; *Automatic* follows your system language. Arabic uses a
 right-to-left layout; measurements always use Western digits (0.20 mm).
+A wrong or missing word? The link on that page leads to [How to translate](docs/TRANSLATING.md).
 
 ### Themes
 
@@ -372,6 +373,10 @@ When a new version exists, the version in the bottom-right corner shows a **red 
 - **Linux (AppImage) and the portable Windows zip: Download update** opens the release page;
   download the new file and replace the old one.
 - **Skip this version** hides that version; the next one is shown again.
+
+After an update, the first start shows **What's new** for the version you now have, once, however
+you updated (installer, winget, zip or AppImage). It is read from the changelog that comes with the
+program, so it needs no connection. A fresh install doesn't show it.
 
 ![Settings → Updates when a new version is available](docs/screenshot-updates.png)
 
@@ -567,12 +572,12 @@ PrintView3D.exe --unregister                       remove file associations
 | Español | Complete, needs review by a native speaker |
 
 **Speak one of these languages? Or want PrintView3D in yours?** Your help is very welcome:
-spotting one wrong word already helps. See [CONTRIBUTING.md → Translations](CONTRIBUTING.md#translations).
+spotting one wrong word already helps. Translations are made right here on GitHub: change the
+file for your language in [`translations/`](translations) and open a pull request, all in the
+browser. Step by step: **[How to translate](docs/TRANSLATING.md)**.
 Untranslated texts simply appear in English, so a language can be added step by step.
 
 ![PrintView3D in Arabic, right-to-left](docs/screenshot-arabic.png)
-
-[![Translation status](https://hosted.weblate.org/widget/printview3d/svg-badge.svg)](https://hosted.weblate.org/engage/printview3d/)
 
 ## Contributing
 

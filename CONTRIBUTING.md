@@ -38,15 +38,14 @@ PrintView3D uses Qt's standard translation files: one file per language in
 [`translations/`](translations) (`printview3d_ar.ts`, `printview3d_de.ts`, …).
 
 **Translating or correcting a translation**
-- *Easiest, once Weblate is connected:* translate in your browser on Hosted Weblate (link in the
-  README). No tools, no GitHub knowledge needed.
-- *Directly:* open the file in **Qt Linguist** (`pyside6-linguist`, comes with PySide6) or any text
-  editor, change the `<translation>` texts, and open a pull request.
+- Translations are made on GitHub only. The step-by-step guide, including editing in the browser
+  without installing anything, is in [docs/TRANSLATING.md](docs/TRANSLATING.md).
+- Open the file in **Qt Linguist** (`pyside6-linguist`, comes with PySide6), in GitHub's editor
+  or in any text editor, change the `<translation>` texts, and open a pull request.
 - Keep `{placeholders}` such as `{slicer}` or `{n}` exactly as they are; they are filled in by the
   program. Keep `<b>…</b>` tags. The tests check both.
 - Texts marked `type="unfinished"` are drafts that still need a native speaker's review. When a
-  translation is correct, remove `type="unfinished"` (in Qt Linguist: mark it as done ✓; on Weblate:
-  approve it).
+  translation is correct, remove `type="unfinished"` (in Qt Linguist: mark it as done ✓).
 - Notes for ambiguous texts (e.g. "Right" means the *right side view*) are shown next to the text.
 
 **A new language**
@@ -67,7 +66,6 @@ Partly translated languages are fine: missing texts show in English.
   through untranslatable.
 
 Useful commands: `python tools/i18n.py stats` (completion per language), `check`, `compile`.
-Setting up Weblate: [docs/WEBLATE.md](docs/WEBLATE.md).
 
 ## Development setup
 
