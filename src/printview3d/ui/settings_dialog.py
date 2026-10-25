@@ -65,10 +65,12 @@ class SettingsDialog(QDialog):
         k0 = QLabel(tr("Language"))
         k0.setObjectName("formKey")
         l0.addRow(k0, self.lang_combo)
-        help_lbl = QLabel(tr("Missing or wrong translation? You can help translate PrintView3D — "
-                             "see \"Translations\" on the project page."))
+        guide = f'<a href="{up.TRANSLATING_URL}">{tr("How to translate on GitHub")}</a>'
+        help_lbl = QLabel(tr("Missing or wrong translation? Anyone can correct it on GitHub: {guide}")
+                          .format(guide=guide))
         help_lbl.setObjectName("muted")
         help_lbl.setWordWrap(True)
+        help_lbl.setOpenExternalLinks(True)
         l0.addRow(help_lbl)
         self._add_page("language", tr("Language"), [g0])
 
@@ -464,7 +466,9 @@ class SettingsDialog(QDialog):
                           "hand-off to your slicer (Creality Print, OrcaSlicer, Bambu Studio, "
                           "PrusaSlicer, Cura and others).") + "<br><br>"
                        + tr("Open source under the MIT License.") + "<br>"
-                       + f'<a href="https://github.com/{up.REPO}">github.com/{up.REPO}</a>')
+                       + f'<a href="{up.PROJECT_URL}">github.com/{up.REPO}</a>' + "<br><br>"
+                       + tr("Like PrintView3D? {star} It helps other people find it.").format(
+                           star=f'<a href="{up.PROJECT_URL}">{tr("Give it a star on GitHub.")}</a>'))
         about.setWordWrap(True)
         about.setOpenExternalLinks(True)
         v.addWidget(about)

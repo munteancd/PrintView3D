@@ -863,6 +863,27 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Thanks for installing PrintView3D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>PrintView3D is free and open source.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>If you like it, please give it a star on GitHub. Stars help other people find PrintView3D and show that the project is alive.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Star on GitHub</source>
+        <extracomment>Button: opens the project page on GitHub, where people can &apos;star&apos; (like) it.</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>No, thanks</source>
         <translation type="unfinished"></translation>
     </message>
@@ -929,7 +950,13 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Missing or wrong translation? You can help translate PrintView3D — see &quot;Translations&quot; on the project page.</source>
+        <source>How to translate on GitHub</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Missing or wrong translation? Anyone can correct it on GitHub: {guide}</source>
+        <extracomment>Settings → Language. {guide} becomes the link &apos;How to translate on GitHub&apos;.</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1241,6 +1268,18 @@
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Open source under the MIT License.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Like PrintView3D? {star} It helps other people find it.</source>
+        <extracomment>Settings → About. {star} becomes the link &apos;Give it a star on GitHub.&apos;</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Give it a star on GitHub.</source>
+        <extracomment>Link text. A &apos;star&apos; on GitHub is like a &apos;like&apos; or bookmark.</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>

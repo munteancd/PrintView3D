@@ -863,6 +863,27 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Thanks for installing PrintView3D</source>
+        <translation type="unfinished">شكرًا لتثبيت PrintView3D</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>PrintView3D is free and open source.</source>
+        <translation type="unfinished">PrintView3D برنامج مجاني ومفتوح المصدر.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>If you like it, please give it a star on GitHub. Stars help other people find PrintView3D and show that the project is alive.</source>
+        <translation type="unfinished">إذا أعجبك البرنامج، امنحه نجمة على GitHub. النجوم تساعد الآخرين على العثور على PrintView3D وتُظهر أن المشروع نشط.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Star on GitHub</source>
+        <extracomment>Button: opens the project page on GitHub, where people can &apos;star&apos; (like) it.</extracomment>
+        <translation type="unfinished">امنحه نجمة على GitHub</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>No, thanks</source>
         <translation>لا، شكرًا</translation>
     </message>
@@ -929,8 +950,14 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Missing or wrong translation? You can help translate PrintView3D — see &quot;Translations&quot; on the project page.</source>
-        <translation>ترجمة ناقصة أو خاطئة؟ يمكنك المساعدة في ترجمة PrintView3D — راجع قسم &quot;Translations&quot; في صفحة المشروع.</translation>
+        <source>How to translate on GitHub</source>
+        <translation type="unfinished">طريقة الترجمة على GitHub</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Missing or wrong translation? Anyone can correct it on GitHub: {guide}</source>
+        <extracomment>Settings → Language. {guide} becomes the link &apos;How to translate on GitHub&apos;.</extracomment>
+        <translation type="unfinished">ترجمة ناقصة أو خاطئة؟ يمكن لأي شخص تصحيحها على GitHub: {guide}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1245,6 +1272,18 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Like PrintView3D? {star} It helps other people find it.</source>
+        <extracomment>Settings → About. {star} becomes the link &apos;Give it a star on GitHub.&apos;</extracomment>
+        <translation type="unfinished">أعجبك PrintView3D؟ {star} فهذا يساعد الآخرين على العثور عليه.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Give it a star on GitHub.</source>
+        <extracomment>Link text. A &apos;star&apos; on GitHub is like a &apos;like&apos; or bookmark.</extracomment>
+        <translation type="unfinished">امنحه نجمة على GitHub.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Built with Python, Qt (PySide6) and PyVista / VTK.</source>
         <translation>مبني باستخدام Python وQt (PySide6) وPyVista / VTK.</translation>
     </message>
@@ -1482,6 +1521,10 @@
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Download update</source>
         <translation>تنزيل التحديث</translation>
+    </message>
+    <message>
+        <source>Missing or wrong translation? You can help translate PrintView3D — see &quot;Translations&quot; on the project page.</source>
+        <translation type="vanished">ترجمة ناقصة أو خاطئة؟ يمكنك المساعدة في ترجمة PrintView3D — راجع قسم &quot;Translations&quot; في صفحة المشروع.</translation>
     </message>
     <message>
         <source>Restart PrintView3D to switch graphics card.</source>

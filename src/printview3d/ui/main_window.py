@@ -1293,6 +1293,7 @@ class MainWindow(QMainWindow):
         QTimer.singleShot(2500, self._first_update_step)
 
     def _first_update_step(self):
+        self._maybe_ask_for_star()
         if self.settings.get("update_check") is None:       # ask once
             box = QMessageBox(self)
             box.setIcon(QMessageBox.Question)
@@ -1306,6 +1307,28 @@ class MainWindow(QMainWindow):
             box.exec()
             self.settings.set("update_check", box.clickedButton() is yes)
         self._maybe_check_updates()
+
+    def _maybe_ask_for_star(self):
+        """New installs, first start only: invite people to star the project on GitHub.
+
+        Shown once, whatever is clicked. Nothing is sent anywhere; the button only opens the
+        project page in the browser. Settings → About keeps the link for later.
+        """
+        if self.settings.get("star_prompt_shown"):
+            return
+        self.settings.set("star_prompt_shown", True)
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Information)
+        box.setWindowTitle(tr("Thanks for installing PrintView3D"))
+        box.setText(tr("PrintView3D is free and open source."))
+        box.setInformativeText(tr("If you like it, please give it a star on GitHub. Stars help other "
+                                  "people find PrintView3D and show that the project is alive."))
+        star = box.addButton(tr("Star on GitHub"), QMessageBox.AcceptRole)
+        box.addButton(tr("No, thanks"), QMessageBox.RejectRole)
+        box.setDefaultButton(star)
+        box.exec()
+        if box.clickedButton() is star:
+            QDesktopServices.openUrl(QUrl(up.PROJECT_URL))
 
     def _maybe_check_updates(self):
         if up.check_is_due(self.settings):

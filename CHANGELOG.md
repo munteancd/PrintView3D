@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.18.0
+- **Translations are made on GitHub only.** Hosted Weblate is no longer used: the README badge
+  and the Weblate setup guide are gone. New step-by-step guide for translators,
+  [docs/TRANSLATING.md](docs/TRANSLATING.md): fix a word right in the browser and send it as a
+  pull request, or use Qt Linguist for bigger work.
+- **Settings → Language** now links directly to that guide.
+- **Thanks for installing**: on the very first start of a new installation, a short message
+  invites you to star PrintView3D on GitHub. It appears once and never again, whatever you click;
+  people updating from an older version don't see it. **Settings → About** keeps the link.
+
 ## 0.17.0
 - **Export STL from 3MF** (toolbar button **Export STL**, `Ctrl+E`, shown for 3MF files): a dialog
   lists every object with its name and triangle count, all ticked. Save them as **one combined STL**

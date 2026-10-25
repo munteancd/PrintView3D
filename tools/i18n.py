@@ -13,11 +13,11 @@
 Files
 -----
 translations/printview3d.ts        template: every English text, no translations
-                                   (Weblate uses it to start new languages)
+                                   (`new` starts a language from it)
 translations/printview3d_<xx>.ts   one file per language (Qt Linguist format)
 
-The .ts files can be edited with Qt Linguist (pyside6-linguist), with Weblate,
-or in any text editor.
+The .ts files can be edited with Qt Linguist (pyside6-linguist), in GitHub's
+editor, or in any text editor. Guide for translators: docs/TRANSLATING.md
 """
 
 from __future__ import annotations
@@ -39,7 +39,7 @@ TEMPLATE = os.path.join(TS_DIR, "printview3d.ts")
 CONTEXT = "PrintView3D"
 PLACEHOLDER = re.compile(r"\{[a-zA-Z_][a-zA-Z0-9_]*\}")
 
-# Notes shown to translators (in Weblate / Qt Linguist) for texts that are
+# Notes shown to translators (in Qt Linguist and the .ts files) for texts that are
 # ambiguous on their own.
 NOTES = {
     "Fit": "Toolbar button: zoom the 3D view so the whole model fits.",
@@ -73,6 +73,12 @@ NOTES = {
     "today {time}": "When the last update check was. {time} is e.g. 14:02.",
     "Skip this version": "Update button: do not show this new version again (the next one is shown).",
     "Plate {n}": "A build plate inside a slicer project; {n} is its number.",
+    "Missing or wrong translation? Anyone can correct it on GitHub: {guide}":
+        "Settings → Language. {guide} becomes the link 'How to translate on GitHub'.",
+    "Star on GitHub": "Button: opens the project page on GitHub, where people can 'star' (like) it.",
+    "Like PrintView3D? {star} It helps other people find it.":
+        "Settings → About. {star} becomes the link 'Give it a star on GitHub.'",
+    "Give it a star on GitHub.": "Link text. A 'star' on GitHub is like a 'like' or bookmark.",
 }
 
 
@@ -144,9 +150,9 @@ def write_ts(path: str, lang: str, messages: list[Message]) -> None:
     for m in messages:
         lines.append("    <message>")
         # File names only, no line numbers: line numbers change with almost every code edit,
-        # and then clash with translations made on Weblate at the same time (merge conflicts).
+        # and then clash with translation pull requests made at the same time (merge conflicts).
         for f in dict.fromkeys(f for f, _line in m.locations):
-            # Written the way Weblate writes it, so neither side rewrites every line of the other.
+            # Written the way Qt Linguist writes it, so saving there doesn't rewrite every line.
             lines.append(f'        <location filename="{f}"></location>')
         lines.append(f"        <source>{_esc(m.source)}</source>")
         if m.note:
