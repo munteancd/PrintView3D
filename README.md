@@ -374,6 +374,10 @@ When a new version exists, the version in the bottom-right corner shows a **red 
   download the new file and replace the old one.
 - **Skip this version** hides that version; the next one is shown again.
 
+After an update, the first start shows **What's new** for the version you now have, once, however
+you updated (installer, winget, zip or AppImage). It is read from the changelog that comes with the
+program, so it needs no connection. A fresh install doesn't show it.
+
 ![Settings → Updates when a new version is available](docs/screenshot-updates.png)
 
 #### Updates and privacy

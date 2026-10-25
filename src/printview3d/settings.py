@@ -28,6 +28,7 @@ DEFAULTS = {
     "update_skip": "",          # version the user chose to skip
     "new_window": False,         # Settings -> Files: True = every file in its own window
     "star_prompt_shown": False, # the one-time "star us on GitHub" message (new installs only)
+    "last_run_version": "",     # version of the last start; "" = new install ("What's new" after updates)
     "recent_files": [],
     "show_travel": False,
     "show_bed": True,
@@ -62,6 +63,9 @@ class Settings:
                 # The GitHub star message is for new installs; people updating
                 # from an older version never see it.
                 stored.setdefault("star_prompt_shown", True)
+                # Versions before 0.18 didn't record themselves. Treat them as 0.17, so people
+                # updating see what's new in 0.18 rather than the whole history.
+                stored.setdefault("last_run_version", "0.17.0")
                 self.data.update(stored)
         except (OSError, ValueError):
             pass

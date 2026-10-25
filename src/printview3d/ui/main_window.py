@@ -1293,7 +1293,10 @@ class MainWindow(QMainWindow):
         QTimer.singleShot(2500, self._first_update_step)
 
     def _first_update_step(self):
-        self._maybe_ask_for_star()
+        self._maybe_ask_for_star()                          # new installs, once
+        previous = up.just_updated(self.settings)           # updated since the last start?
+        if previous:
+            update_ui.show_updated(self, previous)
         if self.settings.get("update_check") is None:       # ask once
             box = QMessageBox(self)
             box.setIcon(QMessageBox.Question)

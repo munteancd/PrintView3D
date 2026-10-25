@@ -9,6 +9,9 @@
 - **Thanks for installing**: on the very first start of a new installation, a short message
   invites you to star PrintView3D on GitHub. It appears once and never again, whatever you click;
   people updating from an older version don't see it. **Settings → About** keeps the link.
+- **What's new after an update**: the first start after updating shows what changed since the
+  version you had, once. It works however you updated (one-click installer, winget, zip or
+  AppImage) and offline, from the changelog included in the program. A fresh install skips it.
 
 ## 0.17.0
 - **Export STL from 3MF** (toolbar button **Export STL**, `Ctrl+E`, shown for 3MF files): a dialog

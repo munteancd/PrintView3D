@@ -35,6 +35,8 @@ RELEASES_PAGE = f"https://github.com/{REPO}/releases/latest"
 PRIVACY_URL = f"https://github.com/{REPO}#updates-and-privacy"
 PROJECT_URL = f"https://github.com/{REPO}"
 TRANSLATING_URL = f"https://github.com/{REPO}/blob/main/docs/TRANSLATING.md"
+CHANGELOG_URL = f"https://github.com/{REPO}/blob/main/CHANGELOG.md"
+MAX_NOTES_SHOWN = 5                 # "What's new" after an update: at most this many versions
 SETUP_ASSET = "PrintView3D-Setup.exe"
 CHECK_INTERVAL = 24 * 3600          # automatic check: at most once a day
 TIMEOUT = 15
@@ -78,6 +80,51 @@ def is_newer(remote: str, local: str = __version__) -> bool:
     r, l_ = parse_version(remote), parse_version(local)
     n = max(len(r), len(l_))
     return bool(r) and r + (0,) * (n - len(r)) > l_ + (0,) * (n - len(l_))
+
+
+# ------------------------------------------------------------------ "What's new" after an update
+def changelog_text() -> str:
+    """CHANGELOG.md: bundled with the program (resources/), or from the source checkout."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    for path in (os.path.join(here, "resources", "CHANGELOG.md"),
+                 os.path.join(here, "..", "..", "CHANGELOG.md")):
+        try:
+            with open(path, encoding="utf-8") as f:
+                return f.read()
+        except OSError:
+            continue
+    return ""
+
+
+def changelog_sections(text: str) -> list[tuple[str, str]]:
+    """[(version, notes), ...] from the "## 0.18.0" headings, in file order (newest first)."""
+    parts = re.split(r"^## +(\S+)[^\n]*\n", text, flags=re.M)
+    return [(parts[i], parts[i + 1].strip()) for i in range(1, len(parts) - 1, 2)]
+
+
+def _absolute_links(md: str) -> str:
+    """Links like (docs/TRANSLATING.md) point into the repository; outside GitHub they need the full URL."""
+    return re.sub(r"\]\((?!https?://|#|mailto:)([^)\s]+)\)",
+                  lambda m: f"](https://github.com/{REPO}/blob/main/{m.group(1)})", md)
+
+
+def notes_since(older: str, current: str = __version__, text: str | None = None) -> list[tuple[str, str]]:
+    """Changelog sections newer than `older` and not newer than `current`, newest first."""
+    text = changelog_text() if text is None else text
+    return [(v, _absolute_links(n)) for v, n in changelog_sections(text)
+            if is_newer(v, older) and not is_newer(v, current)]
+
+
+def just_updated(settings, current: str = __version__) -> str:
+    """The version used before this start if PrintView3D was updated since, else "".
+
+    Records this version either way. Works however the update was made (one-click installer,
+    winget, a downloaded zip or AppImage). A new install has no previous version: nothing to show.
+    """
+    last = settings.get("last_run_version", "")
+    if last != current:
+        settings.set("last_run_version", current)
+    return last if last and is_newer(current, last) else ""
 
 
 # ------------------------------------------------------------------ GitHub

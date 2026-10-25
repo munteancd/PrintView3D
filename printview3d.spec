@@ -49,7 +49,9 @@ from PyInstaller.utils.hooks import collect_data_files
 a = Analysis(
     ["src/printview3d/__main__.py"],
     pathex=["src"],
-    datas=[("src/printview3d/resources", "printview3d/resources")] + collect_data_files("certifi"),
+    # CHANGELOG.md goes along for the "What's new" window shown after an update (works offline).
+    datas=[("src/printview3d/resources", "printview3d/resources"),
+           ("CHANGELOG.md", "printview3d/resources")] + collect_data_files("certifi"),
     hiddenimports=hiddenimports,
     excludes=[
         # Not needed and large; keeps the build smaller.

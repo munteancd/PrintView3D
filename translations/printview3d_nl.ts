@@ -1489,6 +1489,16 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
+        <source>PrintView3D was updated to {version}.</source>
+        <translation type="unfinished">PrintView3D is bijgewerkt naar {version}.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/update_ui.py"></location>
+        <source>All changes</source>
+        <translation type="unfinished">Alle wijzigingen</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Downloading PrintView3D {version}…</source>
         <translation type="unfinished">PrintView3D {version} downloaden…</translation>
     </message>
