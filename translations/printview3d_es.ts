@@ -295,6 +295,7 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Next theme</source>
         <translation type="unfinished">Tema siguiente</translation>
     </message>
@@ -342,30 +343,35 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Fit</source>
         <extracomment>Toolbar button: zoom the 3D view so the whole model fits.</extracomment>
         <translation type="unfinished">Ajustar</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Iso</source>
         <extracomment>Toolbar button: isometric camera view (seen from a corner, slightly above).</extracomment>
         <translation type="unfinished">Iso</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Top</source>
         <extracomment>Toolbar button: camera view from above.</extracomment>
         <translation type="unfinished">Superior</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Front</source>
         <extracomment>Toolbar button: camera view from the front.</extracomment>
         <translation type="unfinished">Frontal</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Right</source>
         <extracomment>Toolbar button: camera view from the right side (not &apos;correct&apos;).</extracomment>
         <translation type="unfinished">Derecha</translation>
@@ -1295,6 +1301,21 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Keyboard and mouse</source>
+        <translation type="unfinished">Teclado y ratón</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Keyboard</source>
+        <translation type="unfinished">Teclado</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Mouse</source>
+        <translation type="unfinished">Ratón</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Path to the slicer program</source>
         <translation type="unfinished">Ruta del programa laminador</translation>
     </message>
@@ -1448,6 +1469,81 @@
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Later</source>
         <translation type="unfinished">Más tarde</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>{view} view</source>
+        <translation type="unfinished">Vista {view}</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Open a file</source>
+        <translation type="unfinished">Abrir un archivo</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Open the file in your slicer</source>
+        <translation type="unfinished">Abrir el archivo en tu laminador</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Export STL (3MF projects)</source>
+        <translation type="unfinished">Exportar STL (proyectos 3MF)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Next / previous layer (G-code)</source>
+        <translation type="unfinished">Capa siguiente / anterior (G-code)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>10 layers up / down</source>
+        <translation type="unfinished">10 capas arriba / abajo</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>First / last layer</source>
+        <translation type="unfinished">Primera / última capa</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Rotate (around the point you press on the model)</source>
+        <translation type="unfinished">Girar (alrededor del punto que pulsas en el modelo)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Left-drag</source>
+        <translation type="unfinished">Arrastrar con botón izquierdo</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Move (pan)</source>
+        <translation type="unfinished">Mover (desplazar)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Right-drag</source>
+        <translation type="unfinished">Arrastrar con botón derecho</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Middle-drag</source>
+        <translation type="unfinished">Arrastrar con botón central</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Shift + left-drag</source>
+        <translation type="unfinished">Mayús + arrastrar con botón izquierdo</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Zoom towards the mouse pointer</source>
+        <translation type="unfinished">Acercar hacia el puntero del ratón</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Mouse wheel</source>
+        <translation type="unfinished">Rueda del ratón</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/theme.py"></location>

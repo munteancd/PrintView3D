@@ -43,7 +43,7 @@ without exporting an STL first.
 | **Open in your slicer** | One click (or `Ctrl+P`) opens the current file in your slicer. Installed slicers are found automatically. |
 | **Default app** | Optional: make PrintView3D open `.stl`, `.3mf` and `.gcode` files when you double-click them. Fully reversible. |
 | **Your language** | English, العربية (Arabic, right-to-left), Nederlands, Deutsch, Français and Español; switch any time in Settings, no restart needed. [Help translate](#translations). |
-| **Themes** | Automatic (follows your system), Dark, Gray, Graphite (warm, easy on the eyes) or Light, for the window and the 3D view. Switch with one click on ◐ or `Ctrl+T`. Toolpath colours stay the same in every theme. |
+| **Themes** | Automatic (follows your system), Dark, Gray, Graphite (warm, easy on the eyes) or Light, for the window and the 3D view. Switch with one click on the palette icon or `Ctrl+T`. Toolpath colours stay the same in every theme. |
 | **Thumbnails** | Windows File Explorer shows previews of 3MF, STL, G-code and FreeCAD files (installed with PrintView3D, optional). |
 | **Updates** | **Check for updates** in Settings, or once a day if you allow it. On Windows one click downloads, checks and installs the new version. The version in the corner gets a red dot when an update is ready. [What is sent](#updates-and-privacy). |
 | **One window** | A file you double-click while PrintView3D is open is shown in that window, instead of opening another one. Prefer a window per file? **Settings → Files → Open each file in a new window**. |
@@ -226,6 +226,8 @@ Looking from underneath? The plate gets out of the way so you can see the bottom
 
 ### Keyboard
 
+The same list is in the program under **Settings → About → Keyboard and mouse**.
+
 | Key | Action |
 |---|---|
 | `Ctrl+O` | Open a file |
@@ -329,7 +331,7 @@ A wrong or missing word? The link on that page leads to [How to translate](docs/
 
 ### Themes
 
-Click the **◐ icon** at the right end of the toolbar to pick a theme, or press **`Ctrl+T`** to
+Click the **palette icon** at the right end of the toolbar to pick a theme, or press **`Ctrl+T`** to
 step to the next one. The same choice is in **Settings → Appearance → Theme**.
 
 - **Automatic** follows the dark/light setting of Windows or your Linux desktop (and switches

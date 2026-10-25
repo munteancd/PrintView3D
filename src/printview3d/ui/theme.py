@@ -234,6 +234,10 @@ def apply_theme(app, choice: str = "auto", mica: bool = False) -> str:
         QListWidget#settingsNav::item:hover {{ background: {t['tool_hover']}; }}
         QListWidget#settingsNav::item:selected {{ background: {t['tool_checked']}; color: {t['text']}; }}
         QLabel#pageTitle {{ font-size: 18px; font-weight: 600; padding-bottom: 4px; }}
+        QLabel#keyCap {{
+            background: {t['button']}; border: 1px solid {t['button_border']};
+            border-bottom-width: 2px; border-radius: 4px; padding: 1px 7px; font-weight: 400;
+        }}
         QLabel#versionBadge {{
             color: {t['muted']}; background: {t['button']};
             border: 1px solid {t['button_border']}; border-radius: 4px;
