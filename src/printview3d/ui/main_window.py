@@ -240,6 +240,9 @@ class MainWindow(QMainWindow):
         self.scene.set_colors(theme.colors())
         self._update_theme_button()
         self.refresh_update_badge()
+        # The ZIP list's type labels take their text colour from the theme when they are made.
+        if self.zip is not None and self.stack.currentIndex() == 1:
+            self._fill_zip_box()
         self.plotter.render()
 
     def prepare_mica(self):

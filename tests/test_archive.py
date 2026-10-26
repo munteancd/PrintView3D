@@ -177,3 +177,31 @@ def test_zip_in_the_window(tmp_path):
     finally:
         w.close()
         app.processEvents()
+
+
+def test_zip_labels_follow_the_theme(tmp_path):
+    """Switching theme recolours the type labels of the ZIP list (light text on dark themes)."""
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication, QLabel
+    app = QApplication.instance() or QApplication([])
+    from printview3d.settings import Settings
+    from printview3d.ui.main_window import MainWindow, _TYPE_TAGS
+
+    stl = open(os.path.join(HERE, "data", "cube_binary.stl"), "rb").read()
+    kit = make_zip(tmp_path / "kit.zip", {"a.stl": stl, "b.stl": stl})
+    w = MainWindow(Settings(str(tmp_path / "settings.json")))
+    try:
+        def stl_label_style():
+            app.processEvents()
+            labels = [l for l in w.zip_box.findChildren(QLabel) if l.text() == "STL" and l.isVisibleTo(w)]
+            assert labels
+            return labels[0].styleSheet()
+
+        w.apply_theme("light")
+        w.load_sync(kit)
+        assert _TYPE_TAGS["stl"][3] in stl_label_style()          # dark text on the light theme
+        w.apply_theme("dark")
+        assert _TYPE_TAGS["stl"][2] in stl_label_style()          # light text on the dark theme
+    finally:
+        w.close()
+        app.processEvents()
