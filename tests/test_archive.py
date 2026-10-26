@@ -26,6 +26,14 @@ endsolid cube
 GCODE = b"G28\nG1 Z0.2 F600\nG1 X10 Y10 E1 F1200\nG1 X20 Y10 E2\n"
 
 
+# The window tests open the real main window, which includes the VTK 3D view. Without a screen
+# (QT_QPA_PLATFORM=offscreen) creating that view crashes the test run on macOS (exit code 139 on
+# the GitHub macOS runner). Windows and Linux run them; the macOS build has its own smoke test
+# that renders a model in the real app.
+needs_3d_window = pytest.mark.skipif(sys.platform == "darwin",
+                                     reason="the VTK 3D view cannot be created offscreen on macOS")
+
+
 @pytest.fixture(autouse=True)
 def private_cache(tmp_path, monkeypatch):
     monkeypatch.setattr(archive, "cache_root", lambda: str(tmp_path / "cache"))
@@ -133,6 +141,7 @@ def test_arrange_keeps_parts_of_a_project_together():
     assert merged.parts[2].name == "knob.stl"
 
 
+@needs_3d_window
 def test_zip_in_the_window(tmp_path):
     """Open a ZIP in the main window: list, Show all, files to send, and a one-model ZIP."""
     os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
@@ -179,6 +188,7 @@ def test_zip_in_the_window(tmp_path):
         app.processEvents()
 
 
+@needs_3d_window
 def test_zip_labels_follow_the_theme(tmp_path):
     """Switching theme recolours the type labels of the ZIP list (light text on dark themes)."""
     os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
@@ -207,6 +217,7 @@ def test_zip_labels_follow_the_theme(tmp_path):
         app.processEvents()
 
 
+@needs_3d_window
 @pytest.mark.parametrize("choice,expect", [
     ("project", ["two.3mf"]),
     ("models", ["cube.stl", "small.stl"]),
