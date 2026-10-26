@@ -1687,8 +1687,8 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Next / previous layer (G-code)</source>
-        <translation>الطبقة التالية / السابقة (G-code)</translation>
+        <source>Next / previous layer (G-code), or file (ZIP)</source>
+        <translation>الطبقة التالية / السابقة (G-code)، أو الملف (ZIP)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1828,6 +1828,10 @@
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Download update</source>
         <translation>تنزيل التحديث</translation>
+    </message>
+    <message>
+        <source>Next / previous layer (G-code)</source>
+        <translation type="vanished">الطبقة التالية / السابقة (G-code)</translation>
     </message>
     <message>
         <source>PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code and FreeCAD files.</source>

@@ -1687,7 +1687,7 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Next / previous layer (G-code)</source>
+        <source>Next / previous layer (G-code), or file (ZIP)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

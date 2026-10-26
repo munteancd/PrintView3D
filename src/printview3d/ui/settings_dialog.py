@@ -735,7 +735,7 @@ def shortcut_rows() -> list[tuple[list[str], str]]:
         (["2"], view.format(view=tr("Top"))),
         (["3"], view.format(view=tr("Front"))),
         (["4"], view.format(view=tr("Right"))),
-        (["↑", "↓"], tr("Next / previous layer (G-code)")),
+        (["↑", "↓"], tr("Next / previous layer (G-code), or file (ZIP)")),
         ([_key("PgUp"), _key("PgDown")], tr("10 layers up / down")),
         ([_key("Home"), _key("End")], tr("First / last layer")),
     ]

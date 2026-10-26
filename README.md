@@ -236,7 +236,7 @@ The same list is in the program under **Settings → About → Keyboard and mous
 | `Ctrl+E` | Export STL (3MF projects) |
 | `Ctrl+T` | Next theme (Dark → Gray → Graphite → Light) |
 | `F` · `1` · `2` · `3` · `4` | Fit · Iso · Top · Front · Right view |
-| `↑` / `↓` | Next / previous layer (G-code) |
+| `↑` / `↓` | Next / previous layer (G-code), or the previous / next file in a ZIP |
 | `Page Up` / `Page Down` | 10 layers up / down |
 | `Home` / `End` | First / last layer |
 
