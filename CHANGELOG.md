@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.19.0
+- **Open ZIP files**: open a downloaded model package (Printables, Thingiverse, …) like any other
+  file, without unpacking it first. Only the 3D files are used (STL, 3MF, OBJ, PLY, OFF, glTF,
+  STEP, FreeCAD and G-code); pictures, documents, links and other files are skipped. A ZIP with one
+  3D file opens just like that file. [Details](README.md#zip-files).
+- **The files in a ZIP** are listed in the side panel with a coloured label for their type and a
+  short explanation of each type. Click a file, or use **↑ / ↓**, to switch.
+- **Show all side by side** places the models of a ZIP next to each other: up to three in one row,
+  then a grid (four as 2 × 2, six as 3 × 2, …), spaced by their real size. Untick a model to hide it.
+  G-code, STEP and FreeCAD files open one at a time.
+- **Sending several models**: Open in slicer sends the ticked models, and the arrow next to it has
+  **Send all models in the ZIP**. A slicer opens a 3MF as a project on its own, so when a 3MF is
+  among them PrintView3D asks what to send: the 3MF project, the other models, or everything as STL
+  on one plate.
+- **New toolbar**: Menu, Open and Recent as icons on the left; Screenshot and Theme on the right.
+  The menu holds Open, Recent, Screenshot, Settings, Updates and About. **Open in slicer** shows a 3D
+  printer icon and **Export STL** an export icon. The icons follow the theme.
+- **Settings → About → Keyboard and mouse** lists every shortcut and mouse control.
+- Long file and object names no longer make the side panel wider than the window.
+- macOS: shortcuts are shown as ⌘ (for example ⌘O) in tooltips and on the About page.
+
 ## 0.18.0
 - **Translations are made on GitHub only.** Hosted Weblate is no longer used: the README badge
   and the Weblate setup guide are gone. New step-by-step guide for translators,
