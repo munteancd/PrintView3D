@@ -11,6 +11,8 @@ window recolours the 3D view (MainWindow.apply_theme).
 
 from __future__ import annotations
 
+import math
+
 from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import QColor, QGuiApplication, QIcon, QPainter, QPainterPath, QPalette, QPen, QPixmap
 
@@ -201,9 +203,10 @@ def apply_theme(app, choice: str = "auto", mica: bool = False) -> str:
             padding: 4px 10px; margin: 1px 2px; font-weight: 600; }}
         QToolBar QToolButton:hover {{ background: {t['button_hover']}; border-color: {t['muted']}; }}
         QToolBar QToolButton:checked {{ background: {t['tool_checked']}; border-color: {ACCENT}; }}
-        QToolBar QToolButton#themeButton {{ padding: 4px 6px; }}
-        QToolBar QToolButton#themeButton::menu-indicator {{ image: none; width: 0; }}
-        QToolButton#slicerButton {{ background: {ACCENT}; color: white; font-weight: 600; padding: 6px 14px; }}
+        QToolBar QToolButton#iconButton {{ padding: 2px 3px; }}
+        QToolBar QToolButton#iconButton::menu-indicator {{ image: none; width: 0; }}
+        QToolBar QToolButton#exportButton {{ padding: 2px 10px 2px 3px; }}
+        QToolButton#slicerButton {{ background: {ACCENT}; color: white; font-weight: 600; padding: 2px 14px 2px 3px; }}
         QToolButton#slicerButton:hover {{ background: {ACCENT_HOVER}; }}
         QToolButton#slicerButton[popupMode="1"] {{ padding-right: 28px; }}
         QToolButton#slicerButton::menu-button {{ width: 22px; border-left: 1px solid rgba(255,255,255,0.35);
@@ -235,6 +238,10 @@ def apply_theme(app, choice: str = "auto", mica: bool = False) -> str:
         QListWidget#settingsNav::item:hover {{ background: {t['tool_hover']}; }}
         QListWidget#settingsNav::item:selected {{ background: {t['tool_checked']}; color: {t['text']}; }}
         QLabel#pageTitle {{ font-size: 18px; font-weight: 600; padding-bottom: 4px; }}
+        QLabel#keyCap {{
+            background: {t['button']}; border: 1px solid {t['button_border']};
+            border-bottom-width: 2px; border-radius: 4px; padding: 1px 7px; font-weight: 400;
+        }}
         QLabel#versionBadge {{
             color: {t['muted']}; background: {t['button']};
             border: 1px solid {t['button_border']}; border-radius: 4px;
@@ -383,6 +390,141 @@ def nav_icon(kind: str, dot: bool = False) -> QIcon:
         p.setPen(QPen(QColor(colors()["bar"]), 3))
         p.setBrush(QColor(UPDATE_DOT))
         p.drawEllipse(QPointF(51, 13), 10, 10)
+    p.end()
+    return QIcon(pm)
+
+
+def _tool_glyph(p: QPainter, kind: str, fg: QColor) -> None:
+    """Draw one toolbar symbol on a 64 x 64 grid (same line style as the Settings icons)."""
+    if kind == "menu":                           # hamburger
+        for y in (18, 32, 46):
+            p.drawLine(QPointF(12, y), QPointF(52, y))
+    elif kind == "open":                         # folder
+        path = QPainterPath()
+        path.moveTo(8, 18)
+        for x, y in ((26, 18), (31, 24), (56, 24), (56, 52), (8, 52)):
+            path.lineTo(x, y)
+        path.closeSubpath()
+        p.drawPath(path)
+    elif kind == "recent":                       # clock with a turn-back arrow
+        p.drawArc(QRectF(12, 12, 40, 40), 135 * 16, -315 * 16)
+        p.drawLine(QPointF(10, 12), QPointF(17.9, 17.9))
+        p.drawLine(QPointF(17.9, 17.9), QPointF(24, 10))
+        p.drawLine(QPointF(32, 22), QPointF(32, 33))
+        p.drawLine(QPointF(32, 33), QPointF(40, 39))
+    elif kind == "screenshot":                   # camera
+        p.drawRoundedRect(QRectF(8, 20, 48, 32), 6, 6)
+        top = QPainterPath()
+        top.moveTo(22, 20)
+        top.lineTo(26, 13)
+        top.lineTo(38, 13)
+        top.lineTo(42, 20)
+        p.drawPath(top)
+        p.drawEllipse(QPointF(32, 36), 9, 9)
+    elif kind == "theme":                        # palette
+        pal = QPainterPath()
+        pal.moveTo(32, 8)
+        pal.arcTo(QRectF(8, 8, 48, 48), 90, 180)              # left half, down to (32, 56)
+        pal.cubicTo(36, 56, 38, 53, 36, 49)
+        pal.cubicTo(34, 45, 37, 42, 41, 42)
+        pal.lineTo(48, 42)
+        pal.arcTo(QRectF(40, 26, 16, 16), 270, 90)            # small curve up to (56, 34)
+        pal.cubicTo(56, 19, 45, 8, 32, 8)
+        p.drawPath(pal)
+        p.save()
+        p.setPen(Qt.NoPen)
+        p.setBrush(fg)
+        for x, y in ((19, 31), (25, 19), (38, 17), (47, 26)):
+            p.drawEllipse(QPointF(x, y), 3.5, 3.5)
+        p.restore()
+    elif kind == "slicer":                       # 3D printer with a part on the bed
+        p.drawRoundedRect(QRectF(8, 8, 48, 48), 6, 6)
+        p.drawLine(QPointF(8, 20), QPointF(56, 20))
+        nozzle = QPainterPath()
+        nozzle.moveTo(27, 20)
+        nozzle.lineTo(37, 20)
+        nozzle.lineTo(32, 28)
+        nozzle.closeSubpath()
+        p.fillPath(nozzle, fg)
+        p.drawRect(QRectF(24, 34, 16, 12))
+        p.drawLine(QPointF(16, 46), QPointF(48, 46))
+    elif kind == "freecad":                      # cube, as on the Settings FreeCAD page
+        top, mid, bot = QPointF(32, 6), QPointF(32, 30), QPointF(32, 58)
+        l_up, r_up = QPointF(10, 18), QPointF(54, 18)
+        l_dn, r_dn = QPointF(10, 46), QPointF(54, 46)
+        for a, b in ((top, l_up), (top, r_up), (l_up, mid), (r_up, mid), (mid, bot),
+                     (l_up, l_dn), (r_up, r_dn), (l_dn, bot), (r_dn, bot)):
+            p.drawLine(a, b)
+    elif kind == "settings":                     # gear
+        p.drawEllipse(QPointF(32, 32), 9, 9)
+        p.drawEllipse(QPointF(32, 32), 18, 18)
+        for i in range(8):
+            a = math.radians(i * 45)
+            p.drawLine(QPointF(32 + 18 * math.cos(a), 32 + 18 * math.sin(a)),
+                       QPointF(32 + 25 * math.cos(a), 32 + 25 * math.sin(a)))
+    elif kind == "updates":                      # circular arrow, as on the Settings Updates page
+        p.drawArc(QRectF(10, 10, 44, 44), 60 * 16, 290 * 16)
+        head = QPainterPath()
+        head.moveTo(48, 6)
+        head.lineTo(52, 22)
+        head.lineTo(36, 20)
+        head.closeSubpath()
+        p.fillPath(head, fg)
+    elif kind == "about":                        # (i)
+        p.drawEllipse(QPointF(32, 32), 24, 24)
+        p.drawLine(QPointF(32, 28), QPointF(32, 44))
+        p.save()
+        p.setPen(Qt.NoPen)
+        p.setBrush(fg)
+        p.drawEllipse(QPointF(32, 19), 3.5, 3.5)
+        p.restore()
+    elif kind == "export":                       # page with an arrow going out
+        page = QPainterPath()
+        page.moveTo(40, 56)
+        for x, y in ((14, 56), (14, 8), (36, 8), (46, 18), (46, 26)):
+            page.lineTo(x, y)
+        p.drawPath(page)
+        fold = QPainterPath()
+        fold.moveTo(36, 8)
+        fold.lineTo(36, 18)
+        fold.lineTo(46, 18)
+        p.drawPath(fold)
+        p.drawLine(QPointF(28, 40), QPointF(58, 40))
+        p.drawLine(QPointF(50, 32), QPointF(58, 40))
+        p.drawLine(QPointF(58, 40), QPointF(50, 48))
+
+
+TOOL_ICONS = ("menu", "open", "recent", "screenshot", "theme", "slicer", "freecad", "export",
+              "settings", "updates", "about")
+
+
+def tool_icon(kind: str, on_accent: bool = False) -> QIcon:
+    """Toolbar icon: the symbol in the accent colour on a soft accent-tinted tile.
+    on_accent=True is for the teal slicer button: a white symbol on a soft white tile."""
+    size = 64
+    pm = QPixmap(size, size)
+    pm.fill(Qt.transparent)
+    p = QPainter(pm)
+    p.setRenderHint(QPainter.Antialiasing)
+    if on_accent:
+        fg, tile = QColor("#ffffff"), QColor(255, 255, 255, 46)
+    else:
+        # A darker teal on the light theme keeps the symbol crisp against the pale tile.
+        fg = QColor("#1f7f7b" if _current == "light" else ACCENT)
+        tile = QColor(ACCENT)
+        tile.setAlphaF(0.22 if _current == "light" else 0.20)
+    p.setPen(Qt.NoPen)
+    p.setBrush(tile)
+    p.drawRoundedRect(QRectF(0, 0, size, size), 14, 14)
+    # The symbol sits inside the tile with a margin, drawn on its own 64 x 64 grid.
+    p.translate(size * 0.12, size * 0.12)
+    p.scale(0.76, 0.76)
+    pen = QPen(fg, 6)
+    pen.setCapStyle(Qt.RoundCap)
+    pen.setJoinStyle(Qt.RoundJoin)
+    p.setPen(pen)
+    p.setBrush(Qt.NoBrush)
+    _tool_glyph(p, kind, fg)
     p.end()
     return QIcon(pm)
 

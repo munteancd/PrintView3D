@@ -10,9 +10,10 @@ import os
 import sys
 
 from PySide6.QtCore import QDateTime, QLocale, QSize, Qt
+from PySide6.QtGui import QKeySequence
 from PySide6.QtWidgets import (
     QApplication, QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout,
-    QFrame, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QMessageBox,
+    QFrame, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QMessageBox,
     QPushButton, QScrollArea, QStackedWidget, QVBoxLayout, QWidget,
 )
 
@@ -270,7 +271,8 @@ class SettingsDialog(QDialog):
         self._add_page("viewer", tr("Viewer"), [g3, g4], keep_titles=True)
 
         self._add_page("updates", tr("Updates"), [self._build_updates()])
-        self._add_page("about", tr("About"), [self._build_about(gpu_info)])
+        self._add_page("about", tr("About"), [self._build_about(gpu_info), self._build_shortcuts()],
+                       keep_titles=True)
 
         bb = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         bb.accepted.connect(self._save)
@@ -479,6 +481,43 @@ class SettingsDialog(QDialog):
         v.addWidget(built)
         return g
 
+    def _build_shortcuts(self) -> QGroupBox:
+        """Keyboard shortcuts and mouse controls of the main window (keep in step with
+        MainWindow._build_shortcuts and the README)."""
+        g = QGroupBox(tr("Keyboard and mouse"))
+        grid = QGridLayout(g)
+        grid.setHorizontalSpacing(14)
+        grid.setVerticalSpacing(6)
+        grid.setColumnStretch(1, 1)
+        row = 0
+        for heading, items in ((tr("Keyboard"), shortcut_rows()), (tr("Mouse"), mouse_rows())):
+            head = QLabel(heading)
+            head.setObjectName("formKey")
+            head.setStyleSheet("font-weight: 600;" + (" margin-top: 8px;" if row else ""))
+            grid.addWidget(head, row, 0, 1, 2)
+            row += 1
+            for keys, action in items:
+                caps = QWidget()
+                h = QHBoxLayout(caps)
+                h.setContentsMargins(0, 0, 0, 0)
+                h.setSpacing(4)
+                for i, k in enumerate(keys):
+                    if i:
+                        sep = QLabel("/")
+                        sep.setObjectName("muted")
+                        h.addWidget(sep)
+                    cap = QLabel(i18n.ltr(k))
+                    cap.setObjectName("keyCap")
+                    h.addWidget(cap)
+                h.addStretch(1)
+                grid.addWidget(caps, row, 0)
+                text = QLabel(action)
+                text.setWordWrap(True)
+                text.setStyleSheet("font-weight: 400;")     # not the box title's bold
+                grid.addWidget(text, row, 1)
+                row += 1
+        return g
+
     # ---------------------------------------------------------------- slicer
     def _store_slicer_fields(self):
         """Remember what was typed for the slicer that is currently selected."""
@@ -676,3 +715,36 @@ class SettingsDialog(QDialog):
         box.setEscapeButton(later)
         box.exec()
         return box.clickedButton() is now
+
+
+def _key(seq: str) -> str:
+    """A shortcut as the system writes it (Ctrl+O on Windows/Linux, ⌘O on a Mac)."""
+    return QKeySequence(seq).toString(QKeySequence.NativeText)
+
+
+def shortcut_rows() -> list[tuple[list[str], str]]:
+    """(keys, what they do) for the About page, in the order people need them."""
+    view = tr("{view} view")
+    return [
+        ([_key("Ctrl+O")], tr("Open a file")),
+        ([_key("Ctrl+P")], tr("Open the file in your slicer")),
+        ([_key("Ctrl+E")], tr("Export STL (3MF projects)")),
+        ([_key("Ctrl+T")], tr("Next theme")),
+        (["F"], view.format(view=tr("Fit"))),
+        (["1"], view.format(view=tr("Iso"))),
+        (["2"], view.format(view=tr("Top"))),
+        (["3"], view.format(view=tr("Front"))),
+        (["4"], view.format(view=tr("Right"))),
+        (["↑", "↓"], tr("Next / previous layer (G-code)")),
+        ([_key("PgUp"), _key("PgDown")], tr("10 layers up / down")),
+        ([_key("Home"), _key("End")], tr("First / last layer")),
+    ]
+
+
+def mouse_rows() -> list[tuple[list[str], str]]:
+    return [
+        ([tr("Left-drag")], tr("Rotate (around the point you press on the model)")),
+        ([tr("Right-drag"), tr("Middle-drag")], tr("Move (pan)")),
+        ([tr("Shift + left-drag")], tr("Move (pan)")),
+        ([tr("Mouse wheel")], tr("Zoom towards the mouse pointer")),
+    ]

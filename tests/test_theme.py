@@ -159,3 +159,23 @@ def test_glass_layer_is_stronger_in_the_light_theme(app):
     dark = alpha(app.styleSheet(), "QStackedWidget#centralStack QScrollArea > QWidget > QWidget {")
     assert light > dark >= 0.4
     theme.apply_theme(app, "dark")
+
+
+def test_toolbar_icons_draw_in_every_theme(app):
+    for name in theme.THEMES:
+        theme.apply_theme(app, name)
+        for kind in theme.TOOL_ICONS:
+            assert not theme.tool_icon(kind).isNull(), (name, kind)
+            assert not theme.tool_icon(kind, on_accent=True).isNull(), (name, kind)
+    theme.apply_theme(app, "dark")
+
+
+def test_about_page_lists_the_shortcuts(app, tmp_path):
+    """The Settings window builds, and About shows every keyboard shortcut of the main window."""
+    from printview3d.ui.settings_dialog import SettingsDialog, mouse_rows, shortcut_rows
+    d = SettingsDialog(Settings(str(tmp_path / "settings.json")), page="about")
+    keys = {k for row_keys, _ in shortcut_rows() for k in row_keys}
+    for k in ("Ctrl+O", "Ctrl+P", "Ctrl+E", "Ctrl+T", "F", "1", "2", "3", "4"):
+        assert k in keys, k
+    assert len(mouse_rows()) >= 3
+    d.deleteLater()

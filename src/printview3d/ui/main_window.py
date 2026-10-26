@@ -273,7 +273,7 @@ class MainWindow(QMainWindow):
     def _update_theme_button(self):
         if not hasattr(self, "theme_btn"):
             return
-        self.theme_btn.setIcon(theme.theme_icon())
+        self._update_toolbar_icons()
         for key, a in self.theme_actions.items():
             a.setText(tr(theme.THEME_NAMES[key]))
             a.setChecked(key == theme.setting())
@@ -289,24 +289,58 @@ class MainWindow(QMainWindow):
     def _build_toolbar(self):
         tb = QToolBar()
         tb.setObjectName("mainToolbar")          # the Mica style rules name it (theme.MICA_CSS)
-        tb.setObjectName("mainToolbar")
         tb.setMovable(False)
-        tb.setIconSize(QSize(18, 18))
-        tb.setToolButtonStyle(Qt.ToolButtonTextOnly)
+        tb.setIconSize(QSize(22, 22))
+        # Buttons with an icon show it beside their text; the view buttons have no icon (text only).
+        tb.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
         self.addToolBar(tb)
 
+        def icon_button(menu: QMenu | None = None, action: QAction | None = None) -> QToolButton:
+            """A square icon tile (no text; the tooltip names it)."""
+            b = QToolButton()
+            b.setObjectName("iconButton")
+            b.setIconSize(QSize(22, 22))
+            b.setToolButtonStyle(Qt.ToolButtonIconOnly)
+            if action is not None:
+                b.setDefaultAction(action)
+            if menu is not None:
+                b.setMenu(menu)
+                b.setPopupMode(QToolButton.InstantPopup)
+            return b
+
+        # Actions live on the window too, so their shortcuts work wherever the button is.
         self.act_open = QAction(self, shortcut=QKeySequence.Open, triggered=self.open_dialog)
-        tb.addAction(self.act_open)
+        self.act_screenshot = QAction(self, triggered=self.save_screenshot)
+        self.act_settings = QAction(self, triggered=self.open_settings)
+        self.act_updates = QAction(self, triggered=lambda: self.open_settings("updates"))
+        self.act_about = QAction(self, triggered=lambda: self.open_settings("about"))
+        self.addAction(self.act_open)
 
         self.recent_menu = QMenu(self)
-        self.recent_btn = QToolButton()
-        self.recent_btn.setMenu(self.recent_menu)
-        self.recent_btn.setPopupMode(QToolButton.InstantPopup)
+
+        # Menu (hamburger): everything in one place, with the shortcuts shown.
+        self.main_menu = QMenu(self)
+        self.main_menu.addAction(self.act_open)
+        self.main_menu.addMenu(self.recent_menu)
+        self.main_menu.addSeparator()
+        self.main_menu.addAction(self.act_screenshot)
+        self.main_menu.addSeparator()
+        self.main_menu.addAction(self.act_settings)
+        self.main_menu.addAction(self.act_updates)
+        self.main_menu.addAction(self.act_about)
+        self.menu_btn = icon_button(menu=self.main_menu)
+        tb.addWidget(self.menu_btn)
+
+        self.open_btn = icon_button(action=self.act_open)
+        tb.addWidget(self.open_btn)
+        self.recent_btn = icon_button(menu=self.recent_menu)
         tb.addWidget(self.recent_btn)
 
         tb.addSeparator()
         self.slicer_btn = QToolButton()
         self.slicer_btn.setObjectName("slicerButton")
+        self.slicer_btn.setIconSize(QSize(22, 22))
+        self.slicer_btn.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
         self.slicer_btn.clicked.connect(lambda: self.open_in_slicer())
         # The small arrow: send the file to another slicer just once.
         self.slicer_menu = QMenu(self)
@@ -319,6 +353,7 @@ class MainWindow(QMainWindow):
         self.act_export_stl.setShortcut(QKeySequence("Ctrl+E"))
         self.act_export_stl.setVisible(False)
         tb.addAction(self.act_export_stl)
+        tb.widgetForAction(self.act_export_stl).setObjectName("exportButton")
         tb.addSeparator()
 
         self.view_actions = []
@@ -337,13 +372,10 @@ class MainWindow(QMainWindow):
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         tb.addWidget(spacer)
 
-        self.act_screenshot = QAction(self, triggered=self.save_screenshot)
-        self.act_settings = QAction(self, triggered=self.open_settings)
-        self.act_about = QAction(self, triggered=lambda: self.open_settings("about"))
-        for a in (self.act_screenshot, self.act_settings, self.act_about):
-            tb.addAction(a)
+        self.screenshot_btn = icon_button(action=self.act_screenshot)
+        tb.addWidget(self.screenshot_btn)
 
-        # Theme: icon at the end of the toolbar; its menu lists every theme.
+        # Theme: palette at the end of the toolbar; its menu lists every theme.
         self.theme_menu = QMenu(self)
         self.theme_group = QActionGroup(self)
         self.theme_actions = {}
@@ -356,12 +388,23 @@ class MainWindow(QMainWindow):
         self.theme_menu.addSeparator()
         self.act_next_theme = QAction(self, triggered=self.next_theme)
         self.theme_menu.addAction(self.act_next_theme)
-        self.theme_btn = QToolButton()
-        self.theme_btn.setObjectName("themeButton")
-        self.theme_btn.setIconSize(QSize(18, 18))
-        self.theme_btn.setMenu(self.theme_menu)
-        self.theme_btn.setPopupMode(QToolButton.InstantPopup)
+        self.theme_btn = icon_button(menu=self.theme_menu)
         tb.addWidget(self.theme_btn)
+
+    def _update_toolbar_icons(self):
+        """Draw the toolbar icons in the current theme's colours (again after a theme switch)."""
+        if not hasattr(self, "theme_btn"):
+            return
+        self.menu_btn.setIcon(theme.tool_icon("menu"))
+        self.act_open.setIcon(theme.tool_icon("open"))
+        self.recent_btn.setIcon(theme.tool_icon("recent"))
+        self.act_screenshot.setIcon(theme.tool_icon("screenshot"))
+        self.act_export_stl.setIcon(theme.tool_icon("export"))
+        self.theme_btn.setIcon(theme.tool_icon("theme"))
+        self.recent_menu.setIcon(theme.tool_icon("recent"))
+        self.act_settings.setIcon(theme.tool_icon("settings"))
+        self.act_updates.setIcon(theme.tool_icon("updates"))
+        self.act_about.setIcon(theme.tool_icon("about"))
 
     def _build_preview_page(self) -> QWidget:
         page = QWidget()
@@ -608,7 +651,10 @@ class MainWindow(QMainWindow):
     def retranslate_ui(self):
         """(Re)set every fixed text. Called at start and when the language changes."""
         self.act_open.setText(tr("Open…"))
-        self.recent_btn.setText(tr("Recent"))
+        self.act_open.setToolTip(tr("Open…") + " (Ctrl+O)")
+        self.menu_btn.setToolTip(tr("Menu"))
+        self.recent_menu.setTitle(tr("Recent"))
+        self.recent_btn.setToolTip(tr("Recent"))
         view_names = {None: tr("Fit"), "iso": tr("Iso"), "top": tr("Top"),
                       "front": tr("Front"), "right": tr("Right")}
         for act, key, view in self.view_actions:
@@ -620,6 +666,7 @@ class MainWindow(QMainWindow):
         self.act_bed.setToolTip(tr("Show / hide the build plate grid"))
         self.act_screenshot.setText(tr("Screenshot"))
         self.act_settings.setText(tr("Settings"))
+        self.act_updates.setText(tr("Updates"))
         self.act_about.setText(tr("About"))
         self._update_theme_button()
         self.refresh_update_badge()
@@ -1476,7 +1523,10 @@ class MainWindow(QMainWindow):
         return tr("custom slicer") if (sid == sl.CUSTOM and name == "custom slicer") else name
 
     def _update_slicer_button(self):
-        if self.current_kind == "freecad" and not self.showing_embedded:
+        freecad = self.current_kind == "freecad" and not self.showing_embedded
+        # A 3D printer for slicers; the FreeCAD cube when the button opens FreeCAD.
+        self.slicer_btn.setIcon(theme.tool_icon("freecad" if freecad else "slicer", on_accent=True))
+        if freecad:
             self.slicer_btn.setText(tr("Open in FreeCAD"))
             self.slicer_btn.setToolTip(tr("Open this file in FreeCAD (Ctrl+P). "
                                           "Use the arrow to send the model to a slicer as STL."))
