@@ -296,6 +296,13 @@ files, for example to share a model or open it in a program that does not read 3
 Model downloads often come as a ZIP. Open it like any other file (**Open…** or drag it onto the
 window); there is no need to unpack it first.
 
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshot-zip-showall.png" alt="Four models from a ZIP side by side, with the list of files in the ZIP"><br><sub><b>Show all side by side</b>: tick or untick each model; the G-code opens on its own.</sub></td>
+<td width="50%"><img src="docs/screenshot-zip-gcode.png" alt="The sliced G-code from the same ZIP, with the file list"><br><sub>Click a file in the list, or use ↑ / ↓: here the sliced G-code from the same ZIP.</sub></td>
+</tr>
+</table>
+
 - **Only the 3D files are used**: STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, FreeCAD and G-code.
   Pictures, PDFs, read-me files, web links, ZIPs inside the ZIP and the hidden `__MACOSX` folder
   are skipped, and the panel says how many were skipped.
@@ -312,6 +319,8 @@ window); there is no need to unpack it first.
   files. When the models to send include a 3MF, PrintView3D asks: the 3MF project (with its
   plates and settings), the other models on one plate, or **everything as STL** (the project's
   objects become a plain STL, so all models go on one plate).
+
+  <img src="docs/screenshot-zip-send.png" alt="The Send to slicer dialog: the 3MF project, the other models, or everything as STL" width="520">
 
 The 3D files are unpacked into PrintView3D's own cache folder (slicers need real files); the sizes
 are checked first, so a damaged or malicious ZIP cannot fill your disk. Files from ZIPs opened more
