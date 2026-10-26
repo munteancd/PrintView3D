@@ -651,7 +651,9 @@ class MainWindow(QMainWindow):
     def retranslate_ui(self):
         """(Re)set every fixed text. Called at start and when the language changes."""
         self.act_open.setText(tr("Open…"))
-        self.act_open.setToolTip(tr("Open…") + " (Ctrl+O)")
+        # The shortcut as the system writes it (Ctrl+O, or ⌘O on a Mac).
+        self.act_open.setToolTip(tr("Open…") + " (" + QKeySequence(QKeySequence.Open).toString(
+            QKeySequence.NativeText) + ")")
         self.menu_btn.setToolTip(tr("Menu"))
         self.recent_menu.setTitle(tr("Recent"))
         self.recent_btn.setToolTip(tr("Recent"))
