@@ -602,8 +602,18 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Opens on its own: click the name</source>
+        <translation type="unfinished">Opent apart: klik op de naam</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>{n} other files skipped (pictures, documents, links).</source>
         <translation type="unfinished">{n} andere bestanden overgeslagen (afbeeldingen, documenten, links).</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Untick a model to hide it; click a G-code to open it.</source>
+        <translation type="unfinished">Vink een model uit om het te verbergen; klik op een G-code om die te openen.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>

@@ -602,8 +602,18 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Opens on its own: click the name</source>
+        <translation>يُفتح بمفرده: انقر على الاسم</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>{n} other files skipped (pictures, documents, links).</source>
         <translation>تم تجاهل {n} ملفات أخرى (صور، مستندات، روابط).</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Untick a model to hide it; click a G-code to open it.</source>
+        <translation>ألغِ تحديد نموذج لإخفائه؛ انقر على ملف G-code لفتحه.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>

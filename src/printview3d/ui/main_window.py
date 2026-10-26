@@ -11,7 +11,7 @@ import numpy as np
 from PySide6.QtCore import QEvent, QObject, QSize, Qt, QTimer, QUrl, Signal
 from PySide6.QtGui import QAction, QActionGroup, QColor, QDesktopServices, QGuiApplication, QIcon, QKeySequence, QPixmap, QShortcut
 from PySide6.QtWidgets import (
-    QAbstractItemView, QApplication, QCheckBox, QFileDialog, QFormLayout, QGroupBox, QHBoxLayout, QLabel,
+    QAbstractItemView, QApplication, QCheckBox, QFileDialog, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout, QLabel,
     QListWidget, QListWidgetItem, QMainWindow, QMenu, QMessageBox, QProgressBar, QPushButton, QScrollArea,
     QSizePolicy, QSlider, QSpinBox, QSplitter, QStackedWidget, QToolBar,
     QToolButton, QVBoxLayout, QWidget,
@@ -94,6 +94,15 @@ def _type_info(kind: str) -> str:
     return tr("{kind}: 3D model").format(kind=_KIND_LABELS.get(kind, kind.upper()))
 
 
+def _wrappable(name: str) -> str:
+    """A file name that can wrap: an invisible break chance after + _ - . (Downloads such as
+    "Elegoo+72mm+spool+adjustable+silica+holder.3mf" have no spaces, and one unbreakable name
+    made the whole side panel wider than the window.)"""
+    for ch in "+_-.":
+        name = name.replace(ch, ch + "\u200b")
+    return name
+
+
 def _size_text(size: int) -> str:
     if size >= 1024 * 1024:
         return tr("{n} MB").format(n=num(size / (1024 * 1024), 1))
@@ -116,6 +125,22 @@ class _LoadSignals(QObject):
 class _ExportSignals(QObject):
     done = Signal(str, object)      # path, list of MeshPart
     failed = Signal(str, str)       # path, error
+
+
+class _ElidedLabel(QLabel):
+    """A one-line label that ends in "…" when it does not fit; the tooltip has the full text."""
+
+    def __init__(self, text: str, parent=None):
+        super().__init__(parent)
+        self._full = text
+        self.setToolTip(text)
+        self.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
+        self.setMinimumWidth(20)
+        self.setText(text)
+
+    def resizeEvent(self, e):
+        super().resizeEvent(e)
+        self.setText(self.fontMetrics().elidedText(self._full, Qt.ElideRight, max(10, self.width())))
 
 
 class _RowList(QListWidget):
@@ -449,6 +474,7 @@ class MainWindow(QMainWindow):
         self.side = QWidget()
         self.side_layout = QVBoxLayout(self.side)
         self.side_layout.setContentsMargins(10, 8, 10, 10)
+        self.side_layout.setSpacing(10)             # room between the boxes and their titles
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -470,6 +496,7 @@ class MainWindow(QMainWindow):
         self.name_label = QLabel()
         self.name_label.setObjectName("fileName")
         self.name_label.setWordWrap(True)
+        self.name_label.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
         L.addWidget(self.name_label)
         self.kind_label = QLabel()
         self.kind_label.setObjectName("muted")
@@ -661,7 +688,7 @@ class MainWindow(QMainWindow):
             layer = self.layer_slider.value()
             only = self.only_layer_cb.isChecked()
             self._reset_side_panel()
-            self.name_label.setText(self._display_name())
+            self.name_label.setText(_wrappable(self._display_name()))
             self._fill_gcode_panel(self.gcode)
             for k, on in checks.items():
                 if k in self.feature_checks:
@@ -674,7 +701,7 @@ class MainWindow(QMainWindow):
             self._schedule_gcode()
         elif self.model is not None:
             self._reset_side_panel()
-            self.name_label.setText(self._display_name())
+            self.name_label.setText(_wrappable(self._display_name()))
             self._fill_model_panel(self.model)
             if self.view_stack.currentIndex() == 1:
                 self._show_freecad_preview(self.model)
@@ -845,15 +872,41 @@ class MainWindow(QMainWindow):
                                                            base + ".stl")))
         return files
 
+    def _type_tag(self, kind: str) -> QLabel:
+        """The coloured type label (STL, 3MF, G-code, ...) of the ZIP list and its legend."""
+        label, bg, fg_dark, fg_light = _TYPE_TAGS.get(kind, (_KIND_LABELS.get(kind, kind.upper()),) + _OTHER_TAG)
+        tag = QLabel(label)
+        tag.setAlignment(Qt.AlignCenter)
+        tag.setFixedWidth(self.fontMetrics().horizontalAdvance("FreeCAD") + 12)
+        tag.setStyleSheet(f"background: {bg}; color: {fg_dark if theme.is_dark() else fg_light};"
+                          f" border-radius: 3px; padding: 1px 4px; font-size: 11px; font-weight: 600;")
+        tag.setToolTip(_type_info(kind))
+        return tag
+
+    def _zip_owner_visible(self, i: int) -> bool:
+        actors = getattr(self, "_model_actors", [])
+        return any(a.GetVisibility() for a, o in zip(actors, self._zip_owner) if o == i)
+
+    def _set_zip_owner_visible(self, i: int, on: bool):
+        for a, o in zip(getattr(self, "_model_actors", []), self._zip_owner):
+            if o == i:
+                a.SetVisibility(on)
+        self.plotter.render()
+
     def _fill_zip_box(self):
-        """The list of 3D files in the ZIP, with their type, Show all and a short guide."""
+        """The 3D files in the ZIP: one list to pick a file, or (Show all) to tick which models
+        are shown. Below it a small legend of the types and what was left out."""
         c = self.zip
         self._clear_layout(self.zip_layout)
+        self._zip_checks: dict[int, QCheckBox] = {}
         if c is None or len(c.entries) < 2:
             self.zip_box.hide()
             return
-        self.zip_box.setTitle(tr("In this ZIP ({n})").format(n=len(c.entries)))
         showing_all = self.current_kind == "zip"
+        if showing_all:
+            self.objects_box.hide()                     # the list below has the checkboxes
+        self.zip_box.setTitle(tr("In this ZIP ({n})").format(n=len(c.entries)))
+        self.zip_layout.setSpacing(8)
         if len(c.arrangeable) >= 2:
             b = QPushButton(tr("Show one at a time") if showing_all else tr("Show all side by side"))
             b.setToolTip(tr("Place all models next to each other (G-code, STEP and FreeCAD files "
@@ -863,38 +916,38 @@ class MainWindow(QMainWindow):
 
         lst = _RowList()
         lst.setObjectName("zipList")
-        lst.setSelectionMode(QAbstractItemView.SingleSelection)
+        lst.setSelectionMode(QAbstractItemView.NoSelection if showing_all else QAbstractItemView.SingleSelection)
         lst.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         lst.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        dark = theme.is_dark()
-        row_h = self.fontMetrics().height() + 14
+        row_h = self.fontMetrics().height() + 16
         for i, e in enumerate(c.entries):
-            label, bg, fg_dark, fg_light = _TYPE_TAGS.get(e.kind, (_KIND_LABELS.get(e.kind, e.kind.upper()),)
-                                                         + _OTHER_TAG)
             w = QWidget()
             h = QHBoxLayout(w)
-            h.setContentsMargins(4, 0, 6, 0)
-            h.setSpacing(6)
-            tag = QLabel(label)
-            tag.setAlignment(Qt.AlignCenter)
-            tag.setMinimumWidth(self.fontMetrics().horizontalAdvance("FreeCAD") + 8)
-            tag.setStyleSheet(f"background: {bg}; color: {fg_dark if dark else fg_light}; border-radius: 3px;"
-                              f" padding: 0px 4px; font-size: 11px; font-weight: 600;")
-            tag.setToolTip(_type_info(e.kind))
-            name = QLabel(e.name)
+            h.setContentsMargins(6, 0, 8, 0)
+            h.setSpacing(8)
+            arranged = showing_all and i in self._zip_owner
+            if showing_all:
+                cb = QCheckBox()
+                if arranged:
+                    cb.setChecked(self._zip_owner_visible(i))
+                    cb.toggled.connect(lambda on, k=i: self._set_zip_owner_visible(k, on))
+                    self._zip_checks[i] = cb
+                else:                                   # G-code, STEP, FreeCAD: not on this plate
+                    cb.setEnabled(False)
+                    cb.setToolTip(tr("Opens on its own: click the name"))
+                h.addWidget(cb)
+            h.addWidget(self._type_tag(e.kind))
+            name = _ElidedLabel(e.name)
             name.setToolTip(e.member)
-            # A long name gives way (cut at the end; the tooltip has it in full); the size never does.
-            name.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
-            name.setMinimumWidth(0)
+            if showing_all and not arranged:
+                name.setObjectName("muted")
+            h.addWidget(name, 1)
             size = QLabel(_size_text(e.size))
             size.setObjectName("muted")
             size.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
-            h.addWidget(tag)
-            h.addWidget(name, 1)
             h.addWidget(size)
             item = QListWidgetItem()
             item.setSizeHint(QSize(0, row_h))
-            item.setToolTip(_type_info(e.kind))
             lst.addItem(item)
             lst.setItemWidget(item, w)
         if not showing_all and 0 <= self._zip_index < len(c.entries):
@@ -903,21 +956,41 @@ class MainWindow(QMainWindow):
         lst.itemClicked.connect(lambda item, l=lst: self._zip_row_clicked(l.row(item)))
         self.zip_layout.addWidget(lst)
 
-        # What the types mean (only the ones in this ZIP), what was left out, and the keys.
-        kinds = list(dict.fromkeys(e.kind for e in c.entries))
-        lines = [_type_info(k) for k in kinds]
+        # Legend: each type in this ZIP with its label and one line of explanation.
+        legend = QWidget()
+        g = QGridLayout(legend)
+        g.setContentsMargins(0, 4, 0, 0)
+        g.setHorizontalSpacing(8)
+        g.setVerticalSpacing(4)
+        for r, k in enumerate(dict.fromkeys(e.kind for e in c.entries)):
+            g.addWidget(self._type_tag(k), r, 0, Qt.AlignTop)
+            text = _type_info(k).split(":", 1)[-1].strip()
+            t = QLabel(text)
+            t.setObjectName("muted")
+            t.setWordWrap(True)
+            g.addWidget(t, r, 1)
+        g.setColumnStretch(1, 1)
+        self.zip_layout.addWidget(legend)
+
+        notes = []
         if c.skipped:
-            lines.append(tr("{n} other files skipped (pictures, documents, links).").format(n=c.skipped))
-        if not showing_all:
-            lines.append(tr("Tip: ↑ / ↓ keys move through the list"))
-        guide = QLabel("<br>".join(lines))
-        guide.setObjectName("muted")
-        guide.setWordWrap(True)
-        self.zip_layout.addWidget(guide)
+            notes.append(tr("{n} other files skipped (pictures, documents, links).").format(n=c.skipped))
+        if showing_all:
+            notes.append(tr("Untick a model to hide it; click a G-code to open it."))
+        else:
+            notes.append(tr("Tip: ↑ / ↓ keys move through the list"))
+        note = QLabel("<br>".join(notes))
+        note.setObjectName("muted")
+        note.setWordWrap(True)
+        note.setStyleSheet("font-size: 11px;")
+        self.zip_layout.addWidget(note)
         self.zip_box.show()
 
     def _zip_row_clicked(self, row: int):
-        if row != self._zip_index or self.current_kind == "zip":
+        if self.current_kind == "zip" and row in self._zip_checks:     # Show all: tick / untick
+            cb = self._zip_checks[row]
+            cb.setChecked(not cb.isChecked())
+        elif row != self._zip_index or self.current_kind == "zip":
             self._open_zip_entry(row)
 
     # ============================================================ loading
@@ -1026,7 +1099,7 @@ class MainWindow(QMainWindow):
         self.scene.clear()
         self.view_stack.setCurrentIndex(0)
         self._reset_side_panel()
-        self.name_label.setText(self._display_name())
+        self.name_label.setText(_wrappable(self._display_name()))
 
         if isinstance(data, GcodeData):
             self.model = None
@@ -1227,7 +1300,7 @@ class MainWindow(QMainWindow):
         self.model = None
         self.scene.clear()
         self._reset_side_panel()
-        self.name_label.setText(self._display_name())
+        self.name_label.setText(_wrappable(self._display_name()))
         self._show_gcode(g)
         self._fill_zip_box()
         self.scene.set_bed_visible(self.act_bed.isChecked())
