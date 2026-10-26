@@ -11,13 +11,14 @@ import numpy as np
 from PySide6.QtCore import QEvent, QObject, QSize, Qt, QTimer, QUrl, Signal
 from PySide6.QtGui import QAction, QActionGroup, QColor, QDesktopServices, QGuiApplication, QIcon, QKeySequence, QPixmap, QShortcut
 from PySide6.QtWidgets import (
-    QApplication, QCheckBox, QFileDialog, QFormLayout, QGroupBox, QHBoxLayout, QLabel,
-    QMainWindow, QMenu, QMessageBox, QProgressBar, QPushButton, QScrollArea,
+    QAbstractItemView, QApplication, QCheckBox, QFileDialog, QFormLayout, QGroupBox, QHBoxLayout, QLabel,
+    QListWidget, QListWidgetItem, QMainWindow, QMenu, QMessageBox, QProgressBar, QPushButton, QScrollArea,
     QSizePolicy, QSlider, QSpinBox, QSplitter, QStackedWidget, QToolBar,
     QToolButton, QVBoxLayout, QWidget,
 )
 
 from .. import APP_NAME, __version__
+from .. import archive as za
 from .. import freecad as fc
 from .. import slicer as sl
 from .. import gpu
@@ -48,13 +49,14 @@ def resource(name: str) -> str:
 def file_filter() -> str:
     return ";;".join([
         tr("3D files") + " (*.stl *.3mf *.obj *.ply *.off *.glb *.gltf *.step *.stp *.STEP *.STP "
-                         "*.gcode *.gco *.g *.FCStd *.fcstd)",
+                         "*.gcode *.gco *.g *.FCStd *.fcstd *.zip)",
         tr("STL models") + " (*.stl)",
         tr("3MF projects") + " (*.3mf)",
         tr("Other 3D models") + " (*.obj *.ply *.off *.glb *.gltf)",
         tr("G-code") + " (*.gcode *.gco *.g)",
         tr("FreeCAD documents") + " (*.FCStd *.fcstd)",
         tr("STEP CAD files") + " (*.step *.stp *.STEP *.STP)",
+        tr("ZIP files with 3D models") + " (*.zip)",
         tr("All files") + " (*)",
     ])
 
@@ -63,6 +65,39 @@ def _swatch(color: str, size: int = 12) -> QIcon:
     pm = QPixmap(size, size)
     pm.fill(QColor(color))
     return QIcon(pm)
+
+
+# The coloured type labels in the ZIP list: (label, background, text on dark, text on light)
+_TYPE_TAGS = {
+    "stl": ("STL", "rgba(47,164,160,0.22)", "#6fd6d1", "#17706c"),
+    "3mf": ("3MF", "rgba(127,119,221,0.24)", "#b9b3f2", "#4a41a8"),
+    "gcode": ("G-code", "rgba(232,163,61,0.24)", "#f2c27e", "#8a5608"),
+    "step": ("STEP", "rgba(55,138,221,0.22)", "#9cc6f2", "#185fa5"),
+    "freecad": ("FreeCAD", "rgba(55,138,221,0.22)", "#9cc6f2", "#185fa5"),
+}
+_OTHER_TAG = ("rgba(136,135,128,0.25)", "#c9c8c0", "#4a4944")
+_KIND_LABELS = {"obj": "OBJ", "ply": "PLY", "off": "OFF", "gltf": "glTF"}
+
+
+def _type_info(kind: str) -> str:
+    """One line that says what a file type is (ZIP list), for people new to 3D printing."""
+    if kind == "stl":
+        return tr("STL: one model shape")
+    if kind == "3mf":
+        return tr("3MF: project with objects, colours and settings")
+    if kind == "gcode":
+        return tr("G-code: already sliced, ready to print")
+    if kind == "step":
+        return tr("STEP: CAD model (shown with the help of FreeCAD)")
+    if kind == "freecad":
+        return tr("FreeCAD: CAD document")
+    return tr("{kind}: 3D model").format(kind=_KIND_LABELS.get(kind, kind.upper()))
+
+
+def _size_text(size: int) -> str:
+    if size >= 1024 * 1024:
+        return tr("{n} MB").format(n=num(size / (1024 * 1024), 1))
+    return tr("{n} KB").format(n=num(max(1, round(size / 1024)), 0))
 
 
 def _plate_name(member: str) -> str:
@@ -81,6 +116,16 @@ class _LoadSignals(QObject):
 class _ExportSignals(QObject):
     done = Signal(str, object)      # path, list of MeshPart
     failed = Signal(str, str)       # path, error
+
+
+class _RowList(QListWidget):
+    """A list of row widgets that follow the list's width. (A plain QListWidget keeps a row
+    widget at its first width: when the panel's scroll bar appeared, the rows stayed 14 px
+    too wide and the file sizes at their right end were cut off.)"""
+
+    def resizeEvent(self, e):
+        super().resizeEvent(e)
+        QTimer.singleShot(0, self.doItemsLayout)
 
 
 class _KeySwallower(QObject):
@@ -104,6 +149,14 @@ class MainWindow(QMainWindow):
         self._embedded_member = ""
         self._file_size_mb = 0.0
         self._load_token = 0
+        # ZIP files: what is inside, which entry is shown (-1 = Show all), and for Show all
+        # which entry each part came from.
+        self.zip: Optional[za.ZipContents] = None
+        self._zip_index = 0
+        self._zip_last_single = 0
+        self._zip_wanted = 0                # the entry asked for (a quick second ↓ continues from it)
+        self._zip_owner: list[int] = []
+        self._pending_zip: tuple = (None, 0)
 
         self.setWindowTitle(APP_NAME)
         self.setObjectName("mainWindow")
@@ -427,6 +480,11 @@ class MainWindow(QMainWindow):
         self.thumb_label.setObjectName("thumbnail")
         L.addWidget(self.thumb_label)
 
+        # ZIP files: the 3D files inside, to pick one or show them all.
+        self.zip_box = QGroupBox()
+        self.zip_layout = QVBoxLayout(self.zip_box)
+        L.addWidget(self.zip_box)
+
         self.details_box = QGroupBox()
         self.details_form = QFormLayout(self.details_box)
         L.addWidget(self.details_box)
@@ -507,8 +565,9 @@ class MainWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+T"), self, activated=self.next_theme)
         for act, key, _ in self.view_actions:
             QShortcut(QKeySequence(key), self, activated=act.trigger)
-        QShortcut(QKeySequence(Qt.Key_Up), self, activated=lambda: self.step_layer(1))
-        QShortcut(QKeySequence(Qt.Key_Down), self, activated=lambda: self.step_layer(-1))
+        # Up/Down: layers of a G-code; in a ZIP list showing a model, the previous/next file.
+        QShortcut(QKeySequence(Qt.Key_Up), self, activated=lambda: self._arrow_key(1))
+        QShortcut(QKeySequence(Qt.Key_Down), self, activated=lambda: self._arrow_key(-1))
         QShortcut(QKeySequence(Qt.Key_PageUp), self, activated=lambda: self.step_layer(10))
         QShortcut(QKeySequence(Qt.Key_PageDown), self, activated=lambda: self.step_layer(-10))
         QShortcut(QKeySequence(Qt.Key_Home), self, activated=lambda: self.set_layer(0))
@@ -585,11 +644,12 @@ class MainWindow(QMainWindow):
         self.thumb_label.hide()
         while self.details_form.rowCount():
             self.details_form.removeRow(0)
+        self._clear_layout(self.zip_layout)
         self._clear_layout(self.objects_layout)
         self._clear_layout(self.embedded_layout)
         self._clear_layout(self.features_layout)
         self.feature_checks = {}
-        for box in (self.objects_box, self.embedded_box, self.layers_box, self.features_box):
+        for box in (self.zip_box, self.objects_box, self.embedded_box, self.layers_box, self.features_box):
             box.hide()
 
     def _refresh_panel(self):
@@ -601,7 +661,7 @@ class MainWindow(QMainWindow):
             layer = self.layer_slider.value()
             only = self.only_layer_cb.isChecked()
             self._reset_side_panel()
-            self.name_label.setText(os.path.basename(self.current_path or ""))
+            self.name_label.setText(self._display_name())
             self._fill_gcode_panel(self.gcode)
             for k, on in checks.items():
                 if k in self.feature_checks:
@@ -614,10 +674,11 @@ class MainWindow(QMainWindow):
             self._schedule_gcode()
         elif self.model is not None:
             self._reset_side_panel()
-            self.name_label.setText(os.path.basename(self.current_path or ""))
+            self.name_label.setText(self._display_name())
             self._fill_model_panel(self.model)
             if self.view_stack.currentIndex() == 1:
                 self._show_freecad_preview(self.model)
+        self._fill_zip_box()
 
     def _add_detail(self, key: str, value: str):
         k = QLabel(key)
@@ -642,13 +703,226 @@ class MainWindow(QMainWindow):
         if self.showing_embedded:
             return tr("Sliced toolpaths · {plate}").format(plate=_plate_name(self._embedded_member))
         names = {"stl": "STL", "3mf": "3MF", "obj": "OBJ", "ply": "PLY", "off": "OFF", "gltf": "glTF",
-                 "gcode": tr("G-code"), "freecad": "FreeCAD", "step": "STEP"}
+                 "gcode": tr("G-code"), "freecad": "FreeCAD", "step": "STEP", "zip": "ZIP"}
         return tr("{kind} · {size} MB").format(kind=names.get(self.current_kind, self.current_kind.upper()),
                                                size=num(self._file_size_mb, 1))
 
+    # ================================================================ ZIP
+    def _display_name(self) -> str:
+        """Name of what is shown: the ZIP (Show all), the file inside the ZIP, or the file."""
+        if self.zip and self.current_kind == "zip":
+            return os.path.basename(self.zip.path)
+        if self.zip and 0 <= self._zip_index < len(self.zip.entries):
+            return self.zip.entries[self._zip_index].name
+        return os.path.basename(self.current_path or "")
+
+    def _user_folder(self) -> str:
+        """Where the user's file is (for dialogs): the ZIP's folder, never the unpack cache."""
+        if self.zip:
+            return os.path.dirname(self.zip.path)
+        return os.path.dirname(self.current_path or "") or os.path.expanduser("~")
+
+    def _zip_of(self, path: str) -> tuple:
+        """(ZIP, index) when `path` is a file unpacked from the open ZIP (e.g. opened again
+        after viewing its sliced plates), otherwise (None, 0)."""
+        if self.zip:
+            for i, e in enumerate(self.zip.entries):
+                if os.path.normcase(e.path) == os.path.normcase(path):
+                    return self.zip, i
+        return None, 0
+
+    def _add_zip_detail(self):
+        if self.zip and self.current_kind != "zip":
+            self._add_detail(tr("From ZIP"), os.path.basename(self.zip.path))
+
+    def _load_archive(self, path: str):
+        self._load_token += 1
+        token = self._load_token
+        self.statusBar().showMessage(tr("Opening {name}…").format(name=os.path.basename(path)))
+        self.progress.setValue(0)
+        self.progress.show()
+        self.slicer_btn.setEnabled(False)
+
+        def work():
+            try:
+                c = za.open_archive(path, lambda f: self._signals.progress.emit(token, f))
+                self._signals.done.emit(token, ("__zip__", c))
+            except za.ArchiveError as e:
+                self._signals.failed.emit(token, str(e))
+            except Exception as e:  # noqa: BLE001 - show any error to the user
+                self._signals.failed.emit(token, f"{type(e).__name__}: {e}")
+
+        threading.Thread(target=work, daemon=True).start()
+
+    def _on_archive_ready(self, contents: za.ZipContents, sync: bool = False):
+        self.progress.hide()
+        self.slicer_btn.setEnabled(True)
+        self.statusBar().clearMessage()
+        if not contents.entries:
+            QMessageBox.information(
+                self, tr("No 3D files in this ZIP"),
+                tr("This ZIP contains no files PrintView3D can open "
+                   "(STL, 3MF, OBJ, PLY, OFF, glTF, STEP, FreeCAD or G-code)."))
+            return
+        # One 3D file: it simply opens, like the file itself. More: the first one, with the list.
+        self._open_zip_entry(0, contents, sync)
+
+    def _open_zip_entry(self, i: int, contents: Optional[za.ZipContents] = None, sync: bool = False):
+        c = contents or self.zip
+        if c is None or not 0 <= i < len(c.entries):
+            return
+        self._zip_wanted = i
+        (self.load_sync if sync else self.load)(c.entries[i].path, c, i)
+
+    def zip_show_all(self, sync: bool = False):
+        """Show all models of the ZIP side by side (STL, 3MF, OBJ, PLY, OFF, glTF)."""
+        c = self.zip
+        if c is None or len(c.arrangeable) < 2:
+            return
+        todo = [(i, e) for i, e in enumerate(c.entries) if e.kind in za.ARRANGEABLE]
+        self._load_token += 1
+        token = self._load_token
+
+        def build():
+            models, index = [], []
+            for k, (i, e) in enumerate(todo):
+                m = load_file(e.path, lambda f, k=k: self._signals.progress.emit(token, (k + f) / len(todo)))
+                if m.parts:
+                    models.append((e.name, m))
+                    index.append(i)
+            merged, owner = za.arrange(models)
+            return ("__zipall__", c, (merged, [index[o] for o in owner]))
+
+        if sync:
+            self._on_loaded(token, build())
+            return
+        self.statusBar().showMessage(tr("Placing {n} models side by side…").format(n=len(todo)))
+        self.progress.setValue(0)
+        self.progress.show()
+        self.slicer_btn.setEnabled(False)
+
+        def work():
+            try:
+                self._signals.done.emit(token, build())
+            except Exception as e:  # noqa: BLE001
+                self._signals.failed.emit(token, f"{type(e).__name__}: {e}")
+
+        threading.Thread(target=work, daemon=True).start()
+
+    def _toggle_show_all(self):
+        if self.current_kind == "zip":
+            self._open_zip_entry(self._zip_last_single)
+        else:
+            self.zip_show_all()
+
+    def _arrow_key(self, delta: int):
+        """Up/Down: the previous/next file of a ZIP while a model is shown; otherwise layers."""
+        c = self.zip
+        if c and len(c.entries) > 1 and self._zip_index >= 0 and self.gcode is None:
+            i = self._zip_wanted - delta                # Up = the file above in the list
+            if 0 <= i < len(c.entries):
+                self._open_zip_entry(i)
+            return
+        self.step_layer(delta)
+
+    def _show_all_files(self) -> list:
+        """Show all: the files of the ticked models (all of them when none is ticked).
+        Formats not every slicer reads (PLY, OFF, glTF) are sent as STL."""
+        c, m = self.zip, self.model
+        if c is None or m is None:
+            return []
+        actors = getattr(self, "_model_actors", [])
+        owners = [o for o, a in zip(self._zip_owner, actors) if a.GetVisibility()] or list(self._zip_owner)
+        files = []
+        for i in dict.fromkeys(owners):                 # in list order, each once
+            e = c.entries[i]
+            if e.kind in za.SENDABLE:
+                files.append(e.path)
+                continue
+            parts = [p for p, o in zip(m.parts, self._zip_owner) if o == i]
+            base = os.path.splitext(os.path.basename(e.path))[0]
+            files.append(fc.export_stl(parts, os.path.join(os.path.dirname(fc.cache_dir()), "to-slicer",
+                                                           base + ".stl")))
+        return files
+
+    def _fill_zip_box(self):
+        """The list of 3D files in the ZIP, with their type, Show all and a short guide."""
+        c = self.zip
+        self._clear_layout(self.zip_layout)
+        if c is None or len(c.entries) < 2:
+            self.zip_box.hide()
+            return
+        self.zip_box.setTitle(tr("In this ZIP ({n})").format(n=len(c.entries)))
+        showing_all = self.current_kind == "zip"
+        if len(c.arrangeable) >= 2:
+            b = QPushButton(tr("Show one at a time") if showing_all else tr("Show all side by side"))
+            b.setToolTip(tr("Place all models next to each other (G-code, STEP and FreeCAD files "
+                            "are opened one at a time)"))
+            b.clicked.connect(self._toggle_show_all)
+            self.zip_layout.addWidget(b)
+
+        lst = _RowList()
+        lst.setObjectName("zipList")
+        lst.setSelectionMode(QAbstractItemView.SingleSelection)
+        lst.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        lst.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        dark = theme.is_dark()
+        row_h = self.fontMetrics().height() + 14
+        for i, e in enumerate(c.entries):
+            label, bg, fg_dark, fg_light = _TYPE_TAGS.get(e.kind, (_KIND_LABELS.get(e.kind, e.kind.upper()),)
+                                                         + _OTHER_TAG)
+            w = QWidget()
+            h = QHBoxLayout(w)
+            h.setContentsMargins(4, 0, 6, 0)
+            h.setSpacing(6)
+            tag = QLabel(label)
+            tag.setAlignment(Qt.AlignCenter)
+            tag.setMinimumWidth(self.fontMetrics().horizontalAdvance("FreeCAD") + 8)
+            tag.setStyleSheet(f"background: {bg}; color: {fg_dark if dark else fg_light}; border-radius: 3px;"
+                              f" padding: 0px 4px; font-size: 11px; font-weight: 600;")
+            tag.setToolTip(_type_info(e.kind))
+            name = QLabel(e.name)
+            name.setToolTip(e.member)
+            # A long name gives way (cut at the end; the tooltip has it in full); the size never does.
+            name.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
+            name.setMinimumWidth(0)
+            size = QLabel(_size_text(e.size))
+            size.setObjectName("muted")
+            size.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
+            h.addWidget(tag)
+            h.addWidget(name, 1)
+            h.addWidget(size)
+            item = QListWidgetItem()
+            item.setSizeHint(QSize(0, row_h))
+            item.setToolTip(_type_info(e.kind))
+            lst.addItem(item)
+            lst.setItemWidget(item, w)
+        if not showing_all and 0 <= self._zip_index < len(c.entries):
+            lst.setCurrentRow(self._zip_index)
+        lst.setFixedHeight(row_h * min(len(c.entries), 10) + 2 * lst.frameWidth() + 2)
+        lst.itemClicked.connect(lambda item, l=lst: self._zip_row_clicked(l.row(item)))
+        self.zip_layout.addWidget(lst)
+
+        # What the types mean (only the ones in this ZIP), what was left out, and the keys.
+        kinds = list(dict.fromkeys(e.kind for e in c.entries))
+        lines = [_type_info(k) for k in kinds]
+        if c.skipped:
+            lines.append(tr("{n} other files skipped (pictures, documents, links).").format(n=c.skipped))
+        if not showing_all:
+            lines.append(tr("Tip: ↑ / ↓ keys move through the list"))
+        guide = QLabel("<br>".join(lines))
+        guide.setObjectName("muted")
+        guide.setWordWrap(True)
+        self.zip_layout.addWidget(guide)
+        self.zip_box.show()
+
+    def _zip_row_clicked(self, row: int):
+        if row != self._zip_index or self.current_kind == "zip":
+            self._open_zip_entry(row)
+
     # ============================================================ loading
     def open_dialog(self):
-        start = os.path.dirname(self.current_path) if self.current_path else ""
+        start = self._user_folder() if self.current_path else ""
         if not start:
             recent = self.settings.get("recent_files", [])
             start = os.path.dirname(recent[0]) if recent else os.path.expanduser("~")
@@ -656,17 +930,22 @@ class MainWindow(QMainWindow):
         if path:
             self.load(path)
 
-    def load(self, path: str):
+    def load(self, path: str, _zip: Optional[za.ZipContents] = None, _zip_index: int = 0):
         path = os.path.abspath(path)
         if not os.path.isfile(path):
             QMessageBox.warning(self, tr("File not found"),
                                 tr("The file no longer exists:") + f"\n{path}")
             return
+        if za.is_archive(path):
+            self._load_archive(path)
+            return
         kind = file_kind(path)
         if not kind:
             QMessageBox.warning(self, tr("Unsupported file"),
-                                tr("PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code and FreeCAD files."))
+                                tr("PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code and "
+                                   "FreeCAD files, and ZIP files that contain them."))
             return
+        self._pending_zip = (_zip, _zip_index) if _zip is not None else self._zip_of(path)
         self._load_token += 1
         token = self._load_token
         self.statusBar().showMessage(tr("Loading {name}…").format(name=os.path.basename(path)))
@@ -684,9 +963,14 @@ class MainWindow(QMainWindow):
 
         threading.Thread(target=work, daemon=True).start()
 
-    def load_sync(self, path: str):
+    def load_sync(self, path: str, _zip: Optional[za.ZipContents] = None, _zip_index: int = 0):
         """Load without a worker thread (used for --screenshot)."""
         path = os.path.abspath(path)
+        if za.is_archive(path):
+            self._load_token += 1
+            self._on_archive_ready(za.open_archive(path), sync=True)
+            return
+        self._pending_zip = (_zip, _zip_index) if _zip is not None else self._zip_of(path)
         self._load_token += 1
         self._on_loaded(self._load_token, (path, file_kind(path),
                                            load_file(path, None, self.settings.get("freecad_path", ""))))
@@ -709,22 +993,40 @@ class MainWindow(QMainWindow):
         if payload[0] == "__embedded__":
             self._on_embedded_loaded(token, payload)
             return
-        path, kind, data = payload
+        if payload[0] == "__zip__":
+            self._on_archive_ready(payload[1])
+            return
+        if payload[0] == "__zipall__":                  # Show all: the arranged models of a ZIP
+            contents, data, owner = payload[1], payload[2][0], payload[2][1]
+            self._pending_zip = (contents, -1)
+            self._zip_owner = owner
+            path, kind = contents.path, "zip"
+        else:
+            path, kind, data = payload
+        self.zip, self._zip_index = self._pending_zip
+        if self.zip is None:
+            self._zip_owner = []
+        elif self._zip_index >= 0:
+            self._zip_last_single = self._zip_index
+        self._zip_wanted = max(0, self._zip_index)
         self.progress.hide()
         self.slicer_btn.setEnabled(True)
         self.current_path = path
         self.current_kind = kind
         self._file_size_mb = os.path.getsize(path) / (1024 * 1024)
         self.showing_embedded = False
-        self.settings.add_recent(path)
+        self.settings.add_recent(self.zip.path if self.zip else path)
         self._refresh_recent_menu()
-        self.setWindowTitle(f"{os.path.basename(path)} — {APP_NAME}")
+        title = self._display_name()
+        if self.zip and kind != "zip":
+            title += f" — {os.path.basename(self.zip.path)}"
+        self.setWindowTitle(f"{title} — {APP_NAME}")
         self.stack.setCurrentIndex(1)
 
         self.scene.clear()
         self.view_stack.setCurrentIndex(0)
         self._reset_side_panel()
-        self.name_label.setText(os.path.basename(path))
+        self.name_label.setText(self._display_name())
 
         if isinstance(data, GcodeData):
             self.model = None
@@ -738,7 +1040,8 @@ class MainWindow(QMainWindow):
         self._update_slicer_button()
         self.act_export_stl.setVisible(kind == "3mf")
         self.act_export_stl.setEnabled(True)
-        msg = tr("Opened {path}").format(path=path)
+        self._fill_zip_box()
+        msg = tr("Opened {path}").format(path=self.zip.path if self.zip else path)
         if kind in ("freecad", "step") and not getattr(data, "parts", None):
             msg = self._freecad_status_text(data)
         self.statusBar().showMessage(msg, 10000)
@@ -752,6 +1055,7 @@ class MainWindow(QMainWindow):
 
     def _fill_model_panel(self, m: ModelData):
         self.kind_label.setText(self._kind_text())
+        self._add_zip_detail()
         if m.freecad is not None and not m.parts:
             self.thumb_label.hide()                 # shown large on the preview page
         else:
@@ -776,6 +1080,10 @@ class MainWindow(QMainWindow):
         if len(m.parts) > 1:
             for i, (part, actor) in enumerate(zip(m.parts, actors)):
                 cb = QCheckBox(tr("{name}  ({n} triangles)").format(name=part.name, n=count(part.n_triangles)))
+                # A long name is cut at the panel's edge (full name in the tooltip) instead of
+                # making the whole panel wider than the window.
+                cb.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
+                cb.setToolTip(cb.text())
                 cb.setIcon(_swatch(Scene.part_color(part, i, len(m.parts))))
                 cb.setChecked(bool(actor.GetVisibility()))
                 cb.toggled.connect(lambda on, a=actor: (a.SetVisibility(on), self.plotter.render()))
@@ -919,8 +1227,9 @@ class MainWindow(QMainWindow):
         self.model = None
         self.scene.clear()
         self._reset_side_panel()
-        self.name_label.setText(os.path.basename(self.current_path or ""))
+        self.name_label.setText(self._display_name())
         self._show_gcode(g)
+        self._fill_zip_box()
         self.scene.set_bed_visible(self.act_bed.isChecked())
         self.scene.set_view("iso")
         self.statusBar().clearMessage()
@@ -948,6 +1257,7 @@ class MainWindow(QMainWindow):
 
     def _fill_gcode_panel(self, g: GcodeData):
         self.kind_label.setText(self._kind_text())
+        self._add_zip_detail()
         self._set_thumbnail(g.thumbnail)
 
         b = g.extrusion_bounds
@@ -1101,12 +1411,23 @@ class MainWindow(QMainWindow):
             if sid == default_id:
                 label += "   " + tr("(default)")
             self.slicer_menu.addAction(label, lambda s_id=sid: self.open_in_slicer(s_id))
+        if self.zip and len(self.zip.sendable) >= 2 and entries:
+            self.slicer_menu.addSeparator()
+            files = [e.path for e in self.zip.sendable]
+            self.slicer_menu.addAction(tr("Send all models in the ZIP ({n})").format(n=len(files)),
+                                       lambda f=files: self.open_in_slicer(files=f))
         self.slicer_menu.addSeparator()
         self.slicer_menu.addAction(tr("Choose default slicer…"), self.open_settings)
 
-    def open_in_slicer(self, slicer_id: Optional[str] = None):
+    def open_in_slicer(self, slicer_id: Optional[str] = None, files: Optional[list] = None):
         file_to_send = self.current_path
-        if self.current_kind == "freecad" and self.current_path:
+        if files is None and self.current_kind == "zip":       # Show all: the ticked models
+            files = self._show_all_files()
+            if not files:
+                return
+        if files is not None:
+            file_to_send = files if len(files) > 1 else files[0]
+        elif self.current_kind == "freecad" and self.current_path:
             if slicer_id is None:                  # main button / Ctrl+P: FreeCAD itself
                 self.open_in_freecad()
                 return
@@ -1159,7 +1480,10 @@ class MainWindow(QMainWindow):
         except OSError as e:
             QMessageBox.critical(self, tr("Could not start {slicer}").format(slicer=name), str(e))
             return
-        what = os.path.basename(file_to_send) if file_to_send else name
+        if isinstance(file_to_send, list):
+            what = tr("{n} models").format(n=len(file_to_send))
+        else:
+            what = os.path.basename(file_to_send) if file_to_send else name
         self.statusBar().showMessage(tr("Opening {file} in {slicer}…").format(file=what, slicer=name), 6000)
 
     # ------------------------------------------------------------ export STL
@@ -1208,7 +1532,7 @@ class MainWindow(QMainWindow):
             self._save_combined_stl(chosen)
 
     def _save_combined_stl(self, parts):
-        folder = os.path.dirname(self.current_path or "") or os.path.expanduser("~")
+        folder = self._user_folder()
         base = os.path.splitext(os.path.basename(self.current_path or "model"))[0]
         if len(parts) == 1 and self.model is not None and len(self.model.parts) > 1:
             base = os.path.splitext(stl_file_names([parts[0].name])[0])[0]
@@ -1226,7 +1550,7 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage(tr("Saved {path}").format(path=out), 8000)
 
     def _save_stl_per_object(self, parts):
-        start = os.path.dirname(self.current_path or "") or os.path.expanduser("~")
+        start = self._user_folder()
         folder = QFileDialog.getExistingDirectory(self, tr("Choose a folder for the STL files"), start)
         if not folder:
             return
@@ -1255,7 +1579,7 @@ class MainWindow(QMainWindow):
         if self.stack.currentIndex() != 1:
             return
         base = os.path.splitext(os.path.basename(self.current_path or "view"))[0]
-        start = os.path.join(os.path.dirname(self.current_path or os.path.expanduser("~")), base + ".png")
+        start = os.path.join(self._user_folder(), base + ".png")
         path, _ = QFileDialog.getSaveFileName(self, tr("Save screenshot"), start,
                                               tr("PNG image") + " (*.png)")
         if path:
@@ -1401,7 +1725,7 @@ class MainWindow(QMainWindow):
     def dragEnterEvent(self, e):
         if e.mimeData().hasUrls():
             for u in e.mimeData().urls():
-                if u.toLocalFile().lower().endswith(SUPPORTED_EXTENSIONS):
+                if u.toLocalFile().lower().endswith(SUPPORTED_EXTENSIONS + za.ARCHIVE_EXTENSIONS):
                     e.acceptProposedAction()
                     return
         e.ignore()
@@ -1409,7 +1733,7 @@ class MainWindow(QMainWindow):
     def dropEvent(self, e):
         for u in e.mimeData().urls():
             p = u.toLocalFile()
-            if p.lower().endswith(SUPPORTED_EXTENSIONS):
+            if p.lower().endswith(SUPPORTED_EXTENSIONS + za.ARCHIVE_EXTENSIONS):
                 self.load(p)
                 return
 
@@ -1434,7 +1758,7 @@ class MainWindow(QMainWindow):
         """Start PrintView3D again with the open file, then close this one."""
         from PySide6.QtCore import QProcess
         from .. import restart
-        program, args = restart.command(self.current_path)
+        program, args = restart.command(self.zip.path if self.zip else self.current_path)
         if self.file_server is not None:            # so the new start can take over
             self.file_server.close()
         if not QProcess.startDetached(program, args):

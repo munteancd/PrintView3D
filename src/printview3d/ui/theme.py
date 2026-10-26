@@ -226,6 +226,10 @@ def apply_theme(app, choice: str = "auto", mica: bool = False) -> str:
             width: 14px; margin: -6px 0; border-radius: 8px; }}
         QStatusBar {{ background: {t['bar']}; color: {t['group_title']}; }}
         QListWidget {{ border: 1px solid {t['border']}; border-radius: 6px; }}
+        QListWidget#zipList {{ background: {t['base']}; outline: none; }}
+        QListWidget#zipList::item {{ border-radius: 4px; }}
+        QListWidget#zipList::item:hover {{ background: {t['tool_hover']}; }}
+        QListWidget#zipList::item:selected {{ background: {t['tool_checked']}; border-left: 3px solid {ACCENT}; }}
         QListWidget#settingsNav {{ background: {t['bar']}; border-radius: 8px; padding: 6px; outline: none; }}
         QListWidget#settingsNav::item {{ padding: 0px 6px; border-radius: 6px; color: {t['text']}; }}
         QListWidget#settingsNav::item:hover {{ background: {t['tool_hover']}; }}
