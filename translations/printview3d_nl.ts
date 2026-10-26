@@ -1084,6 +1084,51 @@
         <translation type="unfinished">PrintView3D kon niet vanzelf herstarten. Sluit het en start het opnieuw.</translation>
     </message>
     <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Send to slicer</source>
+        <translation type="unfinished">Naar slicer versturen</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>A 3MF project opens on its own in the slicer, so it cannot be sent together with other models. What do you want to send?</source>
+        <translation type="unfinished">Een 3MF-project opent op zichzelf in de slicer en kan dus niet samen met andere modellen worden verstuurd. Wat wil je versturen?</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>The 3MF project: {name}</source>
+        <translation type="unfinished">Het 3MF-project: {name}</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>With its plates, colours and print settings.</source>
+        <translation type="unfinished">Met de platen, kleuren en printinstellingen.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>The other models: {n}</source>
+        <translation type="unfinished">De andere modellen: {n}</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Together on one plate; the 3MF project is left out.</source>
+        <translation type="unfinished">Samen op één plaat; het 3MF-project blijft weg.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Everything as STL: {n} models</source>
+        <translation type="unfinished">Alles als STL: {n} modellen</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>The project&apos;s objects become a plain STL, so all models go on one plate. Its plates, colours and print settings are not included.</source>
+        <translation type="unfinished">De objecten van het project worden een gewone STL, zodat alle modellen op één plaat komen. Platen, kleuren en printinstellingen gaan niet mee.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Send</source>
+        <translation type="unfinished">Versturen</translation>
+    </message>
+    <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Language</source>
         <translation type="unfinished">Taal</translation>

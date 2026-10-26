@@ -1084,6 +1084,51 @@
         <translation type="unfinished">تعذّر على PrintView3D إعادة التشغيل تلقائيًا. أغلقه ثم شغّله من جديد.</translation>
     </message>
     <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Send to slicer</source>
+        <translation>إرسال إلى برنامج التقطيع</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>A 3MF project opens on its own in the slicer, so it cannot be sent together with other models. What do you want to send?</source>
+        <translation>يُفتح مشروع 3MF بمفرده في برنامج التقطيع، لذا لا يمكن إرساله مع نماذج أخرى. ماذا تريد أن ترسل؟</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>The 3MF project: {name}</source>
+        <translation>مشروع 3MF: {name}</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>With its plates, colours and print settings.</source>
+        <translation>مع ألواحه وألوانه وإعدادات الطباعة.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>The other models: {n}</source>
+        <translation>النماذج الأخرى ({n})</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Together on one plate; the 3MF project is left out.</source>
+        <translation>معًا على لوح واحد؛ مع استبعاد مشروع 3MF.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Everything as STL: {n} models</source>
+        <translation>الكل بصيغة STL ({n} نماذج)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>The project&apos;s objects become a plain STL, so all models go on one plate. Its plates, colours and print settings are not included.</source>
+        <translation>تتحول كائنات المشروع إلى ملف STL عادي، فتوضع كل النماذج على لوح واحد. لا تُضمَّن ألواحه وألوانه وإعدادات الطباعة.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Send</source>
+        <translation>إرسال</translation>
+    </message>
+    <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Language</source>
         <translation>اللغة</translation>

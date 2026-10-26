@@ -306,6 +306,10 @@ window); there is no need to unpack it first.
   **Objects** to hide them. G-code, STEP and FreeCAD files are opened one at a time.
 - **Open in slicer** sends the model you are looking at; in Show all, the ticked models. The arrow
   next to the button has **Send all models in the ZIP**.
+- A slicer opens a **3MF as a project on its own**, so it cannot take a 3MF together with other
+  files. When the models to send include a 3MF, PrintView3D asks: the 3MF project (with its
+  plates and settings), the other models on one plate, or **everything as STL** (the project's
+  objects become a plain STL, so all models go on one plate).
 
 The 3D files are unpacked into PrintView3D's own cache folder (slicers need real files); the sizes
 are checked first, so a damaged or malicious ZIP cannot fill your disk. Files from ZIPs opened more

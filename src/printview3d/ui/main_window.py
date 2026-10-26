@@ -11,7 +11,7 @@ import numpy as np
 from PySide6.QtCore import QEvent, QObject, QSize, Qt, QTimer, QUrl, Signal
 from PySide6.QtGui import QAction, QActionGroup, QColor, QDesktopServices, QGuiApplication, QIcon, QKeySequence, QPixmap, QShortcut
 from PySide6.QtWidgets import (
-    QAbstractItemView, QApplication, QCheckBox, QFileDialog, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout, QLabel,
+    QAbstractItemView, QApplication, QCheckBox, QDialog, QFileDialog, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout, QLabel,
     QListWidget, QListWidgetItem, QMainWindow, QMenu, QMessageBox, QProgressBar, QPushButton, QScrollArea,
     QSizePolicy, QSlider, QSpinBox, QSplitter, QStackedWidget, QToolBar,
     QToolButton, QVBoxLayout, QWidget,
@@ -36,6 +36,7 @@ from .. import updates as up
 from .export_stl import ExportStlDialog
 from .scene import Scene
 from .settings_dialog import SettingsDialog
+from . import send_dialog as sd
 
 RESOURCES = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "resources")
 GCODE_META_ORDER = ("Print time", "Filament (g)", "Filament (mm)", "Filament type", "Layer height",
@@ -855,25 +856,51 @@ class MainWindow(QMainWindow):
             return
         self.step_layer(delta)
 
-    def _show_all_files(self) -> list:
-        """Show all: the files of the ticked models (all of them when none is ticked).
-        Formats not every slicer reads (PLY, OFF, glTF) are sent as STL."""
-        c, m = self.zip, self.model
-        if c is None or m is None:
-            return []
+    def _show_all_entries(self) -> list[int]:
+        """Show all: the ZIP entries of the ticked models (all of them when none is ticked)."""
         actors = getattr(self, "_model_actors", [])
         owners = [o for o, a in zip(self._zip_owner, actors) if a.GetVisibility()] or list(self._zip_owner)
+        return list(dict.fromkeys(owners))              # in list order, each once
+
+    def _files_to_send(self, indices: list[int]) -> Optional[list]:
+        """The files a slicer gets for these ZIP entries, or None when the user cancels.
+        A 3MF together with other files needs a choice (see send_dialog). Formats not every
+        slicer reads (PLY, OFF, glTF) are sent as STL."""
+        c = self.zip
+        if c is None or not indices:
+            return None
+        entries = [c.entries[i] for i in indices]
+        kinds = [e.kind for e in entries]
+        as_stl_3mf = False
+        if sd.needs_choice(kinds):
+            dlg = sd.SendChoiceDialog([e.name for e in entries], kinds, self)
+            if dlg.exec() != QDialog.Accepted:
+                return None
+            if dlg.choice == sd.PROJECT:
+                return [entries[dlg.project_index].path]
+            if dlg.choice == sd.MODELS:
+                entries = [e for e in entries if e.kind != "3mf"]
+            else:
+                as_stl_3mf = True
+        out = os.path.join(os.path.dirname(fc.cache_dir()), "to-slicer")
         files = []
-        for i in dict.fromkeys(owners):                 # in list order, each once
-            e = c.entries[i]
-            if e.kind in za.SENDABLE:
-                files.append(e.path)
-                continue
-            parts = [p for p, o in zip(m.parts, self._zip_owner) if o == i]
-            base = os.path.splitext(os.path.basename(e.path))[0]
-            files.append(fc.export_stl(parts, os.path.join(os.path.dirname(fc.cache_dir()), "to-slicer",
-                                                           base + ".stl")))
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+        try:
+            for e in entries:
+                if e.kind in ("stl", "obj") or (e.kind == "3mf" and not as_stl_3mf):
+                    files.append(e.path)
+                elif e.kind == "3mf":                   # printable objects only, as one STL
+                    files.append(fc.export_stl(read_3mf_for_export(e.path), os.path.join(out, sd.stl_name(e.path))))
+                else:                                   # PLY, OFF, glTF
+                    files.append(fc.export_stl(load_file(e.path).parts, os.path.join(out, sd.stl_name(e.path))))
+        finally:
+            QApplication.restoreOverrideCursor()
         return files
+
+    # kept for the tests and older callers: the files Show all sends, without asking
+    def _show_all_files(self) -> list:
+        c = self.zip
+        return [c.entries[i].path for i in self._show_all_entries()] if c else []
 
     def _type_tag(self, kind: str) -> QLabel:
         """The coloured type label (STL, 3MF, G-code, ...) of the ZIP list and its legend."""
@@ -1487,18 +1514,21 @@ class MainWindow(QMainWindow):
             if sid == default_id:
                 label += "   " + tr("(default)")
             self.slicer_menu.addAction(label, lambda s_id=sid: self.open_in_slicer(s_id))
-        if self.zip and len(self.zip.sendable) >= 2 and entries:
+        if self.zip and len(self.zip.arrangeable) >= 2 and entries:
             self.slicer_menu.addSeparator()
-            files = [e.path for e in self.zip.sendable]
-            self.slicer_menu.addAction(tr("Send all models in the ZIP ({n})").format(n=len(files)),
-                                       lambda f=files: self.open_in_slicer(files=f))
+            idx = [i for i, e in enumerate(self.zip.entries) if e.kind in za.ARRANGEABLE]
+            self.slicer_menu.addAction(tr("Send all models in the ZIP ({n})").format(n=len(idx)),
+                                       lambda ix=idx: self.open_in_slicer(entries=ix))
         self.slicer_menu.addSeparator()
         self.slicer_menu.addAction(tr("Choose default slicer…"), self.open_settings)
 
-    def open_in_slicer(self, slicer_id: Optional[str] = None, files: Optional[list] = None):
+    def open_in_slicer(self, slicer_id: Optional[str] = None, files: Optional[list] = None,
+                       entries: Optional[list] = None):
         file_to_send = self.current_path
-        if files is None and self.current_kind == "zip":       # Show all: the ticked models
-            files = self._show_all_files()
+        if files is None and entries is None and self.current_kind == "zip":   # Show all: ticked models
+            entries = self._show_all_entries()
+        if entries is not None:
+            files = self._files_to_send(entries)
             if not files:
                 return
         if files is not None:

@@ -205,3 +205,51 @@ def test_zip_labels_follow_the_theme(tmp_path):
     finally:
         w.close()
         app.processEvents()
+
+
+@pytest.mark.parametrize("choice,expect", [
+    ("project", ["two.3mf"]),
+    ("models", ["cube.stl", "small.stl"]),
+    ("all_as_stl", ["two.stl", "cube.stl", "small.stl"]),
+    ("cancel", None),
+])
+def test_send_3mf_with_other_models_asks_first(tmp_path, monkeypatch, choice, expect):
+    """A slicer opens a 3MF as a project on its own, so a 3MF plus other models needs a choice."""
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication, QDialog
+    app = QApplication.instance() or QApplication([])
+    from printview3d.settings import Settings
+    from printview3d.ui import send_dialog as sd
+    from printview3d.ui.main_window import MainWindow
+    from printview3d.loaders import load_file as lf
+
+    def fake_exec(self):
+        if choice == "cancel":
+            return QDialog.Rejected
+        self.choice = choice
+        self.project_index = 0
+        return QDialog.Accepted
+    monkeypatch.setattr(sd.SendChoiceDialog, "exec", fake_exec)
+
+    data = os.path.join(HERE, "data")
+    stl = open(os.path.join(data, "cube_binary.stl"), "rb").read()
+    kit = make_zip(tmp_path / "kit.zip", {"two.3mf": open(os.path.join(data, "two_parts.3mf"), "rb").read(),
+                                          "cube.stl": stl, "small.stl": stl})
+    w = MainWindow(Settings(str(tmp_path / "settings.json")))
+    try:
+        w.load_sync(kit)
+        files = w._files_to_send([0, 1, 2])
+        if expect is None:
+            assert files is None
+            return
+        assert [os.path.basename(f) for f in files] == expect
+        for f in files:
+            assert os.path.isfile(f)
+        if choice == "all_as_stl":
+            assert lf(files[0]).n_triangles > 0                    # the project's objects, as STL
+        # STL and OBJ together need no question
+        assert sd.needs_choice(["stl", "stl", "obj"]) is False
+        assert sd.needs_choice(["3mf"]) is False
+    finally:
+        w.close()
+        app.processEvents()
