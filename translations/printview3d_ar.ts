@@ -4,6 +4,36 @@
 <context>
     <name>PrintView3D</name>
     <message>
+        <location filename="../src/printview3d/archive.py"></location>
+        <source>This is not a valid ZIP file.</source>
+        <translation>هذا ليس ملف ZIP صالحًا.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/archive.py"></location>
+        <source>{name} is too large to unpack ({size} GB).</source>
+        <translation>{name} كبير جدًا لفك ضغطه ({size} غيغابايت).</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/archive.py"></location>
+        <source>{name} unpacks to far more data than a 3D file normally does. It was not opened, to protect your computer.</source>
+        <translation>ينتج عن فك ضغط {name} بيانات أكثر بكثير مما يحتويه ملف ثلاثي الأبعاد عادةً. لم يُفتح حمايةً لحاسوبك.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/archive.py"></location>
+        <source>This ZIP contains {n} 3D files; at most {max} can be opened.</source>
+        <translation>يحتوي ملف ZIP هذا على {n} ملفًا ثلاثي الأبعاد؛ يمكن فتح {max} كحد أقصى.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/archive.py"></location>
+        <source>The 3D files in this ZIP are too large together to unpack.</source>
+        <translation>ملفات ثلاثية الأبعاد في ملف ZIP هذا كبيرة جدًا معًا لفك ضغطها.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/archive.py"></location>
+        <source>{name} in the ZIP is damaged.</source>
+        <translation>الملف {name} داخل ZIP تالف.</translation>
+    </message>
+    <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Export STL</source>
@@ -284,8 +314,53 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>ZIP files with 3D models</source>
+        <translation>ملفات ZIP تحتوي على نماذج ثلاثية الأبعاد</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>All files</source>
         <translation>كل الملفات</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>STL: one model shape</source>
+        <translation>STL: شكل نموذج واحد</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>3MF: project with objects, colours and settings</source>
+        <translation>3MF: مشروع يضم كائنات وألوانًا وإعدادات</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>G-code: already sliced, ready to print</source>
+        <translation>G-code: مُقطَّع مسبقًا وجاهز للطباعة</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>STEP: CAD model (shown with the help of FreeCAD)</source>
+        <translation>STEP: نموذج CAD (يُعرض بمساعدة FreeCAD)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>FreeCAD: CAD document</source>
+        <translation>FreeCAD: مستند CAD</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>{kind}: 3D model</source>
+        <translation>{kind}: نموذج ثلاثي الأبعاد</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>{n} MB</source>
+        <translation>{n} ميغابايت</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>{n} KB</source>
+        <translation>{n} كيلوبايت</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -295,6 +370,7 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Next theme</source>
         <translation>السمة التالية</translation>
     </message>
@@ -331,36 +407,46 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Menu</source>
+        <translation>القائمة</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Recent</source>
         <extracomment>Toolbar menu with recently opened files.</extracomment>
         <translation>الأخيرة</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Fit</source>
         <extracomment>Toolbar button: zoom the 3D view so the whole model fits.</extracomment>
         <translation>ملاءمة</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Iso</source>
         <extracomment>Toolbar button: isometric camera view (seen from a corner, slightly above).</extracomment>
         <translation>متساوي القياس</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Top</source>
         <extracomment>Toolbar button: camera view from above.</extracomment>
         <translation>أعلى</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Front</source>
         <extracomment>Toolbar button: camera view from the front.</extracomment>
         <translation>أمام</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Right</source>
         <extracomment>Toolbar button: camera view from the right side (not &apos;correct&apos;).</extracomment>
         <translation>يمين</translation>
@@ -397,6 +483,12 @@
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Settings</source>
         <translation>الإعدادات</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Updates</source>
+        <translation>التحديثات</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -482,6 +574,71 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>From ZIP</source>
+        <translation>من ملف ZIP</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Opening {name}…</source>
+        <translation>جارٍ فتح {name}…</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>No 3D files in this ZIP</source>
+        <translation>لا توجد ملفات ثلاثية الأبعاد في ملف ZIP هذا</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>This ZIP contains no files PrintView3D can open (STL, 3MF, OBJ, PLY, OFF, glTF, STEP, FreeCAD or G-code).</source>
+        <translation>لا يحتوي ملف ZIP هذا على ملفات يمكن لـ PrintView3D فتحها (STL أو 3MF أو OBJ أو PLY أو OFF أو glTF أو STEP أو FreeCAD أو G-code).</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Placing {n} models side by side…</source>
+        <translation>جارٍ وضع {n} نماذج جنبًا إلى جنب…</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>In this ZIP ({n})</source>
+        <translation>في ملف ZIP هذا ({n})</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Show one at a time</source>
+        <translation>عرض نموذج واحد في كل مرة</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Show all side by side</source>
+        <translation>عرض الكل جنبًا إلى جنب</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Place all models next to each other (G-code, STEP and FreeCAD files are opened one at a time)</source>
+        <translation>وضع كل النماذج بجانب بعضها (تُفتح ملفات G-code وSTEP وFreeCAD واحدًا تلو الآخر)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Opens on its own: click the name</source>
+        <translation>يُفتح بمفرده: انقر على الاسم</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>{n} other files skipped (pictures, documents, links).</source>
+        <translation>تم تجاهل {n} ملفات أخرى (صور، مستندات، روابط).</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Untick a model to hide it; click a G-code to open it.</source>
+        <translation>ألغِ تحديد نموذج لإخفائه؛ انقر على ملف G-code لفتحه.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Tip: ↑ / ↓ keys move through the list</source>
+        <translation>تلميح: مفتاحا ↑ / ↓ للتنقل في القائمة</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open 3D file</source>
         <translation>فتح ملف ثلاثي الأبعاد</translation>
     </message>
@@ -502,8 +659,8 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
-        <source>PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code and FreeCAD files.</source>
-        <translation>يمكن لـ PrintView3D فتح ملفات STL و3MF وOBJ وPLY وOFF وglTF/GLB وSTEP وG-code وFreeCAD.</translation>
+        <source>PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code and FreeCAD files, and ZIP files that contain them.</source>
+        <translation>يمكن لـ PrintView3D فتح ملفات STL و3MF وOBJ وPLY وOFF وglTF/GLB وSTEP وG-code وFreeCAD، وملفات ZIP التي تحتويها.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -746,6 +903,11 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Send all models in the ZIP ({n})</source>
+        <translation>إرسال كل نماذج ملف ZIP ({n})</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Choose default slicer…</source>
         <translation>اختيار برنامج التقطيع الافتراضي…</translation>
     </message>
@@ -790,6 +952,11 @@
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Could not start {slicer}</source>
         <translation>تعذّر تشغيل {slicer}</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>{n} models</source>
+        <translation>{n} نماذج</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -932,6 +1099,51 @@
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PrintView3D could not restart by itself. Close it and start it again.</source>
         <translation type="unfinished">تعذّر على PrintView3D إعادة التشغيل تلقائيًا. أغلقه ثم شغّله من جديد.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Send to slicer</source>
+        <translation>إرسال إلى برنامج التقطيع</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>A 3MF project opens on its own in the slicer, so it cannot be sent together with other models. What do you want to send?</source>
+        <translation>يُفتح مشروع 3MF بمفرده في برنامج التقطيع، لذا لا يمكن إرساله مع نماذج أخرى. ماذا تريد أن ترسل؟</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>The 3MF project: {name}</source>
+        <translation>مشروع 3MF: {name}</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>With its plates, colours and print settings.</source>
+        <translation>مع ألواحه وألوانه وإعدادات الطباعة.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>The other models: {n}</source>
+        <translation>النماذج الأخرى ({n})</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Together on one plate; the 3MF project is left out.</source>
+        <translation>معًا على لوح واحد؛ مع استبعاد مشروع 3MF.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Everything as STL: {n} models</source>
+        <translation>الكل بصيغة STL ({n} نماذج)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>The project&apos;s objects become a plain STL, so all models go on one plate. Its plates, colours and print settings are not included.</source>
+        <translation>تتحول كائنات المشروع إلى ملف STL عادي، فتوضع كل النماذج على لوح واحد. لا تُضمَّن ألواحه وألوانه وإعدادات الطباعة.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Send</source>
+        <translation>إرسال</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1170,11 +1382,6 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Updates</source>
-        <translation>التحديثات</translation>
-    </message>
-    <message>
-        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>What&apos;s new</source>
         <translation>ما الجديد</translation>
     </message>
@@ -1286,6 +1493,21 @@
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Built with Python, Qt (PySide6) and PyVista / VTK.</source>
         <translation>مبني باستخدام Python وQt (PySide6) وPyVista / VTK.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Keyboard and mouse</source>
+        <translation>لوحة المفاتيح والماوس</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Keyboard</source>
+        <translation>لوحة المفاتيح</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Mouse</source>
+        <translation>الماوس</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1444,6 +1666,81 @@
         <translation type="unfinished">لاحقًا</translation>
     </message>
     <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>{view} view</source>
+        <translation>عرض {view}</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Open a file</source>
+        <translation>فتح ملف</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Open the file in your slicer</source>
+        <translation>فتح الملف في برنامج التقطيع</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Export STL (3MF projects)</source>
+        <translation>تصدير STL (مشاريع 3MF)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Next / previous layer (G-code), or file (ZIP)</source>
+        <translation>الطبقة التالية / السابقة (G-code)، أو الملف (ZIP)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>10 layers up / down</source>
+        <translation>10 طبقات للأعلى / للأسفل</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>First / last layer</source>
+        <translation>الطبقة الأولى / الأخيرة</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Rotate (around the point you press on the model)</source>
+        <translation>تدوير (حول النقطة التي تضغط عليها في النموذج)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Left-drag</source>
+        <translation>السحب بالزر الأيسر</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Move (pan)</source>
+        <translation>تحريك (إزاحة)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Right-drag</source>
+        <translation>السحب بالزر الأيمن</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Middle-drag</source>
+        <translation>السحب بالزر الأوسط</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Shift + left-drag</source>
+        <translation>Shift + السحب بالزر الأيسر</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Zoom towards the mouse pointer</source>
+        <translation>تكبير باتجاه مؤشر الماوس</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Mouse wheel</source>
+        <translation>عجلة الماوس</translation>
+    </message>
+    <message>
         <location filename="../src/printview3d/ui/theme.py"></location>
         <source>Automatic (system theme)</source>
         <translation>تلقائي (سمة النظام)</translation>
@@ -1531,6 +1828,14 @@
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Download update</source>
         <translation>تنزيل التحديث</translation>
+    </message>
+    <message>
+        <source>Next / previous layer (G-code)</source>
+        <translation type="vanished">الطبقة التالية / السابقة (G-code)</translation>
+    </message>
+    <message>
+        <source>PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code and FreeCAD files.</source>
+        <translation type="vanished">يمكن لـ PrintView3D فتح ملفات STL و3MF وOBJ وPLY وOFF وglTF/GLB وSTEP وG-code وFreeCAD.</translation>
     </message>
     <message>
         <source>Missing or wrong translation? You can help translate PrintView3D — see &quot;Translations&quot; on the project page.</source>

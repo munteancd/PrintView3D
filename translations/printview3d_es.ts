@@ -4,6 +4,36 @@
 <context>
     <name>PrintView3D</name>
     <message>
+        <location filename="../src/printview3d/archive.py"></location>
+        <source>This is not a valid ZIP file.</source>
+        <translation type="unfinished">Este no es un archivo ZIP válido.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/archive.py"></location>
+        <source>{name} is too large to unpack ({size} GB).</source>
+        <translation type="unfinished">{name} es demasiado grande para descomprimir ({size} GB).</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/archive.py"></location>
+        <source>{name} unpacks to far more data than a 3D file normally does. It was not opened, to protect your computer.</source>
+        <translation type="unfinished">{name} se descomprime en muchos más datos de lo normal para un archivo 3D. No se abrió, para proteger tu ordenador.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/archive.py"></location>
+        <source>This ZIP contains {n} 3D files; at most {max} can be opened.</source>
+        <translation type="unfinished">Este ZIP contiene {n} archivos 3D; como máximo se pueden abrir {max}.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/archive.py"></location>
+        <source>The 3D files in this ZIP are too large together to unpack.</source>
+        <translation type="unfinished">Los archivos 3D de este ZIP son demasiado grandes en conjunto para descomprimirlos.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/archive.py"></location>
+        <source>{name} in the ZIP is damaged.</source>
+        <translation type="unfinished">{name} dentro del ZIP está dañado.</translation>
+    </message>
+    <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Export STL</source>
@@ -284,8 +314,53 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>ZIP files with 3D models</source>
+        <translation type="unfinished">Archivos ZIP con modelos 3D</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>All files</source>
         <translation type="unfinished">Todos los archivos</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>STL: one model shape</source>
+        <translation type="unfinished">STL: la forma de un modelo</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>3MF: project with objects, colours and settings</source>
+        <translation type="unfinished">3MF: proyecto con objetos, colores y ajustes</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>G-code: already sliced, ready to print</source>
+        <translation type="unfinished">G-code: ya laminado, listo para imprimir</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>STEP: CAD model (shown with the help of FreeCAD)</source>
+        <translation type="unfinished">STEP: modelo CAD (se muestra con ayuda de FreeCAD)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>FreeCAD: CAD document</source>
+        <translation type="unfinished">FreeCAD: documento CAD</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>{kind}: 3D model</source>
+        <translation type="unfinished">{kind}: modelo 3D</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>{n} MB</source>
+        <translation type="unfinished">{n} MB</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>{n} KB</source>
+        <translation type="unfinished">{n} KB</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -295,6 +370,7 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Next theme</source>
         <translation type="unfinished">Tema siguiente</translation>
     </message>
@@ -331,36 +407,46 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Menu</source>
+        <translation type="unfinished">Menú</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Recent</source>
         <extracomment>Toolbar menu with recently opened files.</extracomment>
         <translation type="unfinished">Recientes</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Fit</source>
         <extracomment>Toolbar button: zoom the 3D view so the whole model fits.</extracomment>
         <translation type="unfinished">Ajustar</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Iso</source>
         <extracomment>Toolbar button: isometric camera view (seen from a corner, slightly above).</extracomment>
         <translation type="unfinished">Iso</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Top</source>
         <extracomment>Toolbar button: camera view from above.</extracomment>
         <translation type="unfinished">Superior</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Front</source>
         <extracomment>Toolbar button: camera view from the front.</extracomment>
         <translation type="unfinished">Frontal</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Right</source>
         <extracomment>Toolbar button: camera view from the right side (not &apos;correct&apos;).</extracomment>
         <translation type="unfinished">Derecha</translation>
@@ -397,6 +483,12 @@
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Settings</source>
         <translation type="unfinished">Ajustes</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Updates</source>
+        <translation type="unfinished">Actualizaciones</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -482,6 +574,71 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>From ZIP</source>
+        <translation type="unfinished">Del ZIP</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Opening {name}…</source>
+        <translation type="unfinished">Abriendo {name}…</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>No 3D files in this ZIP</source>
+        <translation type="unfinished">No hay archivos 3D en este ZIP</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>This ZIP contains no files PrintView3D can open (STL, 3MF, OBJ, PLY, OFF, glTF, STEP, FreeCAD or G-code).</source>
+        <translation type="unfinished">Este ZIP no contiene archivos que PrintView3D pueda abrir (STL, 3MF, OBJ, PLY, OFF, glTF, STEP, FreeCAD o G-code).</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Placing {n} models side by side…</source>
+        <translation type="unfinished">Colocando {n} modelos uno al lado del otro…</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>In this ZIP ({n})</source>
+        <translation type="unfinished">En este ZIP ({n})</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Show one at a time</source>
+        <translation type="unfinished">Mostrar de uno en uno</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Show all side by side</source>
+        <translation type="unfinished">Mostrar todos uno al lado del otro</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Place all models next to each other (G-code, STEP and FreeCAD files are opened one at a time)</source>
+        <translation type="unfinished">Colocar todos los modelos uno junto a otro (los archivos G-code, STEP y FreeCAD se abren de uno en uno)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Opens on its own: click the name</source>
+        <translation type="unfinished">Se abre por separado: haz clic en el nombre</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>{n} other files skipped (pictures, documents, links).</source>
+        <translation type="unfinished">Se omitieron {n} archivos más (imágenes, documentos, enlaces).</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Untick a model to hide it; click a G-code to open it.</source>
+        <translation type="unfinished">Desmarca un modelo para ocultarlo; haz clic en un G-code para abrirlo.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Tip: ↑ / ↓ keys move through the list</source>
+        <translation type="unfinished">Consejo: las teclas ↑ / ↓ recorren la lista</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open 3D file</source>
         <translation type="unfinished">Abrir archivo 3D</translation>
     </message>
@@ -502,8 +659,8 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
-        <source>PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code and FreeCAD files.</source>
-        <translation type="unfinished">PrintView3D puede abrir archivos STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code y FreeCAD.</translation>
+        <source>PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code and FreeCAD files, and ZIP files that contain them.</source>
+        <translation type="unfinished">PrintView3D puede abrir archivos STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code y FreeCAD, y archivos ZIP que los contengan.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -746,6 +903,11 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Send all models in the ZIP ({n})</source>
+        <translation type="unfinished">Enviar todos los modelos del ZIP ({n})</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Choose default slicer…</source>
         <translation type="unfinished">Elegir laminador predeterminado…</translation>
     </message>
@@ -790,6 +952,11 @@
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Could not start {slicer}</source>
         <translation type="unfinished">No se pudo iniciar {slicer}</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>{n} models</source>
+        <translation type="unfinished">{n} modelos</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -932,6 +1099,51 @@
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PrintView3D could not restart by itself. Close it and start it again.</source>
         <translation type="unfinished">PrintView3D no pudo reiniciarse solo. Ciérralo y vuelve a abrirlo.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Send to slicer</source>
+        <translation type="unfinished">Enviar al laminador</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>A 3MF project opens on its own in the slicer, so it cannot be sent together with other models. What do you want to send?</source>
+        <translation type="unfinished">Un proyecto 3MF se abre solo en el laminador, así que no se puede enviar junto con otros modelos. ¿Qué quieres enviar?</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>The 3MF project: {name}</source>
+        <translation type="unfinished">El proyecto 3MF: {name}</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>With its plates, colours and print settings.</source>
+        <translation type="unfinished">Con sus placas, colores y ajustes de impresión.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>The other models: {n}</source>
+        <translation type="unfinished">Los demás modelos: {n}</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Together on one plate; the 3MF project is left out.</source>
+        <translation type="unfinished">Juntos en una placa; el proyecto 3MF se deja fuera.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Everything as STL: {n} models</source>
+        <translation type="unfinished">Todo como STL: {n} modelos</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>The project&apos;s objects become a plain STL, so all models go on one plate. Its plates, colours and print settings are not included.</source>
+        <translation type="unfinished">Los objetos del proyecto se convierten en un STL simple, así que todos los modelos van en una placa. Sus placas, colores y ajustes de impresión no se incluyen.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/send_dialog.py"></location>
+        <source>Send</source>
+        <translation type="unfinished">Enviar</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1170,11 +1382,6 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Updates</source>
-        <translation type="unfinished">Actualizaciones</translation>
-    </message>
-    <message>
-        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>What&apos;s new</source>
         <translation type="unfinished">Novedades</translation>
     </message>
@@ -1286,6 +1493,21 @@
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Built with Python, Qt (PySide6) and PyVista / VTK.</source>
         <translation type="unfinished">Creado con Python, Qt (PySide6) y PyVista / VTK.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Keyboard and mouse</source>
+        <translation type="unfinished">Teclado y ratón</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Keyboard</source>
+        <translation type="unfinished">Teclado</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Mouse</source>
+        <translation type="unfinished">Ratón</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1444,6 +1666,81 @@
         <translation type="unfinished">Más tarde</translation>
     </message>
     <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>{view} view</source>
+        <translation type="unfinished">Vista {view}</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Open a file</source>
+        <translation type="unfinished">Abrir un archivo</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Open the file in your slicer</source>
+        <translation type="unfinished">Abrir el archivo en tu laminador</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Export STL (3MF projects)</source>
+        <translation type="unfinished">Exportar STL (proyectos 3MF)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Next / previous layer (G-code), or file (ZIP)</source>
+        <translation type="unfinished">Capa siguiente / anterior (G-code) o archivo (ZIP)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>10 layers up / down</source>
+        <translation type="unfinished">10 capas arriba / abajo</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>First / last layer</source>
+        <translation type="unfinished">Primera / última capa</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Rotate (around the point you press on the model)</source>
+        <translation type="unfinished">Girar (alrededor del punto que pulsas en el modelo)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Left-drag</source>
+        <translation type="unfinished">Arrastrar con botón izquierdo</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Move (pan)</source>
+        <translation type="unfinished">Mover (desplazar)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Right-drag</source>
+        <translation type="unfinished">Arrastrar con botón derecho</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Middle-drag</source>
+        <translation type="unfinished">Arrastrar con botón central</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Shift + left-drag</source>
+        <translation type="unfinished">Mayús + arrastrar con botón izquierdo</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Zoom towards the mouse pointer</source>
+        <translation type="unfinished">Acercar hacia el puntero del ratón</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Mouse wheel</source>
+        <translation type="unfinished">Rueda del ratón</translation>
+    </message>
+    <message>
         <location filename="../src/printview3d/ui/theme.py"></location>
         <source>Automatic (system theme)</source>
         <translation type="unfinished">Automático (tema del sistema)</translation>
@@ -1531,6 +1828,14 @@
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Download update</source>
         <translation type="unfinished">Descargar actualización</translation>
+    </message>
+    <message>
+        <source>Next / previous layer (G-code)</source>
+        <translation type="vanished">Capa siguiente / anterior (G-code)</translation>
+    </message>
+    <message>
+        <source>PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code and FreeCAD files.</source>
+        <translation type="vanished">PrintView3D puede abrir archivos STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code y FreeCAD.</translation>
     </message>
     <message>
         <source>Missing or wrong translation? You can help translate PrintView3D — see &quot;Translations&quot; on the project page.</source>

@@ -40,10 +40,11 @@ without exporting an STL first.
 | **FreeCAD** | Open `.FCStd` documents to look at them: shown in 3D exactly as FreeCAD displays them (visible bodies only), with one click to open in FreeCAD or send to your slicer as STL. Uses your installed FreeCAD; without it you still see the preview picture. [Details](#freecad-files). |
 | **STEP** | Open `.step` / `.stp` CAD files: shown in 3D with the help of your installed FreeCAD (converted in the background, remembered afterwards), with the CAD program, author and date from the file. OrcaSlicer, PrusaSlicer and Bambu Studio get the STEP file itself; other slicers get an STL. [Details](#step-files). |
 | **OBJ, PLY, OFF, glTF / GLB** | Other common 3D formats, with the colours saved in the file (textures are not shown). OBJ objects and glTF scenes are listed as separate objects. OBJ goes to your slicer as it is; PLY, OFF and glTF are sent as STL, because not every slicer reads them. [Details](#other-3d-formats). |
+| **ZIP files** | Open a downloaded model package (Printables, Thingiverse, …) directly. Only the 3D files are used; pictures, documents and links are skipped. Pick a model from the list, or **show all** side by side; send one model or all of them to your slicer. [Details](#zip-files). |
 | **Open in your slicer** | One click (or `Ctrl+P`) opens the current file in your slicer. Installed slicers are found automatically. |
 | **Default app** | Optional: make PrintView3D open `.stl`, `.3mf` and `.gcode` files when you double-click them. Fully reversible. |
 | **Your language** | English, العربية (Arabic, right-to-left), Nederlands, Deutsch, Français and Español; switch any time in Settings, no restart needed. [Help translate](#translations). |
-| **Themes** | Automatic (follows your system), Dark, Gray, Graphite (warm, easy on the eyes) or Light, for the window and the 3D view. Switch with one click on ◐ or `Ctrl+T`. Toolpath colours stay the same in every theme. |
+| **Themes** | Automatic (follows your system), Dark, Gray, Graphite (warm, easy on the eyes) or Light, for the window and the 3D view. Switch with one click on the palette icon or `Ctrl+T`. Toolpath colours stay the same in every theme. |
 | **Thumbnails** | Windows File Explorer shows previews of 3MF, STL, G-code and FreeCAD files (installed with PrintView3D, optional). |
 | **Updates** | **Check for updates** in Settings, or once a day if you allow it. On Windows one click downloads, checks and installs the new version. The version in the corner gets a red dot when an update is ready. [What is sent](#updates-and-privacy). |
 | **One window** | A file you double-click while PrintView3D is open is shown in that window, instead of opening another one. Prefer a window per file? **Settings → Files → Open each file in a new window**. |
@@ -226,6 +227,8 @@ Looking from underneath? The plate gets out of the way so you can see the bottom
 
 ### Keyboard
 
+The same list is in the program under **Settings → About → Keyboard and mouse**.
+
 | Key | Action |
 |---|---|
 | `Ctrl+O` | Open a file |
@@ -233,7 +236,7 @@ Looking from underneath? The plate gets out of the way so you can see the bottom
 | `Ctrl+E` | Export STL (3MF projects) |
 | `Ctrl+T` | Next theme (Dark → Gray → Graphite → Light) |
 | `F` · `1` · `2` · `3` · `4` | Fit · Iso · Top · Front · Right view |
-| `↑` / `↓` | Next / previous layer (G-code) |
+| `↑` / `↓` | Next / previous layer (G-code), or the previous / next file in a ZIP |
 | `Page Up` / `Page Down` | 10 layers up / down |
 | `Home` / `End` | First / last layer |
 
@@ -288,6 +291,32 @@ files, for example to share a model or open it in a program that does not read 3
   (as recorded by Creality Print, OrcaSlicer, Bambu Studio and PrusaSlicer), and so are colours,
   materials and print settings. Sizes are in millimetres; the files are binary STL.
 
+### ZIP files
+
+Model downloads often come as a ZIP. Open it like any other file (**Open…** or drag it onto the
+window); there is no need to unpack it first.
+
+- **Only the 3D files are used**: STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, FreeCAD and G-code.
+  Pictures, PDFs, read-me files, web links, ZIPs inside the ZIP and the hidden `__MACOSX` folder
+  are skipped, and the panel says how many were skipped.
+- **A ZIP with one 3D file** opens just like that file.
+- **More files** are listed in the side panel with a coloured label for their type (STL, 3MF,
+  G-code, …) and a short explanation of each type. The first file is shown; click another one, or
+  use **↑ / ↓**, to switch.
+- **Show all side by side** places the models next to each other: up to three in one row, then a
+  grid (four as 2 × 2, six as 3 × 2, nine as 3 × 3, …), spaced by their real size. Untick models in
+  **Objects** to hide them. G-code, STEP and FreeCAD files are opened one at a time.
+- **Open in slicer** sends the model you are looking at; in Show all, the ticked models. The arrow
+  next to the button has **Send all models in the ZIP**.
+- A slicer opens a **3MF as a project on its own**, so it cannot take a 3MF together with other
+  files. When the models to send include a 3MF, PrintView3D asks: the 3MF project (with its
+  plates and settings), the other models on one plate, or **everything as STL** (the project's
+  objects become a plain STL, so all models go on one plate).
+
+The 3D files are unpacked into PrintView3D's own cache folder (slicers need real files); the sizes
+are checked first, so a damaged or malicious ZIP cannot fill your disk. Files from ZIPs opened more
+than a day ago are removed automatically.
+
 ### STEP files
 
 STEP (`.step`, `.stp`) is the common format for exchanging CAD models between programs. It stores
@@ -329,7 +358,7 @@ A wrong or missing word? The link on that page leads to [How to translate](docs/
 
 ### Themes
 
-Click the **◐ icon** at the right end of the toolbar to pick a theme, or press **`Ctrl+T`** to
+Click the **palette icon** at the right end of the toolbar to pick a theme, or press **`Ctrl+T`** to
 step to the next one. The same choice is in **Settings → Appearance → Theme**.
 
 - **Automatic** follows the dark/light setting of Windows or your Linux desktop (and switches

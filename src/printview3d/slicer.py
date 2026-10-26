@@ -449,17 +449,19 @@ def clean_environment(env: Optional[dict] = None) -> dict:
     return env
 
 
-def launch_command(slicer_exe: str, file_path: Optional[str] = None) -> list[str]:
+def launch_command(slicer_exe: str, file_path=None) -> list[str]:
+    """file_path: one file, a list of files (all opened together, e.g. the models of a ZIP;
+    slicers put them on one plate) or None."""
     args = [slicer_exe]
     if sys.platform == "darwin" and slicer_exe.endswith(".app"):
         args = ["open", "-a", slicer_exe]          # macOS app bundles
-    if file_path:
-        args.append(os.path.abspath(file_path))
+    files = [file_path] if isinstance(file_path, str) else list(file_path or [])
+    args.extend(os.path.abspath(f) for f in files if f)
     return args
 
 
-def open_in_slicer(slicer_exe: str, file_path: Optional[str] = None) -> None:
-    """Start the slicer (detached), optionally opening a file in it."""
+def open_in_slicer(slicer_exe: str, file_path=None) -> None:
+    """Start the slicer (detached), optionally opening one file or several files in it."""
     args = launch_command(slicer_exe, file_path)
     kwargs = {"cwd": os.path.dirname(slicer_exe) or None, "close_fds": True, "env": clean_environment()}
     if sys.platform == "win32":
