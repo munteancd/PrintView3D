@@ -10,13 +10,14 @@ from printview3d import updates as u
 from printview3d.settings import Settings
 
 PAYLOAD = b"pretend installer " * 1000
+SETUP_URL = f"https://github.com/{u.REPO}/releases/download/v9.9.0/{u.SETUP_ASSET}"
 
 
 def gh_release(tag="v9.9.0", digest=None, **extra):
     data = {"tag_name": tag, "draft": False, "prerelease": False, "body": "## What's new\n- things",
             "html_url": f"https://github.com/{u.REPO}/releases/tag/{tag}", "published_at": "2026-11-01T10:00:00Z",
             "assets": [{"name": "PrintView3D-windows.zip", "browser_download_url": "https://x/zip", "size": 1},
-                       {"name": u.SETUP_ASSET, "browser_download_url": "https://x/setup.exe",
+                       {"name": u.SETUP_ASSET, "browser_download_url": SETUP_URL,
                         "size": len(PAYLOAD),
                         "digest": digest or "sha256:" + hashlib.sha256(PAYLOAD).hexdigest()}]}
     data.update(extra)
@@ -35,7 +36,7 @@ def test_is_newer(remote, local, newer):
 def test_parse_release():
     rel = u.parse_release(gh_release())
     assert rel.version == "9.9.0"
-    assert rel.setup_url == "https://x/setup.exe"
+    assert rel.setup_url == SETUP_URL
     assert rel.setup_sha256 == hashlib.sha256(PAYLOAD).hexdigest()
     assert "What's new" in rel.notes
 
@@ -109,6 +110,50 @@ def test_download_checks_the_fingerprint(tmp_path, monkeypatch):
     with pytest.raises(u.UpdateError):
         u.download_installer(bad)
     assert not any(p.name.endswith(".part") for p in tmp_path.iterdir())
+
+
+def test_download_refuses_without_a_fingerprint(tmp_path, monkeypatch):
+    monkeypatch.setattr(u, "download_dir", lambda: str(tmp_path))
+    monkeypatch.setattr(u, "_request", lambda *a, **k: _Resp(PAYLOAD))
+    rel = u.parse_release(gh_release())
+    rel.setup_sha256 = ""                       # GitHub gave no digest: nothing to check against
+    with pytest.raises(u.UpdateError, match="fingerprint"):
+        u.download_installer(rel)
+    assert not list(tmp_path.iterdir())
+
+
+@pytest.mark.parametrize("url,ok", [
+    (SETUP_URL, True),
+    ("http://github.com/sevagjb/PrintView3D/releases/download/v1/PrintView3D-Setup.exe", False),
+    ("https://github.com/someone/else/releases/download/v1/PrintView3D-Setup.exe", False),
+    ("https://evil.example/sevagjb/PrintView3D/releases/download/v1/x.exe", False),
+    ("https://github.com.evil.example/sevagjb/PrintView3D/releases/download/v1/x.exe", False),
+])
+def test_download_only_from_this_projects_releases(url, ok, tmp_path, monkeypatch):
+    assert u.trusted_download(url) is ok
+    if not ok:
+        monkeypatch.setattr(u, "download_dir", lambda: str(tmp_path))
+        rel = u.parse_release(gh_release())
+        rel.setup_url = url
+        with pytest.raises(u.UpdateError, match="GitHub"):
+            u.download_installer(rel)
+
+
+@pytest.mark.parametrize("target,ok", [
+    ("https://release-assets.githubusercontent.com/x", True),
+    ("https://objects.githubusercontent.com/x", True),
+    ("http://objects.githubusercontent.com/x", False),
+    ("https://evil.example/x", False),
+])
+def test_redirects_stay_on_github(target, ok):
+    import urllib.request
+    req = urllib.request.Request(SETUP_URL)
+    h = u._GitHubOnly()
+    if ok:
+        assert h.redirect_request(req, None, 302, "Found", {}, target).full_url == target
+    else:
+        with pytest.raises(u.UpdateError):
+            h.redirect_request(req, None, 302, "Found", {}, target)
 
 
 def test_install_kind_from_source_opens_the_page():

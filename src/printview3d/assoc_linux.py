@@ -17,6 +17,7 @@ Cinnamon and others use, and lives in the user's home folder:
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -88,8 +89,12 @@ def program_path() -> str:
 
 
 def exec_line() -> str:
+    """The Exec= value of the menu entry, quoted as the Desktop Entry spec requires, so a
+    program path with spaces, "$", "%", "`" or "\\" in it still starts PrintView3D."""
     def q(x):
-        return '"' + x.replace('"', '\\"') + '"'
+        x = x.replace("%", "%%")                                      # field codes: %% is a literal %
+        x = re.sub(r'(["`$\\])', r"\\\1", x)                       # inside "...": escape " ` $ \
+        return ('"' + x + '"').replace("\\", "\\\\")               # and every \ once more (string value)
 
     if is_frozen() or os.environ.get("APPIMAGE"):
         return f"{q(program_path())} %f"
