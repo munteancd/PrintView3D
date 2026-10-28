@@ -33,7 +33,7 @@ if not exist ".venv\Scripts\python.exe" (
 
 echo [2/4] Installing dependencies (first time takes a few minutes) ...
 ".venv\Scripts\python.exe" -m pip install --upgrade pip >nul
-".venv\Scripts\python.exe" -m pip install -r requirements.txt -r requirements-build.txt || goto :fail
+".venv\Scripts\python.exe" -m pip install -r requirements.txt -r requirements-build.txt -c requirements-build-lock.txt || goto :fail
 
 echo [3/4] Building translations and running tests ...
 ".venv\Scripts\python.exe" tools\i18n.py compile || goto :fail

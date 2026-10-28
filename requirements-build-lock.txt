@@ -1,0 +1,57 @@
+# Exact versions used to BUILD the released program (Windows, Linux, macOS), so a release only
+# changes what's inside it when we choose to. requirements.txt keeps the loose ranges for people
+# who install from source; this file only pins (pip install ... -c requirements-build-lock.txt).
+# PyPI never lets a published version's files change, so a pin always gets the same files.
+# Dependabot proposes updates once a month as a pull request; CI tests them on every platform.
+altgraph==0.17.5
+attrs==26.1.0
+certifi==2026.10.23
+charset-normalizer==3.5.2
+colorama==0.4.6
+contourpy==1.4.0
+cycler==0.12.1
+cyclopts==5.3.2
+docstring-parser==0.18.0
+fonttools==4.68.0
+idna==3.20
+iniconfig==2.3.1
+kiwisolver==1.5.1
+macholib==1.16.4
+markdown-it-py==4.2.0
+matplotlib==3.11.2
+mdurl==0.1.2
+numpy==2.5.4
+packaging==26.3
+pefile==2024.8.26
+pillow==13.0.0
+platformdirs==4.14.0
+pluggy==1.7.0
+pooch==1.9.0
+pygments==2.21.0
+pyinstaller==6.22.3
+pyinstaller-hooks-contrib==2026.9
+pyparsing==3.3.3
+pyside6==6.9.3
+pyside6-addons==6.9.3
+pyside6-essentials==6.9.3
+pyside6-pdf==6.12.0.140
+pyside6-webengine==6.12.0.140
+pytest==9.2.0
+python-dateutil==3.0.0
+pyvista==0.49.2
+pyvista-validation==0.2.2
+pyvistaqt==0.13.1
+pywin32-ctypes==0.2.3
+pyyaml==6.0.3
+qtpy==2.4.3
+requests==2.34.2
+rich==15.0.0
+rich-rst==2.2.0
+scooby==0.12.1
+setuptools==84.2.1
+shiboken6==6.9.3
+six==1.17.0
+typing-extensions==4.16.0
+tzdata==2026.6
+urllib3==2.8.0
+vtk==9.7.1

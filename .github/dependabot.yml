@@ -1,0 +1,18 @@
+# Proposes updates as pull requests (nothing is merged by itself), once a month, grouped so
+# there is one pull request per kind instead of one per package. CI tests each on every platform.
+version: 2
+updates:
+  - package-ecosystem: github-actions       # the pinned actions in .github/workflows
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
+  - package-ecosystem: pip                  # requirements-build-lock.txt (exact build versions)
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      python-packages:
+        patterns: ["*"]
