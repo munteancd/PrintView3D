@@ -5,6 +5,7 @@
   Both need **macOS 14.4 (Sonoma) or newer**; the build now checks this for every file in the app,
   and starts the app on a real macOS 14 Mac
   (earlier notes said macOS 12, which the current Qt version no longer supports).
+- **Dutch** translation fully reviewed.
 - **Website** in Dutch too: [sevagjb.github.io/PrintView3D](https://sevagjb.github.io/PrintView3D/nl/).
 - Uses Qt for Python (PySide6) 6.12 again; 0.19.1 was built with the older 6.9 by mistake.
 
