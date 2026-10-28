@@ -6,8 +6,8 @@ You do **not** need Python or anything else to use PrintView3D. Pick your system
 |---|---|---|
 | **Windows 10 / 11** | `PrintView3D-Setup.exe` (or the portable `PrintView3D-windows.zip`) | [Instructions](#windows) |
 | **Linux** (64-bit, x86-64) | `PrintView3D-x86_64.AppImage` | [Instructions](#linux) |
-| **macOS 14+** (Apple silicon: M1 and newer), beta | `PrintView3D-macOS-AppleSilicon.dmg` | [Instructions](#macos) |
-| **macOS 14+** (Intel), beta | `PrintView3D-macOS-Intel.dmg` | [Instructions](#macos) |
+| **macOS 14.4+** (Apple silicon: M1 and newer), beta | `PrintView3D-macOS-AppleSilicon.dmg` | [Instructions](#macos) |
+| **macOS 14.4+** (Intel), beta | `PrintView3D-macOS-Intel.dmg` | [Instructions](#macos) |
 
 All downloads are on the **[latest release](https://github.com/sevagjb/PrintView3D/releases/latest)** page.
 
@@ -105,7 +105,7 @@ distribution's packages, or in `/opt`. Otherwise choose it once with **Browse…
 > on real Macs yet. Please [tell us how it works](https://github.com/sevagjb/PrintView3D/issues/new?template=mac_build.md): your Mac
 > model, macOS version, and anything that looks wrong.
 
-For **macOS 14 (Sonoma) or newer**, in two versions; pick the one for your Mac
+For **macOS 14.4 (Sonoma) or newer**, in two versions; pick the one for your Mac
 (Apple menu → **About This Mac**: *Chip* means Apple silicon, *Processor* means Intel):
 
 | Your Mac | Download |

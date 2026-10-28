@@ -6,8 +6,8 @@ Je hebt **geen** Python of iets anders nodig om PrintView3D te gebruiken. Kies j
 |---|---|---|
 | **Windows 10 / 11** | `PrintView3D-Setup.exe` (of de draagbare `PrintView3D-windows.zip`) | [Uitleg](#windows) |
 | **Linux** (64-bit, x86-64) | `PrintView3D-x86_64.AppImage` | [Uitleg](#linux) |
-| **macOS 14+** (Apple silicon: M1 en nieuwer), bèta | `PrintView3D-macOS-AppleSilicon.dmg` | [Uitleg](#macos) |
-| **macOS 14+** (Intel), bèta | `PrintView3D-macOS-Intel.dmg` | [Uitleg](#macos) |
+| **macOS 14.4+** (Apple silicon: M1 en nieuwer), bèta | `PrintView3D-macOS-AppleSilicon.dmg` | [Uitleg](#macos) |
+| **macOS 14.4+** (Intel), bèta | `PrintView3D-macOS-Intel.dmg` | [Uitleg](#macos) |
 
 Alle downloads staan op de pagina van de **[nieuwste versie](https://github.com/sevagjb/PrintView3D/releases/latest)**.
 
@@ -106,7 +106,7 @@ distributie, of in `/opt`. Anders kies je hem één keer met **Bladeren…** in 
 > echte Macs geprobeerd. [Laat ons weten hoe het werkt](https://github.com/sevagjb/PrintView3D/issues/new?template=mac_build.md):
 > je Mac-model, de macOS-versie en alles wat niet klopt.
 
-Voor **macOS 14 (Sonoma) of nieuwer**, in twee versies; kies die voor jouw Mac
+Voor **macOS 14.4 (Sonoma) of nieuwer**, in twee versies; kies die voor jouw Mac
 (Apple-menu → **Over deze Mac**: *Chip* betekent Apple silicon, *Processor* betekent Intel):
 
 | Jouw Mac | Download |

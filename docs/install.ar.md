@@ -6,8 +6,8 @@
 |---|---|---|
 | **Windows 10 / 11** | `PrintView3D-Setup.exe` (أو النسخة المحمولة `PrintView3D-windows.zip`) | [التعليمات](#windows) |
 | **Linux** (‏64 بت، x86-64) | `PrintView3D-x86_64.AppImage` | [التعليمات](#linux) |
-| **macOS 14+** (‏Apple silicon: ‏M1 وأحدث)، تجريبي | `PrintView3D-macOS-AppleSilicon.dmg` | [التعليمات](#macos) |
-| **macOS 14+** (‏Intel)، تجريبي | `PrintView3D-macOS-Intel.dmg` | [التعليمات](#macos) |
+| **macOS 14.4+** (‏Apple silicon: ‏M1 وأحدث)، تجريبي | `PrintView3D-macOS-AppleSilicon.dmg` | [التعليمات](#macos) |
+| **macOS 14.4+** (‏Intel)، تجريبي | `PrintView3D-macOS-Intel.dmg` | [التعليمات](#macos) |
 
 كل التنزيلات موجودة في صفحة **[أحدث إصدار](https://github.com/sevagjb/PrintView3D/releases/latest)**.
 
@@ -103,7 +103,7 @@
 > [أخبرنا كيف تعمل](https://github.com/sevagjb/PrintView3D/issues/new?template=mac_build.md): طراز جهاز
 > Mac، وإصدار macOS، وأي شيء يبدو خاطئًا.
 
-لنظام **macOS 14 ‏(Sonoma) أو أحدث**، بنسختين؛ اختر النسخة المناسبة لجهازك
+لنظام **macOS 14.4 ‏(Sonoma) أو أحدث**، بنسختين؛ اختر النسخة المناسبة لجهازك
 (قائمة Apple ← **About This Mac**: ‏*Chip* تعني Apple silicon، و*Processor* تعني Intel):
 
 | جهاز Mac لديك | التنزيل |

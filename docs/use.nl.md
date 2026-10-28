@@ -176,7 +176,7 @@ de volgende keer dat je PrintView3D start).
 
 ## Opmerkingen en beperkingen {#notes-and-limits}
 
-- Windows 10/11 en Linux (x86-64) worden verpakt en getest. De Mac-versies (Apple silicon en Intel, macOS 14+)
+- Windows 10/11 en Linux (x86-64) worden verpakt en getest. De Mac-versies (Apple silicon en Intel, macOS 14.4+)
   zijn in [bèta](install.md#macos). Linux op ARM (Raspberry Pi enz.) wordt nog niet verpakt.
 - Een 3MF-*project* dat in een slicer van het ene merk is opgeslagen, kan zijn printer- en printinstellingen
   verliezen als het in een slicer van een ander merk wordt geopend. Het model zelf laadt gewoon; zo gedragen
