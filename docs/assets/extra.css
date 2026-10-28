@@ -1,0 +1,6 @@
+/* PrintView3D website: small touches on top of Material. */
+.pv-lead { font-size: 1.15rem; line-height: 1.6; }
+.md-typeset img { border-radius: 6px; }
+/* Arabic: commands, paths and file names stay left-to-right inside right-to-left text. */
+[dir="rtl"] .md-typeset code { direction: ltr; unicode-bidi: isolate; }
+[dir="rtl"] .md-typeset pre, [dir="rtl"] .md-typeset pre code { direction: ltr; text-align: left; }

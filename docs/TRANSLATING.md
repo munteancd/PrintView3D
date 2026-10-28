@@ -1,16 +1,16 @@
 # Translating PrintView3D on GitHub
 
-All translations live in this repository, in the [`translations/`](../translations) folder, one file
+All translations live in this repository, in the [`translations/`](https://github.com/sevagjb/PrintView3D/tree/main/translations) folder, one file
 per language. You change a file and send the change as a pull request; it is reviewed and merged
 into the next release. No other website or account is needed, only a free GitHub account.
 
 | Language | File |
 |---|---|
-| العربية Arabic | [`printview3d_ar.ts`](../translations/printview3d_ar.ts) |
-| Deutsch | [`printview3d_de.ts`](../translations/printview3d_de.ts) |
-| Español | [`printview3d_es.ts`](../translations/printview3d_es.ts) |
-| Français | [`printview3d_fr.ts`](../translations/printview3d_fr.ts) |
-| Nederlands | [`printview3d_nl.ts`](../translations/printview3d_nl.ts) |
+| العربية Arabic | [`printview3d_ar.ts`](https://github.com/sevagjb/PrintView3D/blob/main/translations/printview3d_ar.ts) |
+| Deutsch | [`printview3d_de.ts`](https://github.com/sevagjb/PrintView3D/blob/main/translations/printview3d_de.ts) |
+| Español | [`printview3d_es.ts`](https://github.com/sevagjb/PrintView3D/blob/main/translations/printview3d_es.ts) |
+| Français | [`printview3d_fr.ts`](https://github.com/sevagjb/PrintView3D/blob/main/translations/printview3d_fr.ts) |
+| Nederlands | [`printview3d_nl.ts`](https://github.com/sevagjb/PrintView3D/blob/main/translations/printview3d_nl.ts) |
 
 ## Fix a word or a sentence (in the browser, about 5 minutes)
 
@@ -71,4 +71,4 @@ request. Partly translated is fine: texts not translated yet simply show in Engl
 
 When the code gets new or changed texts, `python tools/i18n.py update` adds them to every language
 file as `unfinished`. The tests fail if this was forgotten. Details:
-[CONTRIBUTING.md → Translations](../CONTRIBUTING.md#translations).
+[CONTRIBUTING.md → Translations](https://github.com/sevagjb/PrintView3D/blob/main/CONTRIBUTING.md#translations).
