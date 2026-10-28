@@ -324,24 +324,44 @@ jobs:
         # Every program file must be for this kind of Mac, and none may need a newer macOS than
         # the one promised in Info.plist (LSMinimumSystemVersion) and in the README.
         run: |
-          app=dist/PrintView3D.app
-          promised=$(/usr/libexec/PlistBuddy -c "Print :LSMinimumSystemVersion" $app/Contents/Info.plist)
-          lipo -verify_arch "$app/Contents/MacOS/PrintView3D" ${{ matrix.arch }}
-          worst=0.0; worst_file=""; wrong_arch=""
-          while IFS= read -r -d '' f; do
-            file -b "$f" | grep -q "Mach-O" || continue
-            lipo -verify_arch "$f" ${{ matrix.arch }} 2>/dev/null || wrong_arch="$wrong_arch $f"
-            v=$(vtool -arch ${{ matrix.arch }} -show-build "$f" 2>/dev/null | awk '/minos|version /{print $2; exit}')
-            [ -n "$v" ] || continue
-            if [ "$(printf '%s\n%s\n' "$worst" "$v" | sort -V | tail -1)" = "$v" ] && [ "$v" != "$worst" ]; then
-              worst=$v; worst_file=$f
-            fi
-          done < <(find "$app" -type f \( -perm -u+x -o -name "*.dylib" -o -name "*.so" \) -print0)
-          echo "Oldest macOS needed: $worst (by ${worst_file#$app/}); promised: $promised"
-          if [ -n "$wrong_arch" ]; then echo "::error::Not built for ${{ matrix.arch }}:$wrong_arch"; exit 1; fi
-          if [ "$(printf '%s\n%s\n' "$promised" "$worst" | sort -V | tail -1)" != "$promised" ]; then
-            echo "::error::A file needs macOS $worst, newer than the promised $promised"; exit 1
-          fi
+          python3 - <<'PY'
+          import os, plistlib, subprocess
+          app, arch = "dist/PrintView3D.app", "${{ matrix.arch }}"
+          with open(f"{app}/Contents/Info.plist", "rb") as f:
+              promised = plistlib.load(f)["LSMinimumSystemVersion"]
+          ver = lambda s: tuple(int(x) for x in s.split("."))
+          MACHO = (b"\xcf\xfa\xed\xfe", b"\xce\xfa\xed\xfe", b"\xca\xfe\xba\xbe")  # 64-bit, 32-bit, universal
+          worst, worst_file, wrong, count = "0.0", "", [], 0
+          for root, _, names in os.walk(app):
+              for n in names:
+                  path = os.path.join(root, n)
+                  if os.path.islink(path):
+                      continue
+                  with open(path, "rb") as f:
+                      if f.read(4) not in MACHO:
+                          continue
+                  count += 1
+                  rel = os.path.relpath(path, app)
+                  archs = subprocess.run(["lipo", "-archs", path], capture_output=True, text=True).stdout.split()
+                  if arch not in archs:
+                      wrong.append(f"{rel} ({' '.join(archs) or '?'})")
+                      continue
+                  out = subprocess.run(["vtool", "-arch", arch, "-show-build", path],
+                                       capture_output=True, text=True).stdout.split()
+                  v = next((out[i + 1] for i, w in enumerate(out[:-1]) if w in ("minos", "version")), None)
+                  if v and v[0].isdigit() and ver(v) > ver(worst):
+                      worst, worst_file = v, rel
+          print(f"::notice title=macOS {arch}::{count} program files; oldest macOS needed: {worst} "
+                f"(by {worst_file}); promised: {promised}")
+          bad = False
+          if wrong:
+              bad = True
+              print(f"::error title=Wrong processor::{len(wrong)} files not built for {arch}: " + "; ".join(wrong[:15]))
+          if ver(worst) > ver(promised):
+              bad = True
+              print(f"::error title=macOS version::{worst_file} needs macOS {worst}, newer than the promised {promised}")
+          raise SystemExit(1 if bad else 0)
+          PY
 
       - name: Smoke test (render a sample to an image)
         continue-on-error: true
