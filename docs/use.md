@@ -176,8 +176,8 @@ it switches the next time you start PrintView3D).
 
 ## Notes and limits
 
-- Windows 10/11 and Linux (x86-64) are packaged and tested. The Mac version (Apple silicon) is in
-  [beta](install.md#macos); Intel Macs are not built yet. ARM Linux (Raspberry Pi etc.) is not packaged yet.
+- Windows 10/11 and Linux (x86-64) are packaged and tested. The Mac versions (Apple silicon and Intel,
+  macOS 14+) are in [beta](install.md#macos). ARM Linux (Raspberry Pi etc.) is not packaged yet.
 - A 3MF *project* saved in one brand of slicer may lose its printer/print settings when opened in a
   different brand. The model itself loads fine; that's how the slicers behave.
 - Binary G-code (`.bgcode`) is not supported yet.

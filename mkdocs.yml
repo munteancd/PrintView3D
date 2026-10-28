@@ -67,6 +67,18 @@ plugins:
             Build it yourself: البناء بنفسك
             Translate and contribute: الترجمة والمساهمة
             How to translate: كيف تترجم
+        - locale: nl
+          name: Nederlands
+          build: true
+          site_name: PrintView3D
+          nav_translations:
+            Home: Start
+            Install: Installeren
+            Using PrintView3D: PrintView3D gebruiken
+            FreeCAD, STEP and other formats: FreeCAD, STEP en andere formaten
+            Build it yourself: Zelf bouwen
+            Translate and contribute: Vertalen en meedoen
+            How to translate: Zo vertaal je
 
 nav:
   - Home: index.md
