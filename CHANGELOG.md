@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.19.2
+- **macOS for Intel Macs** (beta): `PrintView3D-macOS-Intel.dmg`, next to the Apple silicon version.
+  Both need **macOS 14 (Sonoma) or newer**; the build now checks this for every file in the app
+  (earlier notes said macOS 12, which the current Qt version no longer supports).
+- **Website** in Dutch too: [sevagjb.github.io/PrintView3D](https://sevagjb.github.io/PrintView3D/nl/).
+- Uses Qt for Python (PySide6) 6.12 again; 0.19.1 was built with the older 6.9 by mistake.
+
 ## 0.19.1
 Safety update. Thanks to a review of how PrintView3D handles files from the internet:
 - **glTF files** can no longer make PrintView3D read files outside the model's own folder. A
@@ -15,9 +22,6 @@ Safety update. Thanks to a review of how PrintView3D handles files from the inte
   can no longer keep Explorer busy.
 - **Linux**: the menu entry also works when the program's folder has `$`, `%` or `\` in its name.
 - New: [SECURITY.md](SECURITY.md) explains how to report a security problem privately.
-- **macOS for Intel Macs** (beta): `PrintView3D-macOS-Intel.dmg`, next to the Apple silicon version.
-  Both need **macOS 14 (Sonoma) or newer**; the build now checks this for every file in the app
-  (earlier notes said macOS 12, which the current Qt version no longer supports).
 
 ## 0.19.0
 - **Open ZIP files**: open a downloaded model package (Printables, Thingiverse, …) like any other
