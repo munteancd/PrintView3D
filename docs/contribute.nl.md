@@ -6,7 +6,7 @@
 |---|---|
 | English | Brontaal |
 | العربية Arabisch | Compleet, nagekeken door een moedertaalspreker |
-| Nederlands | Compleet, wordt nagekeken |
+| Nederlands | Compleet, nagekeken |
 | Deutsch | Compleet, moet nog nagekeken worden door een moedertaalspreker |
 | Français | Compleet, moet nog nagekeken worden door een moedertaalspreker |
 | Español | Compleet, moet nog nagekeken worden door een moedertaalspreker |

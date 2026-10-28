@@ -621,7 +621,7 @@ PrintView3D.exe --unregister                       remove file associations
 |---|---|
 | English | Source language |
 | العربية Arabic | Complete, reviewed by a native speaker |
-| Nederlands | Complete, review in progress |
+| Nederlands | Complete, reviewed |
 | Deutsch | Complete, needs review by a native speaker |
 | Français | Complete, needs review by a native speaker |
 | Español | Complete, needs review by a native speaker |
