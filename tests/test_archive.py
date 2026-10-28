@@ -264,3 +264,38 @@ def test_send_3mf_with_other_models_asks_first(tmp_path, monkeypatch, choice, ex
     finally:
         w.close()
         app.processEvents()
+
+
+@pytest.mark.parametrize("member,expect", [
+    ("models/part.stl", "part.stl"), ("../../escape.stl", "escape.stl"),
+    ("evil:stream.stl", "evil_stream.stl"),           # a ":" would write a hidden NTFS stream
+    ("CON.stl", "_CON.stl"), ("lpt1.3mf", "_lpt1.3mf"), ("end. ", "end"), ("..", "model0"),
+    ("a" * 300 + ".stl", "a" * 196 + ".stl"),
+])
+def test_unpacked_names_are_safe_everywhere(member, expect):
+    assert archive.safe_file_name(member, "model0") == expect
+
+
+def test_a_damaged_member_leaves_no_half_file(tmp_path, monkeypatch):
+    z = make_zip(tmp_path / "d.zip", {"cube.stl": CUBE_STL})
+    contents = archive.read_contents(z)
+    contents.entries[0].size = 10                       # pretend the ZIP declared less data
+    with pytest.raises(archive.ArchiveError):
+        archive.unpack(contents)
+    left = [n for _, _, files in os.walk(archive.cache_root()) for n in files]
+    assert not any(n.endswith(".part") for n in left)
+
+
+def test_3mf_and_freecad_parts_are_size_checked(tmp_path, monkeypatch):
+    """3MF and FreeCAD files are ZIPs too: a part that unpacks to far too much is refused."""
+    from printview3d.loaders import zipsafe
+    monkeypatch.setattr(zipsafe, "RATIO_CHECK_FROM", 1000)
+    for name, member in (("bomb.3mf", "3D/3dmodel.model"), ("bomb.FCStd", "Document.xml")):
+        p = tmp_path / name
+        with zipfile.ZipFile(p, "w", zipfile.ZIP_DEFLATED) as zf:
+            zf.writestr("_rels/.rels", '<Relationships xmlns="http://schemas.openxmlformats.org/'
+                        'package/2006/relationships"><Relationship Type="x/3dmodel" '
+                        'Target="/3D/3dmodel.model"/></Relationships>')
+            zf.writestr(member, b"<a>" + b" " * 2_000_000 + b"</a>")
+        with pytest.raises(ValueError, match="protect your computer"):
+            load_file(str(p))

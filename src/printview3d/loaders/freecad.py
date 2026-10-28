@@ -21,6 +21,8 @@ import zipfile
 from dataclasses import dataclass, field
 from typing import Optional
 
+from . import zipsafe
+
 # Objects that never appear as solids in FreeCAD's 3D view.
 NOT_SOLID_TYPES = (
     "Sketcher::", "App::Origin", "App::Line", "App::Plane", "App::Point", "App::Part",
@@ -100,12 +102,12 @@ def read_fcstd(path: str) -> FreeCADDoc:
         if "Document.xml" not in names:
             raise ValueError("Not a FreeCAD document (Document.xml missing)")
         sizes = {i.filename: i.file_size for i in z.infolist()}
-        doc_root = ET.fromstring(z.read("Document.xml"))
-        gui_root = ET.fromstring(z.read("GuiDocument.xml")) if "GuiDocument.xml" in names else None
+        doc_root = ET.fromstring(zipsafe.read(z, "Document.xml", zipsafe.MAX_SMALL_BYTES))
+        gui_root = ET.fromstring(zipsafe.read(z, "GuiDocument.xml", zipsafe.MAX_SMALL_BYTES)) if "GuiDocument.xml" in names else None
         thumb = None
         for t in ("thumbnails/Thumbnail.png", "Thumbnail.png"):
             if t in names:
-                thumb = z.read(t)
+                thumb = zipsafe.read(z, t, zipsafe.MAX_SMALL_BYTES)
                 break
 
     doc = FreeCADDoc(program_version=doc_root.get("ProgramVersion", ""), thumbnail=thumb)
