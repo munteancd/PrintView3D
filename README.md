@@ -23,7 +23,8 @@
 <p align="center">
   📖 <b>Read the guide on the website:</b>
   <a href="https://sevagjb.github.io/PrintView3D/">English</a> ·
-  <a href="https://sevagjb.github.io/PrintView3D/ar/">العربية</a>
+  <a href="https://sevagjb.github.io/PrintView3D/ar/">العربية</a> ·
+  <a href="https://sevagjb.github.io/PrintView3D/nl/">Nederlands</a>
 </p>
 
 ![PrintView3D showing a sliced vase with the layer slider at 60 %](docs/screenshot-gcode.png)
@@ -620,7 +621,7 @@ PrintView3D.exe --unregister                       remove file associations
 |---|---|
 | English | Source language |
 | العربية Arabic | Complete, reviewed by a native speaker |
-| Nederlands | Complete, needs review by a native speaker |
+| Nederlands | Complete, review in progress |
 | Deutsch | Complete, needs review by a native speaker |
 | Français | Complete, needs review by a native speaker |
 | Español | Complete, needs review by a native speaker |
