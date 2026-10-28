@@ -27,6 +27,7 @@ from typing import TYPE_CHECKING, Callable, Optional
 
 from .i18n import tr
 from .loaders import file_kind
+from .loaders.zipsafe import MAX_FILE_BYTES, MAX_RATIO, RATIO_CHECK_FROM  # noqa: F401 - same limits
 
 if TYPE_CHECKING:
     from .loaders import ModelData
@@ -35,10 +36,7 @@ ARCHIVE_EXTENSIONS = (".zip",)
 
 # Limits (uncompressed sizes). Real model packages stay far below these.
 MAX_ENTRIES = 500                    # 3D files used from one ZIP
-MAX_FILE_BYTES = 2 * 1024 ** 3       # one file
 MAX_TOTAL_BYTES = 6 * 1024 ** 3      # all 3D files together
-MAX_RATIO = 400                      # unpacked / packed size; plain STL rarely passes 20
-RATIO_CHECK_FROM = 64 * 1024 ** 2    # the ratio only matters for files bigger than this
 
 # Kinds that "Show all" can place side by side: plain meshes. G-code is already sliced for one
 # printer at a fixed place on its bed, and STEP/FreeCAD need FreeCAD to convert (slow), so those
@@ -173,6 +171,30 @@ def _clean_old(keep: str, max_age_s: float = 24 * 3600) -> None:
             pass
 
 
+_UNSAFE_NAME = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
+_RESERVED = {"con", "prn", "aux", "nul", *(f"com{i}" for i in range(10)), *(f"lpt{i}" for i in range(10))}
+
+
+def safe_file_name(member: str, fallback: str) -> str:
+    """The file name of a ZIP member, made safe to create on Windows, macOS and Linux.
+
+    Only the last part of the name is used (never the folders, so "../x.stl" stays in the
+    cache). Characters Windows does not allow are replaced: a ":" would otherwise write into a
+    hidden "alternate data stream" of another file. Names Windows reserves (CON, NUL, ...) and
+    names ending in a dot or space get a "_"."""
+    name = os.path.basename(member.replace("\\", "/"))
+    name = _UNSAFE_NAME.sub("_", name).rstrip(" .")
+    if not name or name in (".", ".."):
+        return fallback
+    stem = name.split(".", 1)[0].lower()
+    if stem in _RESERVED:
+        name = "_" + name
+    if len(name) > 200:                                 # keep the extension
+        root, ext = os.path.splitext(name)
+        name = root[: 200 - len(ext)] + ext
+    return name
+
+
 def unpack(contents: ZipContents, progress: Optional[Callable[[float], None]] = None) -> ZipContents:
     """Unpack the 3D files into the cache (again only when the ZIP changed). Sets entry.path."""
     folder = _folder_for(contents.path)
@@ -182,23 +204,30 @@ def unpack(contents: ZipContents, progress: Optional[Callable[[float], None]] = 
     done = 0
     with zipfile.ZipFile(contents.path) as zf:
         for i, e in enumerate(contents.entries):
-            safe = os.path.basename(e.member.replace("\\", "/")) or f"model{i}"
+            safe = safe_file_name(e.member, f"model{i}")
             target = os.path.join(folder, str(i), safe)
             e.path = target
             if not (os.path.isfile(target) and os.path.getsize(target) == e.size):
                 os.makedirs(os.path.dirname(target), exist_ok=True)
                 tmp = target + ".part"
                 written = 0
-                with zf.open(e.member) as src, open(tmp, "wb") as dst:
-                    while True:
-                        chunk = src.read(1024 * 1024)
-                        if not chunk:
-                            break
-                        written += len(chunk)
-                        if written > e.size:            # more data than the ZIP declared
-                            raise ArchiveError(tr("{name} in the ZIP is damaged.").format(name=e.name))
-                        dst.write(chunk)
-                os.replace(tmp, target)
+                try:
+                    with zf.open(e.member) as src, open(tmp, "wb") as dst:
+                        while True:
+                            chunk = src.read(1024 * 1024)
+                            if not chunk:
+                                break
+                            written += len(chunk)
+                            if written > e.size:            # more data than the ZIP declared
+                                raise ArchiveError(tr("{name} in the ZIP is damaged.").format(name=e.name))
+                            dst.write(chunk)
+                    os.replace(tmp, target)
+                except BaseException:
+                    try:                                    # don't leave half a file behind
+                        os.remove(tmp)
+                    except OSError:
+                        pass
+                    raise
             done += e.size
             if progress:
                 progress(done / total)

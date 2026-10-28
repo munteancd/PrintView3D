@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.19.1
+Safety update. Thanks to a review of how PrintView3D handles files from the internet:
+- **glTF files** can no longer make PrintView3D read files outside the model's own folder. A
+  crafted file could name any file on the computer, or on Windows a network share, which would
+  make Windows contact a stranger's server just by opening the file.
+- **Updates** are only installed when GitHub gives the installer's SHA-256 fingerprint and it
+  matches, and the installer is only downloaded from this project's releases on GitHub.
+- **3MF and FreeCAD files** get the same protection as ZIP files: a part that would unpack to far
+  more data than a 3D file needs is refused, instead of filling the memory.
+- **ZIP files**: names that Windows can't use (with `:`, `CON`, …) are made safe when unpacking,
+  and a half-unpacked file is removed when unpacking fails.
+- **File Explorer thumbnails**: STL files with absurd coordinates, or millions of huge triangles,
+  can no longer keep Explorer busy.
+- **Linux**: the menu entry also works when the program's folder has `$`, `%` or `\` in its name.
+- New: [SECURITY.md](SECURITY.md) explains how to report a security problem privately.
+
 ## 0.19.0
 - **Open ZIP files**: open a downloaded model package (Printables, Thingiverse, …) like any other
   file, without unpacking it first. Only the 3D files are used (STL, 3MF, OBJ, PLY, OFF, glTF,

@@ -164,7 +164,8 @@ def _request(url: str, accept: str = "application/vnd.github+json"):
         "User-Agent": f"PrintView3D/{__version__}",     # GitHub requires a User-Agent
         "X-GitHub-Api-Version": "2022-11-28",
     })
-    return urllib.request.urlopen(req, timeout=TIMEOUT, context=_ssl_context())
+    opener = urllib.request.build_opener(urllib.request.HTTPSHandler(context=_ssl_context()), _GitHubOnly())
+    return opener.open(req, timeout=TIMEOUT)
 
 
 def fetch_latest() -> Release:
@@ -235,6 +236,29 @@ def install_kind() -> str:
     return "page"
 
 
+# Where GitHub serves release files: the download link, and the storage it redirects to.
+TRUSTED_HOSTS = ("github.com", "api.github.com", "objects.githubusercontent.com", "release-assets.githubusercontent.com")
+
+
+def trusted_download(url: str) -> bool:
+    """True for an https link to this project's releases on GitHub."""
+    from urllib.parse import urlsplit
+    u = urlsplit(url or "")
+    return (u.scheme == "https" and u.hostname == "github.com"
+            and u.path.startswith(f"/{REPO}/releases/download/"))
+
+
+class _GitHubOnly(urllib.request.HTTPRedirectHandler):
+    """Follow a download's redirects only to GitHub's own servers, and only over https."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        from urllib.parse import urlsplit
+        u = urlsplit(newurl)
+        if u.scheme != "https" or u.hostname not in TRUSTED_HOSTS:
+            raise UpdateError("The download was redirected away from GitHub")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
 def download_dir() -> str:
     base = os.environ.get("LOCALAPPDATA") or os.path.expanduser("~")
     return os.path.join(base, "PrintView3D", "cache", "update")
@@ -245,6 +269,11 @@ def download_installer(rel: Release, progress: Optional[Callable[[float], None]]
     """Download Setup.exe and check its SHA-256 fingerprint. Returns the file path."""
     if not rel.setup_url:
         raise UpdateError("This release has no Windows installer")
+    if not trusted_download(rel.setup_url):
+        raise UpdateError("The installer is not on GitHub, so it was not downloaded")
+    if not re.fullmatch(r"[0-9a-f]{64}", rel.setup_sha256 or ""):
+        # Without GitHub's fingerprint a damaged or replaced download could not be noticed.
+        raise UpdateError("GitHub did not give the installer's fingerprint, so it was not downloaded")
     os.makedirs(download_dir(), exist_ok=True)
     path = os.path.join(download_dir(), f"PrintView3D-Setup-{rel.version}.exe")
     part = path + ".part"
@@ -270,7 +299,7 @@ def download_installer(rel: Release, progress: Optional[Callable[[float], None]]
     except Exception as e:  # noqa: BLE001
         _remove(part)
         raise UpdateError(f"Download failed ({type(e).__name__})") from None
-    if rel.setup_sha256 and h.hexdigest() != rel.setup_sha256:
+    if h.hexdigest() != rel.setup_sha256:
         _remove(part)
         raise UpdateError("The download is damaged (fingerprint does not match). Please try again.")
     os.replace(part, path)

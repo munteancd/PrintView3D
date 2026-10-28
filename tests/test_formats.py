@@ -232,3 +232,35 @@ def test_uncoloured_parts_become_grey_next_to_coloured_ones(tmp_path):
     p.write_text("mtllib mix.mtl\no a\nusemtl blue\nv 0 0 0\nv 1 0 0\nv 0 1 0\nf 1 2 3\n"
                  "o b\nusemtl textured_only\nv 0 0 1\nv 1 0 1\nv 0 1 1\nf 4 5 6\n")
     assert [x.color for x in load_file(str(p)).parts] == ["#0000ff", "#c8c8c8"]
+
+
+@pytest.mark.parametrize("uri", [
+    "/etc/hostname", "../secret.bin", "sub/../../secret.bin", "C:/Windows/win.ini", "C:secret.bin",
+    r"\\server\share\x.bin", "//server/share/x.bin", "%2e%2e/secret.bin",
+    "file:///etc/hostname", "https://example.com/x.bin",
+])
+def test_gltf_never_reads_outside_its_folder(tmp_path, uri):
+    """A crafted glTF must not read other files, or make Windows contact a network share."""
+    doc, buf = _strip_doc()
+    (tmp_path / "secret.bin").write_bytes(buf)              # would load fine if it were followed
+    model = tmp_path / "model"
+    model.mkdir()
+    path = _gltf(model, doc, buf, external=True)
+    doc = json.loads(open(path, encoding="utf-8").read())
+    doc["buffers"][0]["uri"] = uri
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(doc, f)
+    with pytest.raises(ValueError, match="outside its own folder"):
+        load_file(path)
+
+
+def test_gltf_data_in_a_subfolder_still_works(tmp_path):
+    doc, buf = _strip_doc()
+    path = _gltf(tmp_path, doc, buf, external=True)
+    (tmp_path / "data").mkdir()
+    os.replace(tmp_path / "t.bin", tmp_path / "data" / "t.bin")
+    doc = json.loads(open(path, encoding="utf-8").read())
+    doc["buffers"][0]["uri"] = "./data/t.bin"
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(doc, f)
+    assert len(load_file(path).parts[0].faces) == 2

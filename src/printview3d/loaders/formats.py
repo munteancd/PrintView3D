@@ -476,6 +476,24 @@ class _Gltf:
                                  "cannot read yet. Export it again without mesh compression.")
         self._buffers: dict[int, bytes] = {}
 
+    def resource_path(self, uri: str) -> str:
+        """The file a buffer's "uri" names, which must lie in the glTF file's own folder.
+
+        A crafted file could otherwise name any file on the computer ("/home/me/.ssh/key",
+        "../../secret"), or on Windows a network share ("\\\\server\\share\\x.bin"): just opening
+        it would then make Windows contact that server and send the user's sign-in hash."""
+        from urllib.parse import unquote
+        rel = unquote(uri).replace("\\", "/")
+        bad = (not rel or rel.startswith("/") or ":" in rel           # absolute, C:, http:, file:
+               or any(part in ("", "..") for part in rel.split("/")))  # "//server", "a//b", ".."
+        if not bad:
+            p = os.path.realpath(os.path.join(self.folder, *rel.split("/")))
+            folder = os.path.realpath(self.folder)
+            if os.path.commonpath([p, folder]) == folder:            # also through a symlink
+                return p
+        raise ValueError("This glTF file refers to data outside its own folder, which PrintView3D "
+                         "does not read, to protect your computer.")
+
     def buffer(self, i: int) -> bytes:
         if i not in self._buffers:
             b = self.doc["buffers"][i]
@@ -487,8 +505,7 @@ class _Gltf:
             elif uri.startswith("data:"):
                 self._buffers[i] = base64.b64decode(uri.split(",", 1)[1])
             else:
-                from urllib.parse import unquote
-                p = os.path.join(self.folder, unquote(uri))
+                p = self.resource_path(uri)
                 try:
                     with open(p, "rb") as f:
                         self._buffers[i] = f.read()

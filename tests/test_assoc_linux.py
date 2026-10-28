@@ -53,3 +53,35 @@ def test_set_default_and_unregister(home):
     assert "image/png=org.gnome.eog.desktop" in text
     assert not al.is_registered()
     assert not os.path.exists(al.icon_install_path())
+
+
+def _desktop_exec_args(value: str) -> list[str]:
+    """Undo the quoting the way a desktop (GLib) reads an Exec= value: string escapes first,
+    then the quoted arguments, then the %% field code."""
+    value = value.replace("\\\\", "\\")
+    args, cur, i, quoted = [], "", 0, False
+    while i < len(value):
+        c = value[i]
+        if quoted and c == "\\" and i + 1 < len(value):
+            cur += value[i + 1]
+            i += 2
+            continue
+        if c == '"':
+            quoted = not quoted
+        elif c == " " and not quoted:
+            args.append(cur)
+            cur = ""
+        else:
+            cur += c
+        i += 1
+    args.append(cur)
+    return [a.replace("%%", "%") for a in args]
+
+
+@pytest.mark.parametrize("path", ["/opt/Print View/PrintView3D.AppImage",
+                                  "/home/me/$HOME/100%/a`b`/q\"uote/back\\slash/PrintView3D.AppImage"])
+def test_menu_entry_starts_odd_program_paths(path, monkeypatch):
+    from printview3d import assoc_linux
+    monkeypatch.setenv("APPIMAGE", path)
+    args = _desktop_exec_args(assoc_linux.exec_line())
+    assert args == [path, "%f"]

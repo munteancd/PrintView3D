@@ -275,6 +275,9 @@ It is for looking only; nothing in the file is changed.
 FreeCAD is found automatically in its usual places (Windows installer, Linux packages, Snap,
 Flatpak, AppImage). If yours is elsewhere, choose it in **Settings → FreeCAD**.
 
+Because FreeCAD itself opens the file, a FreeCAD or STEP file deserves the same trust as when you
+open it in FreeCAD: open files from people and sites you trust.
+
 <table>
 <tr>
 <td width="50%"><img src="docs/screenshot-freecad.png" alt="A FreeCAD bracket shown in 3D"><br><sub>With FreeCAD installed: the bracket in 3D.</sub></td>

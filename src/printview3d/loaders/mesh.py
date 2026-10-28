@@ -22,6 +22,7 @@ from typing import Callable, Optional
 
 import numpy as np
 
+from . import zipsafe
 from .gcode import parse_bed_shape
 
 
@@ -187,7 +188,7 @@ def _norm(p: str) -> str:
 
 def _find_root_model(z: zipfile.ZipFile) -> str:
     try:
-        rels = _parse_xml(z.read("_rels/.rels"))
+        rels = _parse_xml(zipsafe.read(z, "_rels/.rels", zipsafe.MAX_SMALL_BYTES))
         for r in rels.iter("{%s}Relationship" % NS_RELS):
             if r.get("Type", "").endswith("/3dmodel"):
                 return _norm(r.get("Target", ""))
@@ -244,7 +245,7 @@ def _read_slicer_parts(z: zipfile.ZipFile, lower: dict) -> _SlicerParts:
     name = lower.get("metadata/model_settings.config")
     if name:
         try:
-            root = _parse_xml(z.read(name))
+            root = _parse_xml(zipsafe.read(z, name, zipsafe.MAX_SMALL_BYTES))
             for obj in root.iter("object"):
                 oid = obj.get("id")
                 for md in obj.findall("metadata"):
@@ -257,7 +258,7 @@ def _read_slicer_parts(z: zipfile.ZipFile, lower: dict) -> _SlicerParts:
     name = lower.get("metadata/slic3r_pe_model.config")
     if name:
         try:
-            root = _parse_xml(z.read(name))
+            root = _parse_xml(zipsafe.read(z, name, zipsafe.MAX_SMALL_BYTES))
             for obj in root.iter("object"):
                 oid = obj.get("id")
                 keep, any_volume = [], False
@@ -300,7 +301,7 @@ def _read_3mf_objects(z: zipfile.ZipFile, raw: bool = False,
         part_path = _norm(part_path)
         if part_path not in parts_cache:
             real = lower.get(part_path.lower(), part_path)
-            root = _parse_xml(z.read(real))
+            root = _parse_xml(zipsafe.read(z, real))
             scale = UNIT_SCALE.get(root.get("unit", "millimeter"), 1.0)
             objects = {}
             res = root.find(C + "resources")
@@ -377,6 +378,14 @@ def read_3mf_for_export(path: str, progress: Optional[Callable[[float], None]] =
     return [MeshPart(name, v, f) for name, v, f in found]
 
 
+def _picture(z: zipfile.ZipFile, name: str) -> Optional[bytes]:
+    """An embedded preview picture, or None when it is unreasonably large."""
+    try:
+        return zipsafe.read(z, name, zipsafe.MAX_SMALL_BYTES)
+    except ValueError:
+        return None
+
+
 def load_3mf(path: str, progress: Optional[Callable[[float], None]] = None) -> ModelData:
     with zipfile.ZipFile(path) as z:
         names = z.namelist()
@@ -397,7 +406,7 @@ def load_3mf(path: str, progress: Optional[Callable[[float], None]] = None) -> M
         cfg_name = lower.get("metadata/project_settings.config")
         if cfg_name:
             try:
-                cfg = json.loads(z.read(cfg_name).decode("utf-8", "replace"))
+                cfg = json.loads(zipsafe.read(z, cfg_name, zipsafe.MAX_SMALL_BYTES).decode("utf-8", "replace"))
 
                 def first(v):
                     return v[0] if isinstance(v, list) and v else v
@@ -421,13 +430,13 @@ def load_3mf(path: str, progress: Optional[Callable[[float], None]] = None) -> M
         thumb = None
         for cand in ("metadata/plate_1.png", "metadata/thumbnail.png", "metadata/top_1.png"):
             if cand in lower:
-                thumb = z.read(lower[cand])
+                thumb = _picture(z, lower[cand])
                 break
         if thumb is None:
             for n in names:
                 nl = n.lower()
                 if (nl.startswith("metadata/") or nl.startswith("thumbnails/")) and nl.endswith((".png", ".jpg", ".jpeg")):
-                    thumb = z.read(n)
+                    thumb = _picture(z, n)
                     break
 
         gcodes = sorted(n for n in names if re.match(r"(?i)metadata/plate_\d+\.gcode$", n))
@@ -439,7 +448,7 @@ def load_3mf(path: str, progress: Optional[Callable[[float], None]] = None) -> M
 
 def read_embedded_gcode(path: str, member: str) -> str:
     with zipfile.ZipFile(path) as z:
-        return z.read(member).decode("utf-8", errors="replace")
+        return zipsafe.read(z, member).decode("utf-8", errors="replace")
 
 
 # ==========================================================================

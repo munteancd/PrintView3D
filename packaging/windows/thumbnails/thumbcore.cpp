@@ -20,6 +20,12 @@ namespace {
 const uint64_t kMaxImage = 20u << 20;     // embedded picture: at most 20 MB
 const uint64_t kMaxStl = 512u << 20;      // STL: at most 512 MB is read
 const size_t kGcodeHead = 4u << 20;       // G-code thumbnails are near the top
+const uint32_t kMaxTriangles = 4000000;   // draw at most 4 M triangles
+const float kMaxCoord = 1e15f;            // larger (or NaN/inf) coordinates count as 0, so the
+                                          // projection below can never overflow to infinity
+const uint64_t kMaxPixelTests = 600000000u;  // drawing budget: a hostile STL of millions of
+                                             // huge triangles stops here instead of keeping
+                                             // Explorer busy for minutes
 
 uint16_t le16(const uint8_t* p) { return uint16_t(p[0] | (p[1] << 8)); }
 uint32_t le32(const uint8_t* p) { return uint32_t(p[0]) | (uint32_t(p[1]) << 8) | (uint32_t(p[2]) << 16) | (uint32_t(p[3]) << 24); }
@@ -274,7 +280,7 @@ bool load_stl(Source& src, std::vector<V3>& tri) {
     uint8_t c[4];
     if (n >= 84 && src.read(80, c, 4) && 84 + uint64_t(le32(c)) * 50 == n) {
         uint32_t count = le32(c);
-        const uint32_t kMax = 4000000;                        // draw at most 4 M triangles
+        const uint32_t kMax = kMaxTriangles;
         uint32_t step = count > kMax ? (count + kMax - 1) / kMax : 1;
         std::vector<uint8_t> rec(50);
         const size_t chunk = 20000;
@@ -308,6 +314,7 @@ bool load_stl(Source& src, std::vector<V3>& tri) {
         v.z = std::strtof(e, &e);
         p = size_t(e - text.c_str());
         tri.push_back(v);
+        if (tri.size() >= size_t(kMaxTriangles) * 3) break;
     }
     tri.resize(tri.size() - tri.size() % 3);
     return !tri.empty();
@@ -324,7 +331,8 @@ bool render_stl(Source& src, int size, std::vector<uint8_t>& rgba) {
     const float ca = std::cos(az), sa = std::sin(az), ce = std::cos(el), se = std::sin(el);
     float minx = 1e30f, maxx = -1e30f, miny = 1e30f, maxy = -1e30f;
     for (auto& p : t) {
-        if (!std::isfinite(p.x) || !std::isfinite(p.y) || !std::isfinite(p.z)) { p = {0, 0, 0}; }
+        if (!(std::fabs(p.x) <= kMaxCoord && std::fabs(p.y) <= kMaxCoord && std::fabs(p.z) <= kMaxCoord))
+            p = {0, 0, 0};                        // NaN, infinity or absurdly far away
         float x = ca * p.x - sa * p.y;            // screen right
         float d = sa * p.x + ca * p.y;            // into the screen (horizontal)
         float y = ce * p.z + se * d;              // screen up
@@ -335,7 +343,7 @@ bool render_stl(Source& src, int size, std::vector<uint8_t>& rgba) {
     }
     const int S = size * 2;                       // draw twice as large, then smooth
     float span = std::max(maxx - minx, maxy - miny);
-    if (!(span > 0)) return false;
+    if (!(span > 0) || !std::isfinite(span)) return false;
     float scale = (S * 0.92f) / span;
     float ox = (S - (maxx - minx) * scale) * 0.5f, oy = (S - (maxy - miny) * scale) * 0.5f;
 
@@ -343,7 +351,8 @@ bool render_stl(Source& src, int size, std::vector<uint8_t>& rgba) {
     std::vector<uint8_t> shade(size_t(S) * S, 0);
     std::vector<uint8_t> hit(size_t(S) * S, 0);
     const float lx = -0.35f, ly = 0.55f, lz = -0.76f;   // light from top-left, toward the viewer
-    for (size_t i = 0; i + 2 < t.size(); i += 3) {
+    uint64_t pixel_tests = 0;
+    for (size_t i = 0; i + 2 < t.size() && pixel_tests < kMaxPixelTests; i += 3) {
         V3 a = t[i], b = t[i + 1], c = t[i + 2];
         float ax = (a.x - minx) * scale + ox, ay = S - ((a.y - miny) * scale + oy);
         float bx = (b.x - minx) * scale + ox, by = S - ((b.y - miny) * scale + oy);
@@ -364,6 +373,8 @@ bool render_stl(Source& src, int size, std::vector<uint8_t>& rgba) {
         int x1 = std::min(S - 1, int(std::ceil(std::max({ax, bx, cx}))));
         int y0 = std::max(0, int(std::floor(std::min({ay, by, cy}))));
         int y1 = std::min(S - 1, int(std::ceil(std::max({ay, by, cy}))));
+        if (x1 < x0 || y1 < y0) continue;
+        pixel_tests += uint64_t(x1 - x0 + 1) * uint64_t(y1 - y0 + 1);
         for (int y = y0; y <= y1; ++y) {
             float py = y + 0.5f;
             for (int x = x0; x <= x1; ++x) {
