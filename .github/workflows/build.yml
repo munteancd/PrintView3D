@@ -272,8 +272,22 @@ jobs:
           if-no-files-found: ignore
 
   macos:
-    # Apple silicon (M1 and newer). Ad-hoc signed, not notarized: no paid Apple account.
-    runs-on: macos-15
+    # One build per kind of Mac: Apple silicon (M1 and newer) and Intel. Each is built on its own
+    # kind of Mac, so every library inside is the right one. Ad-hoc signed, not notarized: no paid
+    # Apple account.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            kind: AppleSilicon
+            arch: arm64
+          - runner: macos-15-intel
+            kind: Intel
+            arch: x86_64
+    runs-on: ${{ matrix.runner }}
+    env:
+      DMG: PrintView3D-macOS-${{ matrix.kind }}.dmg
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -306,6 +320,29 @@ jobs:
           codesign --verify --deep --strict --verbose=2 dist/PrintView3D.app
           /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" dist/PrintView3D.app/Contents/Info.plist
 
+      - name: Check the processor type and the oldest macOS it runs on
+        # Every program file must be for this kind of Mac, and none may need a newer macOS than
+        # the one promised in Info.plist (LSMinimumSystemVersion) and in the README.
+        run: |
+          app=dist/PrintView3D.app
+          promised=$(/usr/libexec/PlistBuddy -c "Print :LSMinimumSystemVersion" $app/Contents/Info.plist)
+          lipo -verify_arch "$app/Contents/MacOS/PrintView3D" ${{ matrix.arch }}
+          worst=0.0; worst_file=""; wrong_arch=""
+          while IFS= read -r -d '' f; do
+            file -b "$f" | grep -q "Mach-O" || continue
+            lipo -verify_arch "$f" ${{ matrix.arch }} 2>/dev/null || wrong_arch="$wrong_arch $f"
+            v=$(vtool -arch ${{ matrix.arch }} -show-build "$f" 2>/dev/null | awk '/minos|version /{print $2; exit}')
+            [ -n "$v" ] || continue
+            if [ "$(printf '%s\n%s\n' "$worst" "$v" | sort -V | tail -1)" = "$v" ] && [ "$v" != "$worst" ]; then
+              worst=$v; worst_file=$f
+            fi
+          done < <(find "$app" -type f \( -perm -u+x -o -name "*.dylib" -o -name "*.so" \) -print0)
+          echo "Oldest macOS needed: $worst (by ${worst_file#$app/}); promised: $promised"
+          if [ -n "$wrong_arch" ]; then echo "::error::Not built for ${{ matrix.arch }}:$wrong_arch"; exit 1; fi
+          if [ "$(printf '%s\n%s\n' "$promised" "$worst" | sort -V | tail -1)" != "$promised" ]; then
+            echo "::error::A file needs macOS $worst, newer than the promised $promised"; exit 1
+          fi
+
       - name: Smoke test (render a sample to an image)
         continue-on-error: true
         timeout-minutes: 3
@@ -319,21 +356,21 @@ jobs:
           mkdir dmg
           cp -R dist/PrintView3D.app dmg/
           ln -s /Applications dmg/Applications
-          hdiutil create -volname PrintView3D -srcfolder dmg -ov -format UDZO PrintView3D-macOS-AppleSilicon.dmg
+          hdiutil create -volname PrintView3D -srcfolder dmg -ov -format UDZO "$DMG"
           # The app inside the .dmg must still have an intact signature.
-          hdiutil attach -nobrowse -readonly PrintView3D-macOS-AppleSilicon.dmg -mountpoint /tmp/pv3d
+          hdiutil attach -nobrowse -readonly "$DMG" -mountpoint /tmp/pv3d
           codesign --verify --deep --strict /tmp/pv3d/PrintView3D.app && echo "Signature inside the .dmg OK"
           hdiutil detach /tmp/pv3d
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: PrintView3D-macos
-          path: PrintView3D-macOS-AppleSilicon.dmg
+          name: PrintView3D-macos-${{ matrix.kind }}
+          path: ${{ env.DMG }}
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
-          name: smoke-test-macos
+          name: smoke-test-macos-${{ matrix.kind }}
           path: smoke-mac.png
           if-no-files-found: ignore
 
@@ -377,7 +414,8 @@ jobs:
           | **Windows 10/11** | `PrintView3D-Setup.exe` | Double-click and follow the steps (no admin rights needed) |
           | Windows, portable | `PrintView3D-windows.zip` | Extract and run `PrintView3D.exe`, nothing is installed |
           | **Linux** (x86-64) | `PrintView3D-x86_64.AppImage` | Make it executable and run it ([details]({repo}#linux)) |
-          | **macOS 12+ (Apple silicon), beta** | `PrintView3D-macOS-AppleSilicon.dmg` | Open, drag to Applications, first start: System Settings → Privacy & Security → **Open Anyway** ([details]({repo}#macos)) |
+          | **macOS 14+ (Apple silicon: M1 and newer), beta** | `PrintView3D-macOS-AppleSilicon.dmg` | Open, drag to Applications, first start: System Settings → Privacy & Security → **Open Anyway** ([details]({repo}#macos)) |
+          | **macOS 14+ (Intel), beta** | `PrintView3D-macOS-Intel.dmg` | The same as for Apple silicon ([details]({repo}#macos)) |
 
           No Python needed. See the [README]({repo}#install) for details.
 
@@ -413,6 +451,7 @@ jobs:
             PrintView3D-windows.zip
             PrintView3D-x86_64.AppImage
             PrintView3D-macOS-AppleSilicon.dmg
+            PrintView3D-macOS-Intel.dmg
 
   # A new release also goes to the Windows Package Manager ("winget install PrintView3D").
   winget:

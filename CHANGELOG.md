@@ -15,6 +15,9 @@ Safety update. Thanks to a review of how PrintView3D handles files from the inte
   can no longer keep Explorer busy.
 - **Linux**: the menu entry also works when the program's folder has `$`, `%` or `\` in its name.
 - New: [SECURITY.md](SECURITY.md) explains how to report a security problem privately.
+- **macOS for Intel Macs** (beta): `PrintView3D-macOS-Intel.dmg`, next to the Apple silicon version.
+  Both need **macOS 14 (Sonoma) or newer**; the build now checks this for every file in the app
+  (earlier notes said macOS 12, which the current Qt version no longer supports).
 
 ## 0.19.0
 - **Open ZIP files**: open a downloaded model package (Printables, Thingiverse, …) like any other
