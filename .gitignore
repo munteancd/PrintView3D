@@ -18,3 +18,4 @@ Thumbs.db
 
 # Compiled translations (built by tools/i18n.py compile)
 src/printview3d/resources/translations/
+site/

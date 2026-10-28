@@ -1,0 +1,98 @@
+# The website: https://sevagjb.github.io/PrintView3D/  (built by .github/workflows/website.yml)
+# Pages are in docs/: page.md is English, page.ar.md Arabic, and so on. A page that has no
+# translation yet is shown in English, so a language can be added one page at a time.
+# Try it locally:  pip install -r requirements-website.txt  &&  mkdocs serve
+site_name: PrintView3D
+site_url: https://sevagjb.github.io/PrintView3D/
+site_description: Free viewer for STL, 3MF, G-code, FreeCAD, STEP, OBJ and glTF files, with one-click hand-off to your slicer.
+repo_url: https://github.com/sevagjb/PrintView3D
+repo_name: sevagjb/PrintView3D
+edit_uri: edit/main/docs/
+copyright: MIT license · free to use, change and share
+validation:
+  anchors: warn                  # a link to a missing #heading fails the build
+use_directory_urls: false        # page.html next to the pictures, so the HTML tables' images work
+
+theme:
+  name: material
+  logo: assets/icon.png
+  favicon: assets/icon.png
+  icon:
+    repo: material/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: green
+      toggle: {icon: material/weather-night, name: Dark theme}
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: green
+      toggle: {icon: material/weather-sunny, name: Light theme}
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+
+extra_css:
+  - assets/extra.css
+
+plugins:
+  - search
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true      # language switcher in the header, right-to-left for Arabic
+      reconfigure_search: true
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: ar
+          name: العربية
+          build: true
+          site_name: PrintView3D
+          nav_translations:
+            Home: الرئيسية
+            Install: التثبيت
+            Using PrintView3D: استخدام PrintView3D
+            FreeCAD, STEP and other formats: FreeCAD و STEP وصيغ أخرى
+            Build it yourself: البناء بنفسك
+            Translate and contribute: الترجمة والمساهمة
+            How to translate: كيف تترجم
+
+nav:
+  - Home: index.md
+  - Install: install.md
+  - Using PrintView3D: use.md
+  - FreeCAD, STEP and other formats: cad.md
+  - Build it yourself: build.md
+  - Translate and contribute:
+      - contribute.md
+      - How to translate: TRANSLATING.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
