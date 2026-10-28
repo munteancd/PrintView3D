@@ -28,7 +28,7 @@ jobs:
   winget:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Which version, and is it in winget already?
         id: check
@@ -70,7 +70,14 @@ jobs:
           TITLE: ${{ steps.check.outputs.title }}
         run: |
           if (-not $env:WINGET_TOKEN) { throw "The repository secret WINGET_TOKEN is missing (Settings -> Secrets and variables -> Actions)." }
-          Invoke-WebRequest https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
+          # A fixed wingetcreate version, checked before it gets the token: its SHA-256, and
+          # Windows' check that Microsoft signed it.
+          $url = "https://github.com/microsoft/winget-create/releases/download/v1.12.13.0/wingetcreate.exe"
+          Invoke-WebRequest $url -OutFile wingetcreate.exe
+          $hash = (Get-FileHash wingetcreate.exe -Algorithm SHA256).Hash
+          if ($hash -ne "24042BD37915805615E6CF969AC57C6439124C3FE85823327F5F3FB24BD9FFEA") { throw "wingetcreate.exe has an unexpected SHA-256: $hash" }
+          $sig = Get-AuthenticodeSignature wingetcreate.exe
+          if ($sig.Status -ne "Valid" -or $sig.SignerCertificate.Subject -notmatch "O=Microsoft Corporation") { throw "wingetcreate.exe is not signed by Microsoft ($($sig.Status))" }
           .\wingetcreate.exe submit --prtitle $env:TITLE --token $env:WINGET_TOKEN "winget-out\manifests\s\sevagjb\PrintView3D\$env:V"
           if ($LASTEXITCODE -ne 0) { throw "wingetcreate could not submit the manifests" }
           Write-Output "::notice title=winget::Sent. The pull request is in https://github.com/microsoft/winget-pkgs/pulls (author: the token's account)."

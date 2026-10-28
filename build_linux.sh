@@ -43,7 +43,7 @@ fi
 
 echo "[2/5] Installing dependencies (first time takes a few minutes) ..."
 .venv/bin/python -m pip install --upgrade pip >/dev/null
-.venv/bin/python -m pip install -r requirements.txt -r requirements-build.txt
+.venv/bin/python -m pip install -r requirements.txt -r requirements-build.txt -c requirements-build-lock.txt
 
 echo "[3/5] Building translations and running tests ..."
 .venv/bin/python tools/i18n.py compile
