@@ -381,15 +381,31 @@ jobs:
           test -f smoke-mac.png && echo "Smoke test OK"
 
       - name: Make the .dmg
+        # hdiutil on GitHub's Macs sometimes fails with "Resource busy" while macOS is still
+        # scanning the new files; try a few times, and show hdiutil's own message if it keeps failing.
         run: |
           mkdir dmg
           cp -R dist/PrintView3D.app dmg/
           ln -s /Applications dmg/Applications
-          hdiutil create -volname PrintView3D -srcfolder dmg -ov -format UDZO "$DMG"
+          made=no
+          for try in 1 2 3 4 5; do
+            if hdiutil create -volname PrintView3D -srcfolder dmg -ov -format UDZO "$DMG" > hdiutil.log 2>&1; then
+              made=yes; break
+            fi
+            echo "Attempt $try failed:"; cat hdiutil.log; sleep $((try * 10))
+          done
+          if [ $made != yes ]; then
+            echo "::error title=hdiutil create::$(tail -n 5 hdiutil.log | tr '\n' ' ')"; exit 1
+          fi
           # The app inside the .dmg must still have an intact signature.
-          hdiutil attach -nobrowse -readonly "$DMG" -mountpoint /tmp/pv3d
-          codesign --verify --deep --strict /tmp/pv3d/PrintView3D.app && echo "Signature inside the .dmg OK"
-          hdiutil detach /tmp/pv3d
+          if ! hdiutil attach -nobrowse -readonly "$DMG" -mountpoint /tmp/pv3d > attach.log 2>&1; then
+            echo "::error title=hdiutil attach::$(tail -n 5 attach.log | tr '\n' ' ')"; exit 1
+          fi
+          if ! codesign --verify --deep --strict /tmp/pv3d/PrintView3D.app > sign.log 2>&1; then
+            echo "::error title=Signature inside the .dmg::$(tail -n 5 sign.log | tr '\n' ' ')"; exit 1
+          fi
+          echo "Signature inside the .dmg OK"
+          hdiutil detach /tmp/pv3d || hdiutil detach -force /tmp/pv3d
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
