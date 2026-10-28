@@ -20,6 +20,12 @@
   <a href="CHANGELOG.md">What's new</a>
 </p>
 
+<p align="center">
+  📖 <b>Read the guide on the website:</b>
+  <a href="https://sevagjb.github.io/PrintView3D/">English</a> ·
+  <a href="https://sevagjb.github.io/PrintView3D/ar/">العربية</a>
+</p>
+
 ![PrintView3D showing a sliced vase with the layer slider at 60 %](docs/screenshot-gcode.png)
 
 Microsoft retired its **3D Viewer** app, and Linux never had a good one. PrintView3D fills the gap, made for people who 3D-print:
