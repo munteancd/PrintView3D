@@ -51,10 +51,15 @@ STL-bestanden, bijvoorbeeld om een model te delen of te openen in een programma 
 
 - Een venster toont elk object met zijn naam en aantal driehoeken, allemaal aangevinkt; vink uit wat je niet
   nodig hebt.
+- **Het pijltje naast de knop** biedt elke manier direct: *Alle objecten als één STL*, *Eén STL per object*
+  en *Objecten kiezen…* (het venster). Wat een klik doet, staat vetgedrukt.
+- **Wat een klik doet** (en `Ctrl+E`) kies je in **Instellingen → Bestanden → STL exporteren**: de lijst
+  met objecten tonen (standaard), alles opslaan als één STL, of één STL per object opslaan.
+  *Wijzigen wat een klik doet…* onderaan het menu van het pijltje opent die instelling.
 - **Eén gecombineerde STL**: de aangevinkte objecten in één bestand, op hun plek op de plaat.
 - **Eén STL per object**: elk bestand krijgt de naam van zijn object en komt in een map die je kiest
   (PrintView3D vraagt het voordat het bestaande bestanden vervangt).
-- Een 3MF met maar één object gaat direct naar het venster Opslaan.
+- Een bestand met maar één object gaat altijd direct naar het venster Opslaan.
 - **Alleen de pure vorm:** modifiers, negatieve onderdelen en support-blokkers / -afdwingers worden
   weggelaten (zoals vastgelegd door Creality Print, OrcaSlicer, Bambu Studio en PrusaSlicer), en ook kleuren,
   materialen en printinstellingen. Maten zijn in millimeters; de bestanden zijn binaire STL.

@@ -75,6 +75,10 @@ NOTES = {
     "Plate {n}": "A build plate inside a slicer project; {n} is its number.",
     "Missing or wrong translation? Anyone can correct it on GitHub: {guide}":
         "Settings → Language. {guide} becomes the link 'How to translate on GitHub'.",
+    "Change what a click does…": "Last item in the menu of the Export STL button: opens the setting "
+        "that decides what clicking the button itself does.",
+    "{key} does the same. The arrow next to the button always offers all three ways. A file with only one "
+    "object is always saved straight away.": "Settings → Files → Export STL. {key} is the keyboard shortcut (Ctrl+E).",
     "Star on GitHub": "Button: opens the project page on GitHub, where people can 'star' (like) it.",
     "Like PrintView3D? {star} It helps other people find it.":
         "Settings → About. {star} becomes the link 'Give it a star on GitHub.'",

@@ -27,6 +27,7 @@ DEFAULTS = {
     "update_latest": {},        # newest release seen on GitHub (version, notes, download)
     "update_skip": "",          # version the user chose to skip
     "new_window": False,         # Settings -> Files: True = every file in its own window
+    "export_mode": "dialog",    # Settings -> Files: what a click on Export STL does (EXPORT_MODES)
     "star_prompt_shown": False, # the one-time "star us on GitHub" message (new installs only)
     "last_run_version": "",     # version of the last start; "" = new install ("What's new" after updates)
     "recent_files": [],
@@ -34,6 +35,9 @@ DEFAULTS = {
     "show_bed": True,
     "max_recent": 10,
 }
+
+# Export STL: show the list of objects, save all in one STL, or one STL per object.
+EXPORT_MODES = ("dialog", "combined", "per_object")
 
 
 def settings_dir() -> str:

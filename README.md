@@ -302,10 +302,15 @@ files, for example to share a model or open it in a program that does not read 3
 
 - A dialog lists every object with its name and triangle count, all ticked; untick what you don't
   need.
+- **The arrow next to the button** offers every way directly: *All objects as one STL*, *One STL per
+  object* and *Choose objects…* (the dialog). The one a click makes is shown in bold.
+- **What a click does** (and `Ctrl+E`) is chosen in **Settings → Files → Export STL**: show the list
+  of objects (the default), save everything as one STL, or save one STL per object. *Change what a
+  click does…* at the bottom of the arrow's menu opens that setting.
 - **One combined STL**: the ticked objects in one file, placed as they are on the plate.
 - **One STL per object**: each file is named after its object and saved into a folder you choose
   (PrintView3D asks before replacing files that are already there).
-- A 3MF with only one object goes straight to the Save dialog.
+- A file with only one object always goes straight to the Save dialog.
 - **Raw geometry only:** modifiers, negative parts and support blockers / enforcers are left out
   (as recorded by Creality Print, OrcaSlicer, Bambu Studio and PrusaSlicer), and so are colours,
   materials and print settings. Sizes are in millimetres; the files are binary STL.

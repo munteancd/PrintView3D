@@ -29,7 +29,7 @@ from ..loaders import (
     parse_gcode_text, read_3mf_for_export, read_embedded_gcode, stl_file_names, write_binary_stl,
 )
 from ..loaders.gcode import FEATURE_INDEX
-from ..settings import Settings
+from ..settings import EXPORT_MODES, Settings
 from .labels import feature_label, meta_label, meta_value
 from . import theme, update_ui
 from .. import updates as up
@@ -349,11 +349,30 @@ class MainWindow(QMainWindow):
         self.slicer_btn.setPopupMode(QToolButton.MenuButtonPopup)
         tb.addWidget(self.slicer_btn)
         # 3MF projects, FreeCAD and STEP files: save the objects as plain STL files.
-        self.act_export_stl = QAction(self, triggered=self.export_stl)
+        # A click (or Ctrl+E) does what Settings -> Files says; the arrow offers every way.
+        self.act_export_stl = QAction(self, triggered=lambda: self.export_stl())
         self.act_export_stl.setShortcut(QKeySequence("Ctrl+E"))
-        self.act_export_stl.setVisible(False)
-        tb.addAction(self.act_export_stl)
-        tb.widgetForAction(self.act_export_stl).setObjectName("exportButton")
+        self.addAction(self.act_export_stl)
+        self.act_export_one = QAction(self, triggered=lambda: self.export_stl("combined"))
+        self.act_export_each = QAction(self, triggered=lambda: self.export_stl("per_object"))
+        self.act_export_choose = QAction(self, triggered=lambda: self.export_stl("dialog"))
+        self.act_export_setting = QAction(self, triggered=lambda: self.open_settings("files"))
+        self.export_menu = QMenu(self)
+        self.export_menu.addAction(self.act_export_one)
+        self.export_menu.addAction(self.act_export_each)
+        self.export_menu.addAction(self.act_export_choose)
+        self.export_menu.addSeparator()
+        self.export_menu.addAction(self.act_export_setting)
+        self.export_menu.aboutToShow.connect(self._mark_export_default)
+        self.export_btn = QToolButton()
+        self.export_btn.setObjectName("exportButton")
+        self.export_btn.setIconSize(QSize(22, 22))
+        self.export_btn.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        self.export_btn.setDefaultAction(self.act_export_stl)
+        self.export_btn.setMenu(self.export_menu)
+        self.export_btn.setPopupMode(QToolButton.MenuButtonPopup)
+        self.export_btn_act = tb.addWidget(self.export_btn)
+        self._set_export_visible(False)
         tb.addSeparator()
 
         self.view_actions = []
@@ -666,6 +685,10 @@ class MainWindow(QMainWindow):
         self.act_export_stl.setToolTip(tr("Save the objects of this CAD file as STL files (Ctrl+E)")
                                        if getattr(self, "current_kind", "") in ("freecad", "step") else
                                        tr("Save the objects of this 3MF project as STL files (Ctrl+E)"))
+        self.act_export_one.setText(tr("All objects as one STL"))
+        self.act_export_each.setText(tr("One STL per object"))
+        self.act_export_choose.setText(tr("Choose objects…"))
+        self.act_export_setting.setText(tr("Change what a click does…"))
         self.act_bed.setText(tr("Plate"))
         self.act_bed.setToolTip(tr("Show / hide the build plate grid"))
         self.act_screenshot.setText(tr("Screenshot"))
@@ -1194,7 +1217,7 @@ class MainWindow(QMainWindow):
         self._update_slicer_button()
         # 3MF projects; FreeCAD and STEP files once FreeCAD has turned them into 3D (it has parts).
         cad_parts = kind in ("freecad", "step") and bool(getattr(data, "parts", None))
-        self.act_export_stl.setVisible(kind == "3mf" or cad_parts)
+        self._set_export_visible(kind == "3mf" or cad_parts)
         self.act_export_stl.setEnabled(True)
         self.act_export_stl.setToolTip(tr("Save the objects of this 3MF project as STL files (Ctrl+E)")
                                        if kind == "3mf" else
@@ -1652,13 +1675,34 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage(tr("Opening {file} in {slicer}…").format(file=what, slicer=name), 6000)
 
     # ------------------------------------------------------------ export STL
-    def export_stl(self):
+    def _set_export_visible(self, on: bool):
+        """Show or hide the Export STL button. The action follows, so Ctrl+E only works when
+        there is something to export."""
+        self.act_export_stl.setVisible(on)
+        self.export_btn_act.setVisible(on)
+
+    def _export_default(self) -> str:
+        """What a click on Export STL does (Settings -> Files): "dialog", "combined" or "per_object"."""
+        mode = self.settings.get("export_mode", "dialog")
+        return mode if mode in EXPORT_MODES else "dialog"
+
+    def _mark_export_default(self):
+        """In the arrow's menu, show the choice a click on the button makes in bold."""
+        default = {"combined": self.act_export_one, "per_object": self.act_export_each,
+                   "dialog": self.act_export_choose}[self._export_default()]
+        self.export_menu.setDefaultAction(default)
+
+    def export_stl(self, mode: str | None = None):
         """Export STL. 3MF projects: read the objects again as raw geometry (in the background;
         big projects take a moment). FreeCAD and STEP files: the solids FreeCAD made for the view,
-        which are already the shapes as FreeCAD shows them. Then the user chooses which and how."""
+        which are already the shapes as FreeCAD shows them.
+        mode: "dialog" (choose the objects and how), "combined" (all in one STL) or "per_object"
+        (one STL each); None = the choice in Settings -> Files. A file with one object is always
+        saved straight away."""
         path = self.current_path
         if not path or not self.act_export_stl.isEnabled():
             return
+        self._export_mode = mode if mode in EXPORT_MODES else self._export_default()
         if self.current_kind in ("freecad", "step"):
             parts = list(getattr(self.model, "parts", None) or [])
             if parts:
@@ -1694,6 +1738,13 @@ class MainWindow(QMainWindow):
             return
         if len(parts) == 1:                     # nothing to choose: straight to Save
             self._save_combined_stl(parts)
+            return
+        mode = getattr(self, "_export_mode", "dialog")
+        if mode == "combined":
+            self._save_combined_stl(parts)
+            return
+        if mode == "per_object":
+            self._save_stl_per_object(parts)
             return
         dlg = ExportStlDialog(parts, self)
         if dlg.exec() != ExportStlDialog.Accepted:
