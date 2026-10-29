@@ -46,14 +46,26 @@ def decode(data: bytes) -> str:
     return path if isinstance(path, str) else ""
 
 
+DELIVERED = "delivered"
+NO_WINDOW = "no window"         # nothing listens: no PrintView3D is open
+NO_REPLY = "no reply"           # something listens but did not answer "ok" in time
+
+
 def send_to_running(path: str, name: str | None = None) -> bool:
     """Hand the file to a PrintView3D that is already running. True if it took it."""
+    return hand_over(path, name) == DELIVERED
+
+
+def hand_over(path: str, name: str | None = None) -> str:
+    """Like send_to_running(), but says what happened: DELIVERED, NO_WINDOW or NO_REPLY."""
+    import time
+
     from PySide6.QtNetwork import QLocalSocket
 
     sock = QLocalSocket()
     sock.connectToServer(name or server_name())
     if not sock.waitForConnected(CONNECT_TIMEOUT_MS):
-        return False
+        return NO_WINDOW
     if sys.platform == "win32":
         # Windows only lets the program the user is working with bring a window to the front;
         # this start is that program, so allow the running one to come forward.
@@ -64,14 +76,22 @@ def send_to_running(path: str, name: str | None = None) -> bool:
             pass
     sock.write(encode(path))
     sock.flush()
-    # Delivered only when the open window answers "ok". (waitForBytesWritten() alone is not
-    # proof: on Windows it returns False when the pipe already took the bytes at once, and the
-    # message could still be lost if this start closed the pipe before it was read.)
+    # On Windows Qt writes to the pipe in the background; wait until the message has really
+    # left. Its answer is not used: it can be False when the pipe took the bytes at once.
+    sock.waitForBytesWritten(REPLY_TIMEOUT_MS)
+    # Delivered only when the open window answers "ok".
     reply = bytearray()
-    while ACK not in reply and sock.waitForReadyRead(REPLY_TIMEOUT_MS):
+    deadline = time.monotonic() + REPLY_TIMEOUT_MS / 1000
+    while ACK not in reply:
+        left = int((deadline - time.monotonic()) * 1000)
+        if left <= 0 or not sock.waitForReadyRead(left):
+            break
         reply.extend(bytes(sock.readAll()))
+    # The window answers and then hangs up; the "ok" can arrive together with the hang-up, when
+    # waitForReadyRead() already says False. It is then still waiting here to be read.
+    reply.extend(bytes(sock.readAll()))
     sock.abort()
-    return ACK in reply
+    return DELIVERED if ACK in reply else NO_REPLY
 
 
 class FileServer:
