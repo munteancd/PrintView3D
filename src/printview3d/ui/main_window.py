@@ -420,7 +420,7 @@ class MainWindow(QMainWindow):
         self.theme_group = QActionGroup(self)
         self.theme_actions = {}
         for key in theme.THEME_NAMES:
-            a = QAction(self, checkable=True)
+            a = QAction(theme.theme_swatch(key), "", self, checkable=True)
             a.triggered.connect(lambda _=False, k=key: self.choose_theme(k))
             self.theme_group.addAction(a)
             self.theme_menu.addAction(a)
@@ -439,9 +439,10 @@ class MainWindow(QMainWindow):
         self.act_home.setIcon(theme.tool_icon("home"))
         self.act_open.setIcon(theme.tool_icon("open"))
         self.recent_btn.setIcon(theme.tool_icon("recent"))
-        self.act_screenshot.setIcon(theme.tool_icon("screenshot"))
+        # Screenshot and theme are drawn in the primary colour (orange tiles in the Ember themes).
+        self.act_screenshot.setIcon(theme.tool_icon("screenshot", warm=True))
         self.act_export_stl.setIcon(theme.tool_icon("export"))
-        self.theme_btn.setIcon(theme.tool_icon("theme"))
+        self.theme_btn.setIcon(theme.tool_icon("theme", warm=True))
         self.recent_menu.setIcon(theme.tool_icon("recent"))
         self.act_settings.setIcon(theme.tool_icon("settings"))
         self.act_updates.setIcon(theme.tool_icon("updates"))
