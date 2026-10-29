@@ -104,7 +104,7 @@ Een fout of ontbrekend woord? De link op die pagina leidt naar [Zo vertaal je](T
 ## Thema's {#themes}
 
 Klik op het **palet-icoon** rechts in de werkbalk om een thema te kiezen, of druk op **`Ctrl+T`** voor het
-volgende. Dezelfde keuze staat in **Instellingen → Weergave → Thema**.
+volgende. Dezelfde keuze staat in **Instellingen → Uiterlijk → Thema**.
 
 - **Automatisch** volgt de donker/licht-instelling van Windows of je Linux-bureaublad (en wisselt mee als die
   verandert).
@@ -119,7 +119,7 @@ G-code en het model gelijk blijven, zodat ze altijd overeenkomen met je slicer.
 
 ### Venstertransparantie (Windows 11) {#window-transparency-windows-11}
 
-**Instellingen → Weergave → Venstertransparantie** laat de werkbalk, het zijpaneel en de statusbalk zien wat
+**Instellingen → Uiterlijk → Venstertransparantie** laat de werkbalk, het zijpaneel en de statusbalk zien wat
 achter het venster ligt, in elk thema:
 
 - **Mica**: een zachte tint van je bureaubladachtergrond (zoals in Verkenner).
