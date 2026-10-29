@@ -206,6 +206,9 @@ def apply_theme(app, choice: str = "auto", mica: bool = False) -> str:
         QToolBar QToolButton#iconButton {{ padding: 2px 3px; }}
         QToolBar QToolButton#iconButton::menu-indicator {{ image: none; width: 0; }}
         QToolBar QToolButton#exportButton {{ padding: 2px 10px 2px 3px; }}
+        QToolBar QToolButton#exportButton[popupMode="1"] {{ padding-right: 26px; }}
+        QToolBar QToolButton#exportButton::menu-button {{ width: 20px; border-left: 1px solid {t['button_border']};
+            border-top-right-radius: 5px; border-bottom-right-radius: 5px; }}
         QToolButton#slicerButton {{ background: {ACCENT}; color: white; font-weight: 600; padding: 2px 14px 2px 3px; }}
         QToolButton#slicerButton:hover {{ background: {ACCENT_HOVER}; }}
         QToolButton#slicerButton[popupMode="1"] {{ padding-right: 28px; }}

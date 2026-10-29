@@ -1,8 +1,15 @@
 # Changelog
 
-## 0.19.3
-- **Export STL from FreeCAD and STEP files**: with FreeCAD installed, **Export STL** (`Ctrl+E`)
-  saves the visible solids as STL, all in one file or one file per solid, as for 3MF projects.
+## 0.20.0
+- **Export STL from FreeCAD and STEP files**: once FreeCAD has shown the file in 3D, **Export STL**
+  (`Ctrl+E`) saves its solids as plain STL files, like it does for 3MF projects: all in one file,
+  or one file per solid.
+- **The Export STL button has an arrow** (like *Open in slicer*) with every way at once:
+  *All objects as one STL*, *One STL per object* and *Choose objects…*.
+  [Details](README.md#export-stl-from-3mf).
+- **Choose what a click does** in **Settings → Files → Export STL**: show the list of objects
+  (as before), save everything as one STL, or save one STL per object. `Ctrl+E` does the same.
+- **macOS**: pressing **OK** in Settings saved nothing and showed an error; fixed.
 
 ## 0.19.2
 - **macOS for Intel Macs** (beta): `PrintView3D-macOS-Intel.dmg`, next to the Apple silicon version.

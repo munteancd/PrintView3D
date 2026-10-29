@@ -36,6 +36,7 @@
     <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Export STL</source>
         <translation type="unfinished">STL exportieren</translation>
     </message>
@@ -67,6 +68,7 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>One STL per object</source>
         <translation type="unfinished">Eine STL pro Objekt</translation>
     </message>
@@ -466,6 +468,22 @@
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Save the objects of this 3MF project as STL files (Ctrl+E)</source>
         <translation type="unfinished">Die Objekte dieses 3MF-Projekts als STL-Dateien speichern (Strg+E)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>All objects as one STL</source>
+        <translation type="unfinished">Alle Objekte als eine STL</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Choose objects…</source>
+        <translation type="unfinished">Objekte wählen…</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Change what a click does…</source>
+        <extracomment>Last item in the menu of the Export STL button: opens the setting that decides what clicking the button itself does.</extracomment>
+        <translation type="unfinished">Ändern, was ein Klick macht…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -1286,6 +1304,32 @@
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Off: a file you double-click while PrintView3D is open is shown in the window that is already open. On: every file gets its own window. Starting PrintView3D without a file always opens a new window.</source>
         <translation type="unfinished">Aus: Eine Datei, die Sie bei geöffnetem PrintView3D doppelklicken, wird im bereits geöffneten Fenster angezeigt. An: Jede Datei bekommt ein eigenes Fenster. PrintView3D ohne Datei zu starten öffnet immer ein neues Fenster.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Show the list of objects</source>
+        <translation type="unfinished">Die Liste der Objekte zeigen</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Save everything as one STL</source>
+        <translation type="unfinished">Alles als eine STL speichern</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Save one STL per object</source>
+        <translation type="unfinished">Eine STL pro Objekt speichern</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>When I click Export STL</source>
+        <translation type="unfinished">Wenn ich auf STL exportieren klicke</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>{key} does the same. The arrow next to the button always offers all three ways. A file with only one object is always saved straight away.</source>
+        <extracomment>Settings → Files → Export STL. {key} is the keyboard shortcut (Ctrl+E).</extracomment>
+        <translation type="unfinished">{key} macht dasselbe. Der Pfeil neben der Schaltfläche bietet immer alle drei Wege. Eine Datei mit nur einem Objekt wird immer direkt gespeichert.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>

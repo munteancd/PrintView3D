@@ -188,6 +188,26 @@ class SettingsDialog(QDialog):
         nw_note.setWordWrap(True)
         lo.addWidget(nw_note)
 
+        # ---------------- Export STL ----------------
+        ge = QGroupBox(tr("Export STL"))
+        le = QFormLayout(ge)
+        self.export_combo = QComboBox()
+        for label, mode in ((tr("Show the list of objects"), "dialog"),
+                            (tr("Save everything as one STL"), "combined"),
+                            (tr("Save one STL per object"), "per_object")):
+            self.export_combo.addItem(label, mode)
+        current = settings.get("export_mode", "dialog")
+        self.export_combo.setCurrentIndex(max(0, self.export_combo.findData(current)))
+        ke = QLabel(tr("When I click Export STL"))
+        ke.setObjectName("formKey")
+        le.addRow(ke, self.export_combo)
+        ex_note = QLabel(tr("{key} does the same. The arrow next to the button always offers all three "
+                            "ways. A file with only one object is always saved straight away.").format(
+                                key=_key("Ctrl+E")))
+        ex_note.setObjectName("muted")
+        ex_note.setWordWrap(True)
+        le.addRow(ex_note)
+
         # ---------------- File associations ----------------
         g2 = QGroupBox(tr("Default program for 3D files"))
         l2 = QVBoxLayout(g2)
@@ -228,8 +248,8 @@ class SettingsDialog(QDialog):
         self.assoc_note.setObjectName("muted")
         l2.addWidget(self.assoc_note)
         # macOS gives files to the open PrintView3D by itself, so the choice does not apply there.
-        self._add_page("files", tr("Files"), [g2] if sys.platform == "darwin" else [go, g2],
-                       keep_titles=sys.platform != "darwin")
+        self._add_page("files", tr("Files"), [ge, g2] if sys.platform == "darwin" else [go, ge, g2],
+                       keep_titles=True)
 
         # ---------------- Viewer ----------------
         g3 = QGroupBox(tr("Viewer"))
@@ -664,7 +684,9 @@ class SettingsDialog(QDialog):
         self.settings.set("freecad_path", self.freecad_edit.text().strip())
         self.settings.set("show_travel", self.travel_cb.isChecked())
         self.settings.set("show_bed", self.bed_cb.isChecked())
-        self.settings.set("new_window", self.new_window_cb.isChecked())
+        if sys.platform != "darwin":        # not on the Mac's Files page (its box is never shown)
+            self.settings.set("new_window", self.new_window_cb.isChecked())
+        self.settings.set("export_mode", self.export_combo.currentData())
         self._save_update_choice()
         parent = self.parent()
         restart_for = []                    # settings changed now that only apply after a restart

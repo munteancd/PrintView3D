@@ -36,6 +36,7 @@
     <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Export STL</source>
         <translation type="unfinished">تصدير STL</translation>
     </message>
@@ -67,6 +68,7 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>One STL per object</source>
         <translation type="unfinished">ملف STL لكل جسم</translation>
     </message>
@@ -466,6 +468,22 @@
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Save the objects of this 3MF project as STL files (Ctrl+E)</source>
         <translation type="unfinished">حفظ أجسام مشروع 3MF هذا كملفات STL (Ctrl+E)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>All objects as one STL</source>
+        <translation type="unfinished">كل الأجسام في ملف STL واحد</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Choose objects…</source>
+        <translation type="unfinished">اختيار الأجسام…</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Change what a click does…</source>
+        <extracomment>Last item in the menu of the Export STL button: opens the setting that decides what clicking the button itself does.</extracomment>
+        <translation type="unfinished">تغيير ما تفعله النقرة…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -1286,6 +1304,32 @@
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Off: a file you double-click while PrintView3D is open is shown in the window that is already open. On: every file gets its own window. Starting PrintView3D without a file always opens a new window.</source>
         <translation type="unfinished">عند الإيقاف: يُعرض الملف الذي تنقر عليه نقرًا مزدوجًا أثناء فتح PrintView3D في النافذة المفتوحة بالفعل. عند التشغيل: يحصل كل ملف على نافذة خاصة به. تشغيل PrintView3D بدون ملف يفتح دائمًا نافذة جديدة.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Show the list of objects</source>
+        <translation type="unfinished">عرض قائمة الأجسام</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Save everything as one STL</source>
+        <translation type="unfinished">حفظ الكل في ملف STL واحد</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Save one STL per object</source>
+        <translation type="unfinished">حفظ ملف STL لكل جسم</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>When I click Export STL</source>
+        <translation type="unfinished">عند النقر على تصدير STL</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>{key} does the same. The arrow next to the button always offers all three ways. A file with only one object is always saved straight away.</source>
+        <extracomment>Settings → Files → Export STL. {key} is the keyboard shortcut (Ctrl+E).</extracomment>
+        <translation type="unfinished">يفعل {key} الشيء نفسه. يعرض السهم بجانب الزر دائمًا الطرق الثلاث كلها. الملف الذي يحتوي على جسم واحد فقط يُحفظ مباشرةً دائمًا.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
