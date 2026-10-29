@@ -41,12 +41,21 @@ def _wait(app, cond, seconds=3.0):
 
 
 def _send_from_other_process(name: str, path: str) -> "subprocess.Popen":
-    """A second PrintView3D start, as a double-click makes it: its own process."""
+    """A second PrintView3D start, as a double-click makes it: its own process, which (like
+    app.py) has its Qt application before it hands the file over. Without one, Qt on Windows can
+    leave the message unsent. If the file is not delivered, it says why on stderr."""
     src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src")
-    code = ("import sys; from printview3d import single_instance as si; "
-            "sys.exit(0 if si.send_to_running(sys.argv[1], name=sys.argv[2]) else 3)")
+    code = ("import sys\n"
+            "from PySide6.QtCore import QCoreApplication\n"
+            "from printview3d import single_instance as si\n"
+            "app = QCoreApplication([])\n"
+            "result = si.hand_over(sys.argv[1], name=sys.argv[2])\n"
+            "if result != si.DELIVERED:\n"
+            "    print('hand-over: ' + result, file=sys.stderr)\n"
+            "sys.exit(0 if result == si.DELIVERED else 3)\n")
     env = dict(os.environ, PYTHONPATH=os.path.abspath(src), QT_QPA_PLATFORM="offscreen")
-    return subprocess.Popen([sys.executable, "-c", code, path, name], env=env)
+    return subprocess.Popen([sys.executable, "-c", code, path, name], env=env,
+                            stderr=subprocess.PIPE, text=True)
 
 
 def test_second_start_hands_file_to_first(qapp, tmp_path):
@@ -58,7 +67,10 @@ def test_second_start_hands_file_to_first(qapp, tmp_path):
         path = str(tmp_path / "cube.3mf")
         sender = _send_from_other_process(name, path)
         _wait(qapp, lambda: sender.poll() is not None and got, seconds=20)
-        assert sender.wait(5) == 0, "the second start did not get an ok"
+        code = sender.wait(5)
+        why = sender.stderr.read().strip()
+        assert code == 0, f"the second start did not get an ok ({why or 'no reason given'}; " \
+                          f"file arrived in the open window: {bool(got)})"
         assert got == [os.path.abspath(path)]
         # Only one window may listen: a second server does not take the name over.
         other = si.FileServer(lambda p: None, name=name)
@@ -77,6 +89,7 @@ def test_no_reply_means_not_delivered(qapp, tmp_path):
         sender = _send_from_other_process(name, str(tmp_path / "a.stl"))
         _wait(qapp, lambda: sender.poll() is not None, seconds=20)
         assert sender.wait(5) == 3
+        assert "no reply" in sender.stderr.read()
     finally:
         mute.close()
 
@@ -84,6 +97,7 @@ def test_no_reply_means_not_delivered(qapp, tmp_path):
 def test_nobody_running(qapp, tmp_path):
     name = "PrintView3D-test-" + uuid.uuid4().hex[:8]
     assert not si.send_to_running(str(tmp_path / "a.stl"), name=name)
+    assert si.hand_over(str(tmp_path / "a.stl"), name=name) == si.NO_WINDOW
 
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Windows pipes go away with their program")

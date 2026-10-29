@@ -1,0 +1,35 @@
+name: Hand-off stress (temporary)
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  stress:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-24.04, macos-15]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt -c requirements-build-lock.txt pytest
+      - name: Old vs new hand-off, many rounds
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: python tools/handoff_stress.py 60
+      - name: The real test, 25 times in a row
+        shell: bash
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          fails=0
+          for i in $(seq 1 25); do python -m pytest -q -p no:cacheprovider tests/test_single_instance.py >log.txt 2>&1 || { fails=$((fails+1)); tail -20 log.txt; }; done
+          echo "::notice title=test_single_instance ${{ runner.os }}::$fails of 25 runs failed"
+          test $fails -eq 0
