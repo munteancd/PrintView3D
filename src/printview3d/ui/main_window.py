@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gc
 import os
 import sys
 import threading
@@ -163,6 +164,19 @@ class _KeySwallower(QObject):
         return False
 
 
+def _return_free_memory() -> None:
+    """Linux: ask the C library to give memory that is free again back to the system. Without
+    this it keeps it for later, and the program looks just as big after closing a file.
+    Windows and macOS give large freed blocks back by themselves."""
+    if not sys.platform.startswith("linux"):
+        return
+    try:
+        import ctypes
+        ctypes.CDLL("libc.so.6").malloc_trim(0)
+    except (OSError, AttributeError):      # not glibc (e.g. musl): nothing to do
+        pass
+
+
 class MainWindow(QMainWindow):
     def __init__(self, settings: Optional[Settings] = None):
         super().__init__()
@@ -310,6 +324,10 @@ class MainWindow(QMainWindow):
 
         # Actions live on the window too, so their shortcuts work wherever the button is.
         self.act_open = QAction(self, shortcut=QKeySequence.Open, triggered=self.open_dialog)
+        # Home: close the file and go back to the start page (frees what the file took).
+        self.act_home = QAction(self, shortcut=QKeySequence("Ctrl+W"), triggered=self.go_home)
+        self.act_home.setEnabled(False)                 # nothing open yet
+        self.addAction(self.act_home)
         self.act_screenshot = QAction(self, triggered=self.save_screenshot)
         self.act_settings = QAction(self, triggered=self.open_settings)
         self.act_updates = QAction(self, triggered=lambda: self.open_settings("updates"))
@@ -320,6 +338,7 @@ class MainWindow(QMainWindow):
 
         # Menu (hamburger): everything in one place, with the shortcuts shown.
         self.main_menu = QMenu(self)
+        self.main_menu.addAction(self.act_home)
         self.main_menu.addAction(self.act_open)
         self.main_menu.addMenu(self.recent_menu)
         self.main_menu.addSeparator()
@@ -331,6 +350,8 @@ class MainWindow(QMainWindow):
         self.menu_btn = icon_button(menu=self.main_menu)
         tb.addWidget(self.menu_btn)
 
+        self.home_btn = icon_button(action=self.act_home)
+        tb.addWidget(self.home_btn)
         self.open_btn = icon_button(action=self.act_open)
         tb.addWidget(self.open_btn)
         self.recent_btn = icon_button(menu=self.recent_menu)
@@ -399,7 +420,7 @@ class MainWindow(QMainWindow):
         self.theme_group = QActionGroup(self)
         self.theme_actions = {}
         for key in theme.THEME_NAMES:
-            a = QAction(self, checkable=True)
+            a = QAction(theme.theme_swatch(key), "", self, checkable=True)
             a.triggered.connect(lambda _=False, k=key: self.choose_theme(k))
             self.theme_group.addAction(a)
             self.theme_menu.addAction(a)
@@ -415,11 +436,13 @@ class MainWindow(QMainWindow):
         if not hasattr(self, "theme_btn"):
             return
         self.menu_btn.setIcon(theme.tool_icon("menu"))
+        self.act_home.setIcon(theme.tool_icon("home"))
         self.act_open.setIcon(theme.tool_icon("open"))
         self.recent_btn.setIcon(theme.tool_icon("recent"))
-        self.act_screenshot.setIcon(theme.tool_icon("screenshot"))
+        # Screenshot and theme are drawn in the primary colour (orange tiles in the Ember themes).
+        self.act_screenshot.setIcon(theme.tool_icon("screenshot", warm=True))
         self.act_export_stl.setIcon(theme.tool_icon("export"))
-        self.theme_btn.setIcon(theme.tool_icon("theme"))
+        self.theme_btn.setIcon(theme.tool_icon("theme", warm=True))
         self.recent_menu.setIcon(theme.tool_icon("recent"))
         self.act_settings.setIcon(theme.tool_icon("settings"))
         self.act_updates.setIcon(theme.tool_icon("updates"))
@@ -674,6 +697,9 @@ class MainWindow(QMainWindow):
         self.act_open.setToolTip(tr("Open…") + " (" + QKeySequence(QKeySequence.Open).toString(
             QKeySequence.NativeText) + ")")
         self.menu_btn.setToolTip(tr("Menu"))
+        self.act_home.setText(tr("Home"))
+        self.act_home.setToolTip(tr("Close the file and go back to the start page ({key})").format(
+            key=self.act_home.shortcut().toString(QKeySequence.NativeText)))
         self.recent_menu.setTitle(tr("Recent"))
         self.recent_btn.setToolTip(tr("Recent"))
         view_names = {None: tr("Fit"), "iso": tr("Iso"), "top": tr("Top"),
@@ -1199,6 +1225,7 @@ class MainWindow(QMainWindow):
             title += f" — {os.path.basename(self.zip.path)}"
         self.setWindowTitle(f"{title} — {APP_NAME}")
         self.stack.setCurrentIndex(1)
+        self.act_home.setEnabled(True)
 
         self.scene.clear()
         self.view_stack.setCurrentIndex(0)
@@ -1227,6 +1254,43 @@ class MainWindow(QMainWindow):
         if kind in ("freecad", "step") and not getattr(data, "parts", None):
             msg = self._freecad_status_text(data)
         self.statusBar().showMessage(msg, 10000)
+
+    # -------------------------------------------------------------- home
+    def go_home(self):
+        """Home (Ctrl+W): close the open file and show the start page with the recent files.
+        Lets go of everything the file took: the model or toolpaths, the 3D view's copy of them
+        and the side panel. The program itself (window, Qt, the 3D engine) stays, so this frees
+        the most after big files. A ZIP's unpacked files stay on disk for the daily clean-up,
+        because another window may be showing them."""
+        self._load_token += 1               # a file still loading or switching is not shown after all
+        self.progress.hide()
+        self.slicer_btn.setEnabled(True)
+        self._gcode_timer.stop()
+        self.scene.clear()
+        self._model_actors = []
+        self.view_stack.setCurrentIndex(0)
+        self._reset_side_panel()
+        self.model = None
+        self.gcode = None
+        self.zip = None
+        self._zip_index = self._zip_last_single = self._zip_wanted = 0
+        self._zip_owner = []
+        self._pending_zip = (None, 0)
+        self.current_path = None
+        self.current_kind = ""
+        self.showing_embedded = False
+        self._embedded_member = ""
+        self._file_size_mb = 0.0
+        self._set_export_visible(False)
+        self._update_slicer_button()
+        self.act_home.setEnabled(False)
+        self.setWindowTitle(APP_NAME)
+        self._refresh_recent_menu()         # the file just closed is at the top of the list
+        self.stack.setCurrentIndex(0)
+        self.statusBar().clearMessage()
+        self.plotter.render()               # the 3D view lets go of its drawn copy too
+        gc.collect()                        # big arrays go back now, not at some later moment
+        _return_free_memory()
 
     # ------------------------------------------------------------- model
     def _show_model(self, m: ModelData):

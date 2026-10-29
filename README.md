@@ -51,7 +51,7 @@ without exporting an STL first.
 | **Open in your slicer** | One click (or `Ctrl+P`) opens the current file in your slicer. Installed slicers are found automatically. |
 | **Default app** | Optional: make PrintView3D open `.stl`, `.3mf` and `.gcode` files when you double-click them. Fully reversible. |
 | **Your language** | English, العربية (Arabic, right-to-left), Nederlands, Deutsch, Français and Español; switch any time in Settings, no restart needed. [Help translate](#translations). |
-| **Themes** | Automatic (follows your system), Dark, Gray, Graphite (warm, easy on the eyes) or Light, for the window and the 3D view. Switch with one click on the palette icon or `Ctrl+T`. Toolpath colours stay the same in every theme. |
+| **Themes** | Automatic (follows your system), Dark, Gray, Graphite (warm, easy on the eyes), Light, Ember Light or Ember Dark (warm orange and teal), for the window and the 3D view. Pick one from picture cards in Settings, the palette icon or `Ctrl+T`. Toolpath colours stay the same in every theme. |
 | **Thumbnails** | Windows File Explorer shows previews of 3MF, STL, G-code and FreeCAD files (installed with PrintView3D, optional). |
 | **Updates** | **Check for updates** in Settings, or once a day if you allow it. On Windows one click downloads, checks and installs the new version. The version in the corner gets a red dot when an update is ready. [What is sent](#updates-and-privacy). |
 | **One window** | A file you double-click while PrintView3D is open is shown in that window, instead of opening another one. Prefer a window per file? **Settings → Files → Open each file in a new window**. |
@@ -224,6 +224,10 @@ into Applications to replace the old one. Older Macs that can't run macOS 14:
 **Open a file:** double-click it (if PrintView3D is the default), drag it onto the window, use
 **Open**, or pick it from **Recent**. Try the files in [`examples/`](examples) to get started.
 
+**Home:** the house button (`Ctrl+W`) closes the open file and goes back to the start page, with
+your recent files. It also gives back the memory the file took, which matters most after a large
+G-code or ZIP.
+
 **One window:** a file you double-click while PrintView3D is already open is shown in that window,
 which comes to the front. To give every file its own window (to compare two models side by side),
 tick **Settings → Files → Open each file in a new window**. Starting PrintView3D from the Start
@@ -246,9 +250,10 @@ The same list is in the program under **Settings → About → Keyboard and mous
 | Key | Action |
 |---|---|
 | `Ctrl+O` | Open a file |
+| `Ctrl+W` | Close the file (back to the start page) |
 | `Ctrl+P` | Open the file in your default slicer |
 | `Ctrl+E` | Export STL (3MF projects, FreeCAD and STEP files) |
-| `Ctrl+T` | Next theme (Dark → Gray → Graphite → Light) |
+| `Ctrl+T` | Next theme (Dark → Gray → Graphite → Light → Ember Light → Ember Dark) |
 | `F` · `1` · `2` · `3` · `4` | Fit · Iso · Top · Front · Right view |
 | `↑` / `↓` | Next / previous layer (G-code), or the previous / next file in a ZIP |
 | `Page Up` / `Page Down` | 10 layers up / down |
@@ -391,15 +396,36 @@ A wrong or missing word? The link on that page leads to [How to translate](docs/
 
 ### Themes
 
-Click the **palette icon** at the right end of the toolbar to pick a theme, or press **`Ctrl+T`** to
-step to the next one. The same choice is in **Settings → Appearance → Theme**.
+There are three ways to pick a theme:
+
+- **Settings → Appearance → Theme** shows every theme as a **picture card**: a small view of
+  PrintView3D in that theme, with its toolbar, side panel and 3D view. Click a card and every
+  window switches at once, so you can try them one after another. **OK** keeps the theme you
+  clicked last; **Cancel** goes back to the theme you had when you opened Settings.
+- The **palette icon** at the right end of the toolbar opens a menu of all themes, each with a
+  small colour swatch.
+- **`Ctrl+T`** steps to the next theme.
+
+The themes:
 
 - **Automatic** follows the dark/light setting of Windows or your Linux desktop (and switches
   along when that changes).
-- **Dark**, **Gray**, **Graphite** (a warm, dark brownish tone that is soft on the eyes) or **Light**.
+- **Dark**, **Gray**, **Graphite** (a warm, dark brownish tone that is soft on the eyes) or
+  **Light**, with teal buttons.
+- **Ember Light**: warm cream with a bright orange and a lagoon teal. The slicer button, OK and the
+  chosen Settings page are orange; the toolbar tiles, sliders and focus are teal; text is a soft
+  slate grey instead of black. The 3D view is a deeper sand colour, so white and yellow toolpaths
+  stay visible.
+- **Ember Dark**: the same orange and teal at night, on deep lagoon greens instead of grey, with a
+  teal-lit build plate.
 
 The switch is immediate; the 3D background, plate and grid change with it, while G-code and
-model colours stay the same so they always match your slicer.
+model colours stay the same so they always match your slicer. In every theme, text and grey labels
+have a contrast of at least 4.5 : 1 against the window, so they stay easy to read.
+
+![Settings → Appearance with a picture card for every theme](docs/screenshot-theme-picker.png)
+
+![Ember Light with a 3MF plate, and Ember Dark with G-code](docs/screenshot-theme-ember.png)
 
 ![The theme menu on the toolbar](docs/screenshot-theme-menu.png)
 
@@ -614,7 +640,7 @@ PrintView3D.exe part.gcode --screenshot out.png    save a picture and exit
 PrintView3D.exe model.stl --send-to-slicer         open the file in your default slicer and exit
 PrintView3D.exe model.stl --send-to-slicer orcaslicer   ...or in a specific one
 PrintView3D.exe --lang ar                          start in a language (en, ar, nl, de, fr, es)
-PrintView3D.exe --theme light                      start with a theme (auto, dark, gray, graphite, light)
+PrintView3D.exe --theme light                      start with a theme (auto, dark, gray, graphite, light, ember, ember_dark)
 PrintView3D.exe --register                         add to "Open with" (Linux: also the applications menu)
 PrintView3D.exe --unregister                       remove file associations
 (on Linux use ./PrintView3D-x86_64.AppImage instead of PrintView3D.exe)

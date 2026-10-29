@@ -414,6 +414,18 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Home</source>
+        <extracomment>Toolbar button with a house icon: closes the open file and goes back to the start page.</extracomment>
+        <translation type="unfinished">Inicio</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Close the file and go back to the start page ({key})</source>
+        <extracomment>Tooltip of the Home button. {key} is its keyboard shortcut (Ctrl+W).</extracomment>
+        <translation type="unfinished">Cerrar el archivo y volver a la página de inicio ({key})</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Recent</source>
         <extracomment>Toolbar menu with recently opened files.</extracomment>
         <translation type="unfinished">Recientes</translation>
@@ -1196,14 +1208,24 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Appearance</source>
-        <translation type="unfinished">Apariencia</translation>
-    </message>
-    <message>
-        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Theme</source>
         <extracomment>Settings: the colour theme of the program (dark, gray, light).</extracomment>
         <translation type="unfinished">Tema</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Automatic</source>
+        <translation type="unfinished">Automático</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Click a theme to try it right away. OK keeps it, Cancel goes back.</source>
+        <translation type="unfinished">Haz clic en un tema para probarlo enseguida. Aceptar lo conserva, Cancelar vuelve al anterior.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Window transparency</source>
+        <translation type="unfinished">Transparencia de la ventana</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1222,11 +1244,6 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Window transparency</source>
-        <translation type="unfinished">Transparencia de la ventana</translation>
-    </message>
-    <message>
-        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Windows 11 only. Takes effect after restarting PrintView3D. Windows shows a plain colour while the window is not active.</source>
         <translation type="unfinished">Solo Windows 11. Se aplica al reiniciar PrintView3D. Windows muestra un color liso mientras la ventana no está activa.</translation>
     </message>
@@ -1234,6 +1251,11 @@
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Needs Windows 11.</source>
         <translation type="unfinished">Requiere Windows 11.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Appearance</source>
+        <translation type="unfinished">Apariencia</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1726,6 +1748,11 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Close the file (back to the start page)</source>
+        <translation type="unfinished">Cerrar el archivo (volver a la página de inicio)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Open the file in your slicer</source>
         <translation type="unfinished">Abrir el archivo en tu laminador</translation>
     </message>
@@ -1817,6 +1844,16 @@
         <source>Light</source>
         <extracomment>Colour theme name: light colours (not &apos;not heavy&apos;).</extracomment>
         <translation type="unfinished">Claro</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/theme.py"></location>
+        <source>Ember Light</source>
+        <translation type="unfinished">Brasa claro</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/theme.py"></location>
+        <source>Ember Dark</source>
+        <translation type="unfinished">Brasa oscuro</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>

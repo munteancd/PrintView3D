@@ -3,6 +3,10 @@
 **Een bestand openen:** dubbelklik erop (als PrintView3D het standaardprogramma is), sleep het naar het venster,
 gebruik **Openen**, of kies het uit **Recent**. Probeer de bestanden in [`examples/`](https://github.com/sevagjb/PrintView3D/blob/main/examples) om te beginnen.
 
+**Start:** de knop met het huisje (`Ctrl+W`) sluit het open bestand en gaat terug naar de startpagina,
+met je recente bestanden. Het geeft ook het geheugen terug dat het bestand gebruikte; dat maakt vooral
+verschil na een grote G-code of ZIP.
+
 **Eén venster:** een bestand waarop je dubbelklikt terwijl PrintView3D al open is, verschijnt in dat venster,
 dat naar voren komt. Wil je elk bestand in een eigen venster (om twee modellen naast elkaar te vergelijken),
 vink dan **Instellingen → Bestanden → Elk bestand in een nieuw venster openen** aan. PrintView3D starten
@@ -25,6 +29,7 @@ Dezelfde lijst staat in het programma onder **Instellingen → Over → Toetsenb
 | Toets | Actie |
 |---|---|
 | `Ctrl+O` | Een bestand openen |
+| `Ctrl+W` | Het bestand sluiten (terug naar de startpagina) |
 | `Ctrl+P` | Het bestand in je standaardslicer openen |
 | `Ctrl+E` | STL exporteren (3MF-projecten, FreeCAD- en STEP-bestanden) |
 | `Ctrl+T` | Volgend thema (Donker → Grijs → Grafiet → Licht) |

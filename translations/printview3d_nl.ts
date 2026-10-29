@@ -414,6 +414,18 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Home</source>
+        <extracomment>Toolbar button with a house icon: closes the open file and goes back to the start page.</extracomment>
+        <translation type="unfinished">Start</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Close the file and go back to the start page ({key})</source>
+        <extracomment>Tooltip of the Home button. {key} is its keyboard shortcut (Ctrl+W).</extracomment>
+        <translation type="unfinished">Het bestand sluiten en teruggaan naar de startpagina ({key})</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Recent</source>
         <extracomment>Toolbar menu with recently opened files.</extracomment>
         <translation>Recent</translation>
@@ -1196,14 +1208,24 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Appearance</source>
-        <translation>Uiterlijk</translation>
-    </message>
-    <message>
-        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Theme</source>
         <extracomment>Settings: the colour theme of the program (dark, gray, light).</extracomment>
         <translation>Thema</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Automatic</source>
+        <translation>Automatisch</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Click a theme to try it right away. OK keeps it, Cancel goes back.</source>
+        <translation>Klik op een thema om het meteen te proberen. OK houdt het, Annuleren zet het vorige terug.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Window transparency</source>
+        <translation>Venstertransparantie</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1222,11 +1244,6 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Window transparency</source>
-        <translation>Venstertransparantie</translation>
-    </message>
-    <message>
-        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Windows 11 only. Takes effect after restarting PrintView3D. Windows shows a plain colour while the window is not active.</source>
         <translation>Alleen Windows 11. Werkt na het herstarten van PrintView3D. Windows toont een effen kleur zolang het venster niet actief is.</translation>
     </message>
@@ -1234,6 +1251,11 @@
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Needs Windows 11.</source>
         <translation>Vereist Windows 11.</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Appearance</source>
+        <translation>Uiterlijk</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1726,6 +1748,11 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Close the file (back to the start page)</source>
+        <translation type="unfinished">Het bestand sluiten (terug naar de startpagina)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Open the file in your slicer</source>
         <translation>Het bestand openen in je slicer</translation>
     </message>
@@ -1817,6 +1844,16 @@
         <source>Light</source>
         <extracomment>Colour theme name: light colours (not &apos;not heavy&apos;).</extracomment>
         <translation>Licht</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/theme.py"></location>
+        <source>Ember Light</source>
+        <translation>Gloed licht</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/theme.py"></location>
+        <source>Ember Dark</source>
+        <translation>Gloed donker</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>

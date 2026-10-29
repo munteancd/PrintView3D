@@ -3,6 +3,10 @@
 **Open a file:** double-click it (if PrintView3D is the default), drag it onto the window, use
 **Open**, or pick it from **Recent**. Try the files in [`examples/`](https://github.com/sevagjb/PrintView3D/blob/main/examples) to get started.
 
+**Home:** the house button (`Ctrl+W`) closes the open file and goes back to the start page, with
+your recent files. It also gives back the memory the file took, which matters most after a large
+G-code or ZIP.
+
 **One window:** a file you double-click while PrintView3D is already open is shown in that window,
 which comes to the front. To give every file its own window (to compare two models side by side),
 tick **Settings → Files → Open each file in a new window**. Starting PrintView3D from the Start
@@ -25,6 +29,7 @@ The same list is in the program under **Settings → About → Keyboard and mous
 | Key | Action |
 |---|---|
 | `Ctrl+O` | Open a file |
+| `Ctrl+W` | Close the file (back to the start page) |
 | `Ctrl+P` | Open the file in your default slicer |
 | `Ctrl+E` | Export STL (3MF projects, FreeCAD and STEP files) |
 | `Ctrl+T` | Next theme (Dark → Gray → Graphite → Light) |
