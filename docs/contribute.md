@@ -6,7 +6,7 @@
 |---|---|
 | English | Source language |
 | العربية Arabic | Complete, reviewed by a native speaker |
-| Nederlands | Complete, needs review by a native speaker |
+| Nederlands | Complete, reviewed |
 | Deutsch | Complete, needs review by a native speaker |
 | Français | Complete, needs review by a native speaker |
 | Español | Complete, needs review by a native speaker |

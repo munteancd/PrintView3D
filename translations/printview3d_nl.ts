@@ -6,1828 +6,1828 @@
     <message>
         <location filename="../src/printview3d/archive.py"></location>
         <source>This is not a valid ZIP file.</source>
-        <translation type="unfinished">Dit is geen geldig ZIP-bestand.</translation>
+        <translation>Dit is geen geldig ZIP-bestand.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/archive.py"></location>
         <source>{name} is too large to unpack ({size} GB).</source>
-        <translation type="unfinished">{name} is te groot om uit te pakken ({size} GB).</translation>
+        <translation>{name} is te groot om uit te pakken ({size} GB).</translation>
     </message>
     <message>
         <location filename="../src/printview3d/archive.py"></location>
         <source>{name} unpacks to far more data than a 3D file normally does. It was not opened, to protect your computer.</source>
-        <translation type="unfinished">{name} pakt uit tot veel meer gegevens dan een 3D-bestand normaal heeft. Het is niet geopend, om je computer te beschermen.</translation>
+        <translation>{name} pakt uit tot veel meer gegevens dan een 3D-bestand normaal heeft. Het is niet geopend, om je computer te beschermen.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/archive.py"></location>
         <source>This ZIP contains {n} 3D files; at most {max} can be opened.</source>
-        <translation type="unfinished">Deze ZIP bevat {n} 3D-bestanden; er kunnen er hoogstens {max} worden geopend.</translation>
+        <translation>Deze ZIP bevat {n} 3D-bestanden; er kunnen er hoogstens {max} worden geopend.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/archive.py"></location>
         <source>The 3D files in this ZIP are too large together to unpack.</source>
-        <translation type="unfinished">De 3D-bestanden in deze ZIP zijn samen te groot om uit te pakken.</translation>
+        <translation>De 3D-bestanden in deze ZIP zijn samen te groot om uit te pakken.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/archive.py"></location>
         <source>{name} in the ZIP is damaged.</source>
-        <translation type="unfinished">{name} in de ZIP is beschadigd.</translation>
+        <translation>{name} in de ZIP is beschadigd.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Export STL</source>
-        <translation type="unfinished">STL exporteren</translation>
+        <translation>STL exporteren</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
         <source>Choose the objects to export.</source>
-        <translation type="unfinished">Kies de objecten die je wilt exporteren.</translation>
+        <translation>Kies de objecten die je wilt exporteren.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
         <source>Object</source>
-        <translation type="unfinished">Object</translation>
+        <translation>Object</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Triangles</source>
-        <translation type="unfinished">Driehoeken</translation>
+        <translation>Driehoeken</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
         <source>Save as</source>
-        <translation type="unfinished">Opslaan als</translation>
+        <translation>Opslaan als</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
         <source>One combined STL</source>
-        <translation type="unfinished">Eén gecombineerde STL</translation>
+        <translation>Eén gecombineerde STL</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
         <source>One STL per object</source>
-        <translation type="unfinished">Eén STL per object</translation>
+        <translation>Eén STL per object</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
         <source>Each file is named after its object and saved in a folder you choose.</source>
-        <translation type="unfinished">Elk bestand krijgt de naam van zijn object en wordt opgeslagen in een map die je kiest.</translation>
+        <translation>Elk bestand krijgt de naam van zijn object en wordt opgeslagen in een map die je kiest.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
         <source>Raw geometry only: no modifiers, negative parts, or support blockers and enforcers, and no colours, materials or print settings. Sizes in millimetres, saved as binary STL.</source>
-        <translation type="unfinished">Alleen de kale geometrie: geen modifiers, negatieve delen of supportblokkers en -forceerders, en geen kleuren, materialen of printinstellingen. Maten in millimeters, opgeslagen als binaire STL.</translation>
+        <translation>Alleen de kale geometrie: geen modifiers, negatieve delen of supportblokkers en -forceerders, en geen kleuren, materialen of printinstellingen. Maten in millimeters, opgeslagen als binaire STL.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/export_stl.py"></location>
         <source>Export…</source>
-        <translation type="unfinished">Exporteren…</translation>
+        <translation>Exporteren…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Outer wall</source>
-        <translation type="unfinished">Buitenwand</translation>
+        <translation>Buitenwand</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Inner wall</source>
-        <translation type="unfinished">Binnenwand</translation>
+        <translation>Binnenwand</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Overhang wall</source>
-        <translation type="unfinished">Overhangwand</translation>
+        <translation>Overhangwand</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Sparse infill</source>
         <extracomment>3D printing term: the partially filled inside of a print.</extracomment>
-        <translation type="unfinished">Dunne vulling</translation>
+        <translation>Dunne vulling</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Solid infill</source>
-        <translation type="unfinished">Massieve vulling</translation>
+        <translation>Massieve vulling</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Top / bottom</source>
-        <translation type="unfinished">Boven / onder</translation>
+        <translation>Boven / onder</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Bridge</source>
-        <translation type="unfinished">Brug</translation>
+        <translation>Brug</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Gap fill</source>
-        <translation type="unfinished">Gatvulling</translation>
+        <translation>Gatvulling</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Ironing</source>
         <extracomment>3D printing term: smoothing the top surface with the hot nozzle.</extracomment>
-        <translation type="unfinished">Strijken</translation>
+        <translation>Strijken</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Support</source>
-        <translation type="unfinished">Ondersteuning</translation>
+        <translation>Ondersteuning</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Support interface</source>
-        <translation type="unfinished">Ondersteuningsinterface</translation>
+        <translation>Ondersteuningsinterface</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Skirt / brim</source>
         <extracomment>3D printing terms: lines printed around the model on the first layer.</extracomment>
-        <translation type="unfinished">Skirt / brim</translation>
+        <translation>Skirt / brim</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Prime tower</source>
         <extracomment>3D printing term: tower printed to prime the nozzle after a color/material change.</extracomment>
-        <translation type="unfinished">Primetoren</translation>
+        <translation>Primetoren</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Other / custom</source>
-        <translation type="unfinished">Overig / aangepast</translation>
+        <translation>Overig / aangepast</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Travel moves</source>
         <extracomment>3D printing term: nozzle movements without printing.</extracomment>
-        <translation type="unfinished">Verplaatsingen</translation>
+        <translation>Verplaatsingen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Print time</source>
-        <translation type="unfinished">Printtijd</translation>
+        <translation>Printtijd</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Filament (g)</source>
-        <translation type="unfinished">Filament (g)</translation>
+        <translation>Filament (g)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Filament (mm)</source>
-        <translation type="unfinished">Filament (mm)</translation>
+        <translation>Filament (mm)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Filament type</source>
-        <translation type="unfinished">Filamenttype</translation>
+        <translation>Filamenttype</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Filament profile</source>
-        <translation type="unfinished">Filamentprofiel</translation>
+        <translation>Filamentprofiel</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Layer height</source>
-        <translation type="unfinished">Laaghoogte</translation>
+        <translation>Laaghoogte</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Nozzle</source>
-        <translation type="unfinished">Nozzle</translation>
+        <translation>Nozzle</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Printer</source>
-        <translation type="unfinished">Printer</translation>
+        <translation>Printer</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Printer profile</source>
-        <translation type="unfinished">Printerprofiel</translation>
+        <translation>Printerprofiel</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Process profile</source>
-        <translation type="unfinished">Procesprofiel</translation>
+        <translation>Procesprofiel</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Slicer</source>
         <extracomment>A slicer is the program that turns a 3D model into G-code (e.g. Creality Print, OrcaSlicer).</extracomment>
-        <translation type="unfinished">Slicer</translation>
+        <translation>Slicer</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Created with</source>
-        <translation type="unfinished">Gemaakt met</translation>
+        <translation>Gemaakt met</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Title</source>
-        <translation type="unfinished">Titel</translation>
+        <translation>Titel</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Designer</source>
-        <translation type="unfinished">Ontwerper</translation>
+        <translation>Ontwerper</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Description</source>
-        <translation type="unfinished">Beschrijving</translation>
+        <translation>Beschrijving</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Format</source>
-        <translation type="unfinished">Formaat</translation>
+        <translation>Formaat</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Organization</source>
-        <translation type="unfinished">Organisatie</translation>
+        <translation>Organisatie</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Date</source>
-        <translation type="unfinished">Datum</translation>
+        <translation>Datum</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Default app</source>
-        <translation type="unfinished">Standaardapp</translation>
+        <translation>Standaardapp</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>In &quot;Open with&quot; (not default)</source>
-        <translation type="unfinished">In &quot;Openen met&quot; (niet standaard)</translation>
+        <translation>In &quot;Openen met&quot; (niet standaard)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Not registered</source>
-        <translation type="unfinished">Niet geregistreerd</translation>
+        <translation>Niet geregistreerd</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>Not available on this system</source>
-        <translation type="unfinished">Niet beschikbaar op dit systeem</translation>
+        <translation>Niet beschikbaar op dit systeem</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/labels.py"></location>
         <source>(calculated)</source>
-        <translation type="unfinished">(berekend)</translation>
+        <translation>(berekend)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>3D files</source>
-        <translation type="unfinished">3D-bestanden</translation>
+        <translation>3D-bestanden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>STL models</source>
-        <translation type="unfinished">STL-modellen</translation>
+        <translation>STL-modellen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>3MF projects</source>
-        <translation type="unfinished">3MF-projecten</translation>
+        <translation>3MF-projecten</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Other 3D models</source>
-        <translation type="unfinished">Andere 3D-modellen</translation>
+        <translation>Andere 3D-modellen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>FreeCAD documents</source>
-        <translation type="unfinished">FreeCAD-documenten</translation>
+        <translation>FreeCAD-documenten</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>STEP CAD files</source>
-        <translation type="unfinished">STEP-CAD-bestanden</translation>
+        <translation>STEP-CAD-bestanden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>ZIP files with 3D models</source>
-        <translation type="unfinished">ZIP-bestanden met 3D-modellen</translation>
+        <translation>ZIP-bestanden met 3D-modellen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>All files</source>
-        <translation type="unfinished">Alle bestanden</translation>
+        <translation>Alle bestanden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>STL: one model shape</source>
-        <translation type="unfinished">STL: één modelvorm</translation>
+        <translation>STL: één modelvorm</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>3MF: project with objects, colours and settings</source>
-        <translation type="unfinished">3MF: project met objecten, kleuren en instellingen</translation>
+        <translation>3MF: project met objecten, kleuren en instellingen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>G-code: already sliced, ready to print</source>
-        <translation type="unfinished">G-code: al gesliced, klaar om te printen</translation>
+        <translation>G-code: al gesliced, klaar om te printen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>STEP: CAD model (shown with the help of FreeCAD)</source>
-        <translation type="unfinished">STEP: CAD-model (getoond met hulp van FreeCAD)</translation>
+        <translation>STEP: CAD-model (getoond met hulp van FreeCAD)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>FreeCAD: CAD document</source>
-        <translation type="unfinished">FreeCAD: CAD-document</translation>
+        <translation>FreeCAD: CAD-document</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>{kind}: 3D model</source>
-        <translation type="unfinished">{kind}: 3D-model</translation>
+        <translation>{kind}: 3D-model</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>{n} MB</source>
-        <translation type="unfinished">{n} MB</translation>
+        <translation>{n} MB</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>{n} KB</source>
-        <translation type="unfinished">{n} KB</translation>
+        <translation>{n} KB</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Plate {n}</source>
         <extracomment>A build plate inside a slicer project; {n} is its number.</extracomment>
-        <translation type="unfinished">Plaat {n}</translation>
+        <translation>Plaat {n}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Next theme</source>
-        <translation type="unfinished">Volgend thema</translation>
+        <translation>Volgend thema</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Theme: {name} (Ctrl+T: next theme)</source>
         <extracomment>Tooltip of the theme icon. {name} is the current theme (Dark, Gray...).</extracomment>
-        <translation type="unfinished">Thema: {name} (Ctrl+T: volgend thema)</translation>
+        <translation>Thema: {name} (Ctrl+T: volgend thema)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Preview picture</source>
-        <translation type="unfinished">Voorbeeldafbeelding</translation>
+        <translation>Voorbeeldafbeelding</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>No 3D view</source>
-        <translation type="unfinished">Geen 3D-weergave</translation>
+        <translation>Geen 3D-weergave</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Download FreeCAD</source>
-        <translation type="unfinished">FreeCAD downloaden</translation>
+        <translation>FreeCAD downloaden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Choose FreeCAD…</source>
-        <translation type="unfinished">FreeCAD kiezen…</translation>
+        <translation>FreeCAD kiezen…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open…</source>
-        <translation type="unfinished">Openen…</translation>
+        <translation>Openen…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Menu</source>
-        <translation type="unfinished">Menu</translation>
+        <translation>Menu</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Recent</source>
         <extracomment>Toolbar menu with recently opened files.</extracomment>
-        <translation type="unfinished">Recent</translation>
+        <translation>Recent</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Fit</source>
         <extracomment>Toolbar button: zoom the 3D view so the whole model fits.</extracomment>
-        <translation type="unfinished">Passend</translation>
+        <translation>Passend</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Iso</source>
         <extracomment>Toolbar button: isometric camera view (seen from a corner, slightly above).</extracomment>
-        <translation type="unfinished">Iso</translation>
+        <translation>Iso</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Top</source>
         <extracomment>Toolbar button: camera view from above.</extracomment>
-        <translation type="unfinished">Boven</translation>
+        <translation>Boven</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Front</source>
         <extracomment>Toolbar button: camera view from the front.</extracomment>
-        <translation type="unfinished">Voor</translation>
+        <translation>Voor</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Right</source>
         <extracomment>Toolbar button: camera view from the right side (not &apos;correct&apos;).</extracomment>
-        <translation type="unfinished">Rechts</translation>
+        <translation>Rechts</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>{view} view ({key})</source>
         <extracomment>Tooltip. {view} is a translated view name (Top, Front...), {key} a keyboard key.</extracomment>
-        <translation type="unfinished">Weergave {view} ({key})</translation>
+        <translation>Weergave {view} ({key})</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Save the objects of this 3MF project as STL files (Ctrl+E)</source>
-        <translation type="unfinished">De objecten van dit 3MF-project opslaan als STL-bestanden (Ctrl+E)</translation>
+        <translation>De objecten van dit 3MF-project opslaan als STL-bestanden (Ctrl+E)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Plate</source>
         <extracomment>Toolbar toggle: show or hide the printer&apos;s build plate / bed grid.</extracomment>
-        <translation type="unfinished">Plaat</translation>
+        <translation>Plaat</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Show / hide the build plate grid</source>
-        <translation type="unfinished">Raster van de printplaat tonen / verbergen</translation>
+        <translation>Raster van de printplaat tonen / verbergen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Screenshot</source>
-        <translation type="unfinished">Schermafbeelding</translation>
+        <translation>Schermafbeelding</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Settings</source>
-        <translation type="unfinished">Instellingen</translation>
+        <translation>Instellingen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Updates</source>
-        <translation type="unfinished">Updates</translation>
+        <translation>Updates</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>About</source>
-        <translation type="unfinished">Over</translation>
+        <translation>Over</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Drop a 3D model or G-code file here, or open one.</source>
-        <translation type="unfinished">Sleep een 3D-model of G-codebestand hierheen, of open er een.</translation>
+        <translation>Sleep een 3D-model of G-codebestand hierheen, of open er een.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open file…</source>
-        <translation type="unfinished">Bestand openen…</translation>
+        <translation>Bestand openen…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Details</source>
-        <translation type="unfinished">Details</translation>
+        <translation>Details</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Project</source>
-        <translation type="unfinished">Project</translation>
+        <translation>Project</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Sliced plates</source>
-        <translation type="unfinished">Gesliced platen</translation>
+        <translation>Gesliced platen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Layers</source>
-        <translation type="unfinished">Lagen</translation>
+        <translation>Lagen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Features</source>
-        <translation type="unfinished">Onderdelen</translation>
+        <translation>Onderdelen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Go to layer</source>
-        <translation type="unfinished">Ga naar laag</translation>
+        <translation>Ga naar laag</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Show only this layer</source>
-        <translation type="unfinished">Alleen deze laag tonen</translation>
+        <translation>Alleen deze laag tonen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Tip: ↑ / ↓ arrow keys move through layers</source>
-        <translation type="unfinished">Tip: met de pijltjestoetsen ↑ / ↓ blader je door de lagen</translation>
+        <translation>Tip: met de pijltjestoetsen ↑ / ↓ blader je door de lagen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Previous layer</source>
-        <translation type="unfinished">Vorige laag</translation>
+        <translation>Vorige laag</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Next layer</source>
-        <translation type="unfinished">Volgende laag</translation>
+        <translation>Volgende laag</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Sliced toolpaths · {plate}</source>
-        <translation type="unfinished">Gesliced printpaden · {plate}</translation>
+        <translation>Gesliced printpaden · {plate}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>G-code</source>
-        <translation type="unfinished">G-code</translation>
+        <translation>G-code</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>{kind} · {size} MB</source>
         <extracomment>Under the file name. {kind} is STL, 3MF or G-code; {size} the file size.</extracomment>
-        <translation type="unfinished">{kind} · {size} MB</translation>
+        <translation>{kind} · {size} MB</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>From ZIP</source>
-        <translation type="unfinished">Uit ZIP</translation>
+        <translation>Uit ZIP</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Opening {name}…</source>
-        <translation type="unfinished">{name} openen…</translation>
+        <translation>{name} openen…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>No 3D files in this ZIP</source>
-        <translation type="unfinished">Geen 3D-bestanden in deze ZIP</translation>
+        <translation>Geen 3D-bestanden in deze ZIP</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>This ZIP contains no files PrintView3D can open (STL, 3MF, OBJ, PLY, OFF, glTF, STEP, FreeCAD or G-code).</source>
-        <translation type="unfinished">Deze ZIP bevat geen bestanden die PrintView3D kan openen (STL, 3MF, OBJ, PLY, OFF, glTF, STEP, FreeCAD of G-code).</translation>
+        <translation>Deze ZIP bevat geen bestanden die PrintView3D kan openen (STL, 3MF, OBJ, PLY, OFF, glTF, STEP, FreeCAD of G-code).</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Placing {n} models side by side…</source>
-        <translation type="unfinished">{n} modellen naast elkaar plaatsen…</translation>
+        <translation>{n} modellen naast elkaar plaatsen…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>In this ZIP ({n})</source>
-        <translation type="unfinished">In deze ZIP ({n})</translation>
+        <translation>In deze ZIP ({n})</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Show one at a time</source>
-        <translation type="unfinished">Eén tegelijk tonen</translation>
+        <translation>Eén tegelijk tonen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Show all side by side</source>
-        <translation type="unfinished">Alles naast elkaar tonen</translation>
+        <translation>Alles naast elkaar tonen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Place all models next to each other (G-code, STEP and FreeCAD files are opened one at a time)</source>
-        <translation type="unfinished">Alle modellen naast elkaar plaatsen (G-code-, STEP- en FreeCAD-bestanden worden één voor één geopend)</translation>
+        <translation>Alle modellen naast elkaar plaatsen (G-code-, STEP- en FreeCAD-bestanden worden één voor één geopend)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Opens on its own: click the name</source>
-        <translation type="unfinished">Opent apart: klik op de naam</translation>
+        <translation>Opent apart: klik op de naam</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>{n} other files skipped (pictures, documents, links).</source>
-        <translation type="unfinished">{n} andere bestanden overgeslagen (afbeeldingen, documenten, links).</translation>
+        <translation>{n} andere bestanden overgeslagen (afbeeldingen, documenten, links).</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Untick a model to hide it; click a G-code to open it.</source>
-        <translation type="unfinished">Vink een model uit om het te verbergen; klik op een G-code om die te openen.</translation>
+        <translation>Vink een model uit om het te verbergen; klik op een G-code om die te openen.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Tip: ↑ / ↓ keys move through the list</source>
-        <translation type="unfinished">Tip: met ↑ / ↓ door de lijst bladeren</translation>
+        <translation>Tip: met ↑ / ↓ door de lijst bladeren</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open 3D file</source>
-        <translation type="unfinished">3D-bestand openen</translation>
+        <translation>3D-bestand openen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>File not found</source>
-        <translation type="unfinished">Bestand niet gevonden</translation>
+        <translation>Bestand niet gevonden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>The file no longer exists:</source>
-        <translation type="unfinished">Het bestand bestaat niet meer:</translation>
+        <translation>Het bestand bestaat niet meer:</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Unsupported file</source>
-        <translation type="unfinished">Niet-ondersteund bestand</translation>
+        <translation>Niet-ondersteund bestand</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PrintView3D can open STL, 3MF, OBJ, PLY, OFF, glTF/GLB, STEP, G-code and FreeCAD files, and ZIP files that contain them.</source>
-        <translation type="unfinished">PrintView3D kan STL-, 3MF-, OBJ-, PLY-, OFF-, glTF/GLB-, STEP-, G-code- en FreeCAD-bestanden openen, en ZIP-bestanden die ze bevatten.</translation>
+        <translation>PrintView3D kan STL-, 3MF-, OBJ-, PLY-, OFF-, glTF/GLB-, STEP-, G-code- en FreeCAD-bestanden openen, en ZIP-bestanden die ze bevatten.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Loading {name}…</source>
-        <translation type="unfinished">{name} laden…</translation>
+        <translation>{name} laden…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Could not open file</source>
-        <translation type="unfinished">Kan bestand niet openen</translation>
+        <translation>Kan bestand niet openen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Opened {path}</source>
-        <translation type="unfinished">{path} geopend</translation>
+        <translation>{path} geopend</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Size (X×Y×Z)</source>
-        <translation type="unfinished">Afmetingen (X×Y×Z)</translation>
+        <translation>Afmetingen (X×Y×Z)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>{x} × {y} × {z} mm</source>
-        <translation type="unfinished">{x} × {y} × {z} mm</translation>
+        <translation>{x} × {y} × {z} mm</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Note</source>
-        <translation type="unfinished">Opmerking</translation>
+        <translation>Opmerking</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Very small: the file may use metres instead of millimetres. Your slicer can scale it.</source>
-        <translation type="unfinished">Erg klein: het bestand gebruikt misschien meters in plaats van millimeters. Je slicer kan het schalen.</translation>
+        <translation>Erg klein: het bestand gebruikt misschien meters in plaats van millimeters. Je slicer kan het schalen.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Volume</source>
-        <translation type="unfinished">Volume</translation>
+        <translation>Volume</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>{v} cm³</source>
-        <translation type="unfinished">{v} cm³</translation>
+        <translation>{v} cm³</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>{name}  ({n} triangles)</source>
-        <translation type="unfinished">{name}  ({n} driehoeken)</translation>
+        <translation>{name}  ({n} driehoeken)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Objects ({n})</source>
-        <translation type="unfinished">Objecten ({n})</translation>
+        <translation>Objecten ({n})</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>This project contains sliced G-code.</source>
-        <translation type="unfinished">Dit project bevat gesliced G-code.</translation>
+        <translation>Dit project bevat gesliced G-code.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Show toolpaths — {plate}</source>
-        <translation type="unfinished">Printpaden tonen — {plate}</translation>
+        <translation>Printpaden tonen — {plate}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Converted to 3D with FreeCAD.</source>
-        <translation type="unfinished">Met FreeCAD omgezet naar 3D.</translation>
+        <translation>Met FreeCAD omgezet naar 3D.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>STEP files are shown in 3D with the help of FreeCAD (free), which was not found on this computer.</source>
-        <translation type="unfinished">STEP-bestanden worden in 3D getoond met behulp van FreeCAD (gratis), dat niet op deze computer is gevonden.</translation>
+        <translation>STEP-bestanden worden in 3D getoond met behulp van FreeCAD (gratis), dat niet op deze computer is gevonden.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Shown as in FreeCAD: visible objects only (no sketches, hidden objects or helpers).</source>
-        <translation type="unfinished">Weergegeven zoals in FreeCAD: alleen zichtbare objecten (geen schetsen, verborgen objecten of hulpelementen).</translation>
+        <translation>Weergegeven zoals in FreeCAD: alleen zichtbare objecten (geen schetsen, verborgen objecten of hulpelementen).</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Nothing is visible in this document: all objects are hidden in FreeCAD.</source>
-        <translation type="unfinished">Er is niets zichtbaar in dit document: alle objecten zijn verborgen in FreeCAD.</translation>
+        <translation>Er is niets zichtbaar in dit document: alle objecten zijn verborgen in FreeCAD.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>FreeCAD could not convert this file: {error}</source>
-        <translation type="unfinished">FreeCAD kon dit bestand niet omzetten: {error}</translation>
+        <translation>FreeCAD kon dit bestand niet omzetten: {error}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>FreeCAD was not found, so only the preview picture is shown. Install FreeCAD (free, freecad.org) to see the model in 3D.</source>
-        <translation type="unfinished">FreeCAD is niet gevonden, daarom wordt alleen de voorbeeldafbeelding getoond. Installeer FreeCAD (gratis, freecad.org) om het model in 3D te zien.</translation>
+        <translation>FreeCAD is niet gevonden, daarom wordt alleen de voorbeeldafbeelding getoond. Installeer FreeCAD (gratis, freecad.org) om het model in 3D te zien.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>STEP file</source>
-        <translation type="unfinished">STEP-bestand</translation>
+        <translation>STEP-bestand</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>FreeCAD document</source>
-        <translation type="unfinished">FreeCAD-document</translation>
+        <translation>FreeCAD-document</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Visible objects: {names}</source>
-        <translation type="unfinished">Zichtbare objecten: {names}</translation>
+        <translation>Zichtbare objecten: {names}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open in FreeCAD</source>
-        <translation type="unfinished">Openen in FreeCAD</translation>
+        <translation>Openen in FreeCAD</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>FreeCAD not found</source>
-        <translation type="unfinished">FreeCAD niet gevonden</translation>
+        <translation>FreeCAD niet gevonden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>FreeCAD was not found on this computer.</source>
-        <translation type="unfinished">FreeCAD is niet gevonden op deze computer.</translation>
+        <translation>FreeCAD is niet gevonden op deze computer.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open Settings to choose the FreeCAD program?</source>
-        <translation type="unfinished">Instellingen openen om het FreeCAD-programma te kiezen?</translation>
+        <translation>Instellingen openen om het FreeCAD-programma te kiezen?</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Could not start FreeCAD</source>
-        <translation type="unfinished">Kan FreeCAD niet starten</translation>
+        <translation>Kan FreeCAD niet starten</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Opening {file} in {slicer}…</source>
-        <translation type="unfinished">{file} openen in {slicer}…</translation>
+        <translation>{file} openen in {slicer}…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>This slicer does not open STEP files, and PrintView3D needs FreeCAD to convert it to STL. Install FreeCAD or choose it in Settings, or send the file to OrcaSlicer, PrusaSlicer or Bambu Studio, which open STEP files themselves.</source>
-        <translation type="unfinished">Deze slicer opent geen STEP-bestanden, en PrintView3D heeft FreeCAD nodig om ze naar STL om te zetten. Installeer FreeCAD of kies het in Instellingen, of stuur het bestand naar OrcaSlicer, PrusaSlicer of Bambu Studio, die STEP-bestanden zelf openen.</translation>
+        <translation>Deze slicer opent geen STEP-bestanden, en PrintView3D heeft FreeCAD nodig om ze naar STL om te zetten. Installeer FreeCAD of kies het in Instellingen, of stuur het bestand naar OrcaSlicer, PrusaSlicer of Bambu Studio, die STEP-bestanden zelf openen.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>To send a FreeCAD model to a slicer, PrintView3D needs FreeCAD to convert it first. Install FreeCAD or choose it in Settings.</source>
-        <translation type="unfinished">Om een FreeCAD-model naar een slicer te sturen, heeft PrintView3D FreeCAD nodig om het eerst om te zetten. Installeer FreeCAD of kies het in Instellingen.</translation>
+        <translation>Om een FreeCAD-model naar een slicer te sturen, heeft PrintView3D FreeCAD nodig om het eerst om te zetten. Installeer FreeCAD of kies het in Instellingen.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Nothing to send</source>
-        <translation type="unfinished">Niets om te verzenden</translation>
+        <translation>Niets om te verzenden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Reading sliced G-code from project…</source>
-        <translation type="unfinished">Gesliced G-code uit het project lezen…</translation>
+        <translation>Gesliced G-code uit het project lezen…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>No printable moves found in this G-code.</source>
-        <translation type="unfinished">Geen printbewegingen gevonden in deze G-code.</translation>
+        <translation>Geen printbewegingen gevonden in deze G-code.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Print size</source>
-        <translation type="unfinished">Printafmetingen</translation>
+        <translation>Printafmetingen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Back to 3D model</source>
-        <translation type="unfinished">Terug naar 3D-model</translation>
+        <translation>Terug naar 3D-model</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>All</source>
         <extracomment>Button: show all print feature types.</extracomment>
-        <translation type="unfinished">Alles</translation>
+        <translation>Alles</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>None</source>
         <extracomment>Button: hide all print feature types.</extracomment>
-        <translation type="unfinished">Geen</translation>
+        <translation>Geen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>&lt;b&gt;Layer {n}&lt;/b&gt; of {total}  ·  Z = {z} mm</source>
         <extracomment>Keep &lt;b&gt;...&lt;/b&gt; around the layer number.</extracomment>
-        <translation type="unfinished">&lt;b&gt;Laag {n}&lt;/b&gt; van {total}  ·  Z = {z} mm</translation>
+        <translation>&lt;b&gt;Laag {n}&lt;/b&gt; van {total}  ·  Z = {z} mm</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>custom slicer</source>
-        <translation type="unfinished">aangepaste slicer</translation>
+        <translation>aangepaste slicer</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open this file in FreeCAD (Ctrl+P). Use the arrow to send the model to a slicer as STL.</source>
-        <translation type="unfinished">Open dit bestand in FreeCAD (Ctrl+P). Gebruik de pijl om het model als STL naar een slicer te sturen.</translation>
+        <translation>Open dit bestand in FreeCAD (Ctrl+P). Gebruik de pijl om het model als STL naar een slicer te sturen.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open in {slicer}</source>
-        <translation type="unfinished">Openen in {slicer}</translation>
+        <translation>Openen in {slicer}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open this file in {slicer} (Ctrl+P). Use the arrow to pick another slicer.</source>
-        <translation type="unfinished">Open dit bestand in {slicer} (Ctrl+P). Kies met de pijl een andere slicer.</translation>
+        <translation>Open dit bestand in {slicer} (Ctrl+P). Kies met de pijl een andere slicer.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open in slicer</source>
-        <translation type="unfinished">Openen in slicer</translation>
+        <translation>Openen in slicer</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>No slicer found yet — choose one in Settings (Ctrl+P)</source>
-        <translation type="unfinished">Nog geen slicer gevonden — kies er een in Instellingen (Ctrl+P)</translation>
+        <translation>Nog geen slicer gevonden — kies er een in Instellingen (Ctrl+P)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>No slicers found</source>
-        <translation type="unfinished">Geen slicers gevonden</translation>
+        <translation>Geen slicers gevonden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Send to {slicer} as STL</source>
-        <translation type="unfinished">Als STL naar {slicer} sturen</translation>
+        <translation>Als STL naar {slicer} sturen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>(default)</source>
-        <translation type="unfinished">(standaard)</translation>
+        <translation>(standaard)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Send all models in the ZIP ({n})</source>
-        <translation type="unfinished">Alle modellen uit de ZIP versturen ({n})</translation>
+        <translation>Alle modellen uit de ZIP versturen ({n})</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Choose default slicer…</source>
-        <translation type="unfinished">Standaardslicer kiezen…</translation>
+        <translation>Standaardslicer kiezen…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>No slicer found</source>
-        <translation type="unfinished">Geen slicer gevonden</translation>
+        <translation>Geen slicer gevonden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>No supported slicer was found on this computer.</source>
-        <translation type="unfinished">Er is geen ondersteunde slicer gevonden op deze computer.</translation>
+        <translation>Er is geen ondersteunde slicer gevonden op deze computer.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Open Settings to choose your slicer program?</source>
-        <translation type="unfinished">Instellingen openen om je slicer te kiezen?</translation>
+        <translation>Instellingen openen om je slicer te kiezen?</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>{slicer} not found</source>
-        <translation type="unfinished">{slicer} niet gevonden</translation>
+        <translation>{slicer} niet gevonden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>{slicer} could not be found automatically.</source>
-        <translation type="unfinished">{slicer} kon niet automatisch worden gevonden.</translation>
+        <translation>{slicer} kon niet automatisch worden gevonden.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Do you want to locate its program file yourself?</source>
-        <translation type="unfinished">Wil je het programmabestand zelf aanwijzen?</translation>
+        <translation>Wil je het programmabestand zelf aanwijzen?</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Locate {slicer}</source>
-        <translation type="unfinished">{slicer} zoeken</translation>
+        <translation>{slicer} zoeken</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Could not start {slicer}</source>
-        <translation type="unfinished">Kan {slicer} niet starten</translation>
+        <translation>Kan {slicer} niet starten</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>{n} models</source>
-        <translation type="unfinished">{n} modellen</translation>
+        <translation>{n} modellen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Reading the objects of {name}…</source>
-        <translation type="unfinished">Objecten van {name} lezen…</translation>
+        <translation>Objecten van {name} lezen…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Could not export STL</source>
-        <translation type="unfinished">STL exporteren mislukt</translation>
+        <translation>STL exporteren mislukt</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>This 3MF file contains no printable objects to export.</source>
-        <translation type="unfinished">Dit 3MF-bestand bevat geen printbare objecten om te exporteren.</translation>
+        <translation>Dit 3MF-bestand bevat geen printbare objecten om te exporteren.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Saved {path}</source>
-        <translation type="unfinished">{path} opgeslagen</translation>
+        <translation>{path} opgeslagen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Choose a folder for the STL files</source>
-        <translation type="unfinished">Kies een map voor de STL-bestanden</translation>
+        <translation>Kies een map voor de STL-bestanden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>These files already exist in this folder:</source>
-        <translation type="unfinished">Deze bestanden staan al in deze map:</translation>
+        <translation>Deze bestanden staan al in deze map:</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Replace</source>
-        <translation type="unfinished">Vervangen</translation>
+        <translation>Vervangen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Saved {n} STL files in {folder}</source>
-        <translation type="unfinished">{n} STL-bestanden opgeslagen in {folder}</translation>
+        <translation>{n} STL-bestanden opgeslagen in {folder}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Save screenshot</source>
-        <translation type="unfinished">Schermafbeelding opslaan</translation>
+        <translation>Schermafbeelding opslaan</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PNG image</source>
-        <translation type="unfinished">PNG-afbeelding</translation>
+        <translation>PNG-afbeelding</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Check for updates?</source>
-        <translation type="unfinished">Controleren op updates?</translation>
+        <translation>Controleren op updates?</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Should PrintView3D check GitHub once a day for new versions?</source>
-        <translation type="unfinished">Moet PrintView3D één keer per dag op GitHub controleren of er nieuwe versies zijn?</translation>
+        <translation>Moet PrintView3D één keer per dag op GitHub controleren of er nieuwe versies zijn?</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Only the newest version number is requested. No personal data or files are sent. You can change this any time in Settings → Updates.</source>
-        <translation type="unfinished">Alleen het nieuwste versienummer wordt opgevraagd. Er worden geen persoonlijke gegevens of bestanden verzonden. Je kunt dit altijd wijzigen in Instellingen → Updates.</translation>
+        <translation>Alleen het nieuwste versienummer wordt opgevraagd. Er worden geen persoonlijke gegevens of bestanden verzonden. Je kunt dit altijd wijzigen in Instellingen → Updates.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Yes, check daily</source>
-        <translation type="unfinished">Ja, dagelijks controleren</translation>
+        <translation>Ja, dagelijks controleren</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Thanks for installing PrintView3D</source>
-        <translation type="unfinished">Bedankt voor het installeren van PrintView3D</translation>
+        <translation>Bedankt voor het installeren van PrintView3D</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PrintView3D is free and open source.</source>
-        <translation type="unfinished">PrintView3D is gratis en open source.</translation>
+        <translation>PrintView3D is gratis en open source.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>If you like it, please give it a star on GitHub. Stars help other people find PrintView3D and show that the project is alive.</source>
-        <translation type="unfinished">Vind je het goed? Geef het dan een ster op GitHub. Sterren helpen anderen PrintView3D te vinden en laten zien dat het project leeft.</translation>
+        <translation>Vind je het goed? Geef het dan een ster op GitHub. Sterren helpen anderen PrintView3D te vinden en laten zien dat het project leeft.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Star on GitHub</source>
         <extracomment>Button: opens the project page on GitHub, where people can &apos;star&apos; (like) it.</extracomment>
-        <translation type="unfinished">Ster geven op GitHub</translation>
+        <translation>Ster geven op GitHub</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>No, thanks</source>
-        <translation type="unfinished">Nee, bedankt</translation>
+        <translation>Nee, bedankt</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PrintView3D {version} is available. Click the version in the corner to update.</source>
-        <translation type="unfinished">PrintView3D {version} is beschikbaar. Klik op de versie in de hoek om bij te werken.</translation>
+        <translation>PrintView3D {version} is beschikbaar. Klik op de versie in de hoek om bij te werken.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PrintView3D {version} is available. Click to update.</source>
-        <translation type="unfinished">PrintView3D {version} is beschikbaar. Klik om bij te werken.</translation>
+        <translation>PrintView3D {version} is beschikbaar. Klik om bij te werken.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PrintView3D {version} is up to date. Click for update settings.</source>
-        <translation type="unfinished">PrintView3D {version} is up-to-date. Klik voor de update-instellingen.</translation>
+        <translation>PrintView3D {version} is up-to-date. Klik voor de update-instellingen.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Version {version}. Click to check for updates.</source>
-        <translation type="unfinished">Versie {version}. Klik om op updates te controleren.</translation>
+        <translation>Versie {version}. Klik om op updates te controleren.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>No recent files</source>
-        <translation type="unfinished">Geen recente bestanden</translation>
+        <translation>Geen recente bestanden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Recent files</source>
-        <translation type="unfinished">Recente bestanden</translation>
+        <translation>Recente bestanden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Clear list</source>
-        <translation type="unfinished">Lijst wissen</translation>
+        <translation>Lijst wissen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Restart needed</source>
-        <translation type="unfinished">Herstart nodig</translation>
+        <translation>Herstart nodig</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>PrintView3D could not restart by itself. Close it and start it again.</source>
-        <translation type="unfinished">PrintView3D kon niet vanzelf herstarten. Sluit het en start het opnieuw.</translation>
+        <translation>PrintView3D kon niet vanzelf herstarten. Sluit het en start het opnieuw.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/send_dialog.py"></location>
         <source>Send to slicer</source>
-        <translation type="unfinished">Naar slicer versturen</translation>
+        <translation>Naar slicer versturen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/send_dialog.py"></location>
         <source>A 3MF project opens on its own in the slicer, so it cannot be sent together with other models. What do you want to send?</source>
-        <translation type="unfinished">Een 3MF-project opent op zichzelf in de slicer en kan dus niet samen met andere modellen worden verstuurd. Wat wil je versturen?</translation>
+        <translation>Een 3MF-project opent op zichzelf in de slicer en kan dus niet samen met andere modellen worden verstuurd. Wat wil je versturen?</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/send_dialog.py"></location>
         <source>The 3MF project: {name}</source>
-        <translation type="unfinished">Het 3MF-project: {name}</translation>
+        <translation>Het 3MF-project: {name}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/send_dialog.py"></location>
         <source>With its plates, colours and print settings.</source>
-        <translation type="unfinished">Met de platen, kleuren en printinstellingen.</translation>
+        <translation>Met de platen, kleuren en printinstellingen.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/send_dialog.py"></location>
         <source>The other models: {n}</source>
-        <translation type="unfinished">De andere modellen: {n}</translation>
+        <translation>De andere modellen: {n}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/send_dialog.py"></location>
         <source>Together on one plate; the 3MF project is left out.</source>
-        <translation type="unfinished">Samen op één plaat; het 3MF-project blijft weg.</translation>
+        <translation>Samen op één plaat; het 3MF-project blijft weg.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/send_dialog.py"></location>
         <source>Everything as STL: {n} models</source>
-        <translation type="unfinished">Alles als STL: {n} modellen</translation>
+        <translation>Alles als STL: {n} modellen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/send_dialog.py"></location>
         <source>The project&apos;s objects become a plain STL, so all models go on one plate. Its plates, colours and print settings are not included.</source>
-        <translation type="unfinished">De objecten van het project worden een gewone STL, zodat alle modellen op één plaat komen. Platen, kleuren en printinstellingen gaan niet mee.</translation>
+        <translation>De objecten van het project worden een gewone STL, zodat alle modellen op één plaat komen. Platen, kleuren en printinstellingen gaan niet mee.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/send_dialog.py"></location>
         <source>Send</source>
-        <translation type="unfinished">Versturen</translation>
+        <translation>Versturen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Language</source>
-        <translation type="unfinished">Taal</translation>
+        <translation>Taal</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Automatic (system language)</source>
-        <translation type="unfinished">Automatisch (systeemtaal)</translation>
+        <translation>Automatisch (systeemtaal)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>(incomplete)</source>
-        <translation type="unfinished">(onvolledig)</translation>
+        <translation>(onvolledig)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>How to translate on GitHub</source>
-        <translation type="unfinished">Zo vertaal je op GitHub</translation>
+        <translation>Zo vertaal je op GitHub</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Missing or wrong translation? Anyone can correct it on GitHub: {guide}</source>
         <extracomment>Settings → Language. {guide} becomes the link &apos;How to translate on GitHub&apos;.</extracomment>
-        <translation type="unfinished">Ontbrekende of foute vertaling? Iedereen kan die op GitHub verbeteren: {guide}</translation>
+        <translation>Ontbrekende of foute vertaling? Iedereen kan die op GitHub verbeteren: {guide}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Appearance</source>
-        <translation type="unfinished">Weergave</translation>
+        <translation>Weergave</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Theme</source>
         <extracomment>Settings: the colour theme of the program (dark, gray, light).</extracomment>
-        <translation type="unfinished">Thema</translation>
+        <translation>Thema</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Off</source>
-        <translation type="unfinished">Uit</translation>
+        <translation>Uit</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Mica (soft tint of the wallpaper)</source>
-        <translation type="unfinished">Mica (zachte tint van de achtergrond)</translation>
+        <translation>Mica (zachte tint van de achtergrond)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Acrylic (frosted glass)</source>
-        <translation type="unfinished">Acrylic (matglas)</translation>
+        <translation>Acrylic (matglas)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Window transparency</source>
-        <translation type="unfinished">Venstertransparantie</translation>
+        <translation>Venstertransparantie</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Windows 11 only. Takes effect after restarting PrintView3D. Windows shows a plain colour while the window is not active.</source>
-        <translation type="unfinished">Alleen Windows 11. Werkt na het herstarten van PrintView3D. Windows toont een effen kleur zolang het venster niet actief is.</translation>
+        <translation>Alleen Windows 11. Werkt na het herstarten van PrintView3D. Windows toont een effen kleur zolang het venster niet actief is.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Needs Windows 11.</source>
-        <translation type="unfinished">Vereist Windows 11.</translation>
+        <translation>Vereist Windows 11.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>installed</source>
-        <translation type="unfinished">geïnstalleerd</translation>
+        <translation>geïnstalleerd</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>not found</source>
-        <translation type="unfinished">niet gevonden</translation>
+        <translation>niet gevonden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Custom program…</source>
-        <translation type="unfinished">Ander programma…</translation>
+        <translation>Ander programma…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Default slicer</source>
-        <translation type="unfinished">Standaardslicer</translation>
+        <translation>Standaardslicer</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Name shown on the button, e.g. SuperSlicer</source>
-        <translation type="unfinished">Naam op de knop, bijv. SuperSlicer</translation>
+        <translation>Naam op de knop, bijv. SuperSlicer</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Name</source>
-        <translation type="unfinished">Naam</translation>
+        <translation>Naam</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Browse…</source>
-        <translation type="unfinished">Bladeren…</translation>
+        <translation>Bladeren…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Detect</source>
-        <translation type="unfinished">Detecteren</translation>
+        <translation>Detecteren</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>FreeCAD</source>
-        <translation type="unfinished">FreeCAD</translation>
+        <translation>FreeCAD</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>FreeCAD files (.FCStd) are shown in 3D with the help of your installed FreeCAD. Without it, PrintView3D shows the preview picture and the object list.</source>
-        <translation type="unfinished">FreeCAD-bestanden (.FCStd) worden in 3D getoond met behulp van je geïnstalleerde FreeCAD. Zonder FreeCAD toont PrintView3D de voorbeeldafbeelding en de objectenlijst.</translation>
+        <translation>FreeCAD-bestanden (.FCStd) worden in 3D getoond met behulp van je geïnstalleerde FreeCAD. Zonder FreeCAD toont PrintView3D de voorbeeldafbeelding en de objectenlijst.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Found automatically</source>
-        <translation type="unfinished">Automatisch gevonden</translation>
+        <translation>Automatisch gevonden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Opening files</source>
-        <translation type="unfinished">Bestanden openen</translation>
+        <translation>Bestanden openen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Open each file in a new window</source>
-        <translation type="unfinished">Elk bestand in een nieuw venster openen</translation>
+        <translation>Elk bestand in een nieuw venster openen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Off: a file you double-click while PrintView3D is open is shown in the window that is already open. On: every file gets its own window. Starting PrintView3D without a file always opens a new window.</source>
-        <translation type="unfinished">Uit: een bestand dat je dubbelklikt terwijl PrintView3D open is, wordt getoond in het venster dat al open is. Aan: elk bestand krijgt een eigen venster. PrintView3D starten zonder bestand opent altijd een nieuw venster.</translation>
+        <translation>Uit: een bestand dat je dubbelklikt terwijl PrintView3D open is, wordt getoond in het venster dat al open is. Aan: elk bestand krijgt een eigen venster. PrintView3D starten zonder bestand opent altijd een nieuw venster.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Default program for 3D files</source>
-        <translation type="unfinished">Standaardprogramma voor 3D-bestanden</translation>
+        <translation>Standaardprogramma voor 3D-bestanden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Register PrintView3D so it can open .stl, .3mf and .gcode files when you double-click them. Windows then asks you to confirm it as the default app — that last step is done by Windows itself and can be changed back at any time.</source>
-        <translation type="unfinished">Registreer PrintView3D zodat het .stl-, .3mf- en .gcode-bestanden opent als je erop dubbelklikt. Windows vraagt je daarna om het als standaardapp te bevestigen — die laatste stap doet Windows zelf en kan altijd worden teruggedraaid.</translation>
+        <translation>Registreer PrintView3D zodat het .stl-, .3mf- en .gcode-bestanden opent als je erop dubbelklikt. Windows vraagt je daarna om het als standaardapp te bevestigen — die laatste stap doet Windows zelf en kan altijd worden teruggedraaid.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Add PrintView3D to your applications menu and to &quot;Open with&quot;, and make it the default app for .stl, .3mf and .gcode files. Remove registration undoes it.</source>
-        <translation type="unfinished">Voeg PrintView3D toe aan je programmamenu en aan &quot;Openen met&quot;, en maak het de standaardapp voor .stl-, .3mf- en .gcode-bestanden. &quot;Registratie verwijderen&quot; maakt dit ongedaan.</translation>
+        <translation>Voeg PrintView3D toe aan je programmamenu en aan &quot;Openen met&quot;, en maak het de standaardapp voor .stl-, .3mf- en .gcode-bestanden. &quot;Registratie verwijderen&quot; maakt dit ongedaan.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>OBJ, PLY, OFF, glTF and STEP files are only added to &quot;Open with&quot;.</source>
-        <translation type="unfinished">OBJ-, PLY-, OFF-, glTF- en STEP-bestanden worden alleen toegevoegd aan &quot;Openen met&quot;.</translation>
+        <translation>OBJ-, PLY-, OFF-, glTF- en STEP-bestanden worden alleen toegevoegd aan &quot;Openen met&quot;.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Register &amp;&amp; choose as default…</source>
         <extracomment>&apos;&amp;&amp;&apos; shows a single &apos;&amp;&apos; on the button; keep it as &apos;&amp;&amp;&apos; or use a word.</extracomment>
-        <translation type="unfinished">Registreren en als standaard kiezen…</translation>
+        <translation>Registreren en als standaard kiezen…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Register &amp;&amp; make default</source>
         <extracomment>&apos;&amp;&amp;&apos; shows a single &apos;&amp;&apos; on the button; keep it as &apos;&amp;&amp;&apos; or use a word.</extracomment>
-        <translation type="unfinished">Registreren en standaard maken</translation>
+        <translation>Registreren en standaard maken</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Remove registration</source>
-        <translation type="unfinished">Registratie verwijderen</translation>
+        <translation>Registratie verwijderen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Files</source>
         <extracomment>Settings page: which file types open with PrintView3D (default program).</extracomment>
-        <translation type="unfinished">Bestanden</translation>
+        <translation>Bestanden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Viewer</source>
-        <translation type="unfinished">Weergave</translation>
+        <translation>Weergave</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Show travel moves when opening G-code</source>
-        <translation type="unfinished">Verplaatsingen tonen bij het openen van G-code</translation>
+        <translation>Verplaatsingen tonen bij het openen van G-code</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Show build plate grid</source>
-        <translation type="unfinished">Raster van de printplaat tonen</translation>
+        <translation>Raster van de printplaat tonen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Graphics</source>
-        <translation type="unfinished">Grafische kaart</translation>
+        <translation>Grafische kaart</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>unknown</source>
-        <translation type="unfinished">onbekend</translation>
+        <translation>onbekend</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Drawing with: {gpu}</source>
-        <translation type="unfinished">Tekent met: {gpu}</translation>
+        <translation>Tekent met: {gpu}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Use the high-performance graphics card (recommended on laptops)</source>
-        <translation type="unfinished">De krachtige videokaart gebruiken (aanbevolen op laptops)</translation>
+        <translation>De krachtige videokaart gebruiken (aanbevolen op laptops)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Takes effect after restarting PrintView3D.</source>
-        <translation type="unfinished">Werkt na het herstarten van PrintView3D.</translation>
+        <translation>Werkt na het herstarten van PrintView3D.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Available in the installed PrintView3D.exe.</source>
-        <translation type="unfinished">Beschikbaar in de geïnstalleerde PrintView3D.exe.</translation>
+        <translation>Beschikbaar in de geïnstalleerde PrintView3D.exe.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>On laptops with two graphics chips, start PrintView3D from the applications menu (after Register on the Files page) — the menu entry asks for the dedicated GPU — or use your desktop&apos;s &quot;Launch using Dedicated Graphics Card&quot; option.</source>
-        <translation type="unfinished">Start PrintView3D op laptops met twee grafische chips vanuit het programmamenu (na Registreren op de pagina Bestanden) — die menu-ingang vraagt om de snelle GPU — of gebruik de optie &quot;Launch using Dedicated Graphics Card&quot; van je bureaublad.</translation>
+        <translation>Start PrintView3D op laptops met twee grafische chips vanuit het programmamenu (na Registreren op de pagina Bestanden) — die menu-ingang vraagt om de snelle GPU — of gebruik de optie &quot;Launch using Dedicated Graphics Card&quot; van je bureaublad.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>This looks like the built-in (slower) graphics. Tick the box and restart for smoother rotation.</source>
-        <translation type="unfinished">Dit lijkt de ingebouwde (tragere) grafische chip. Vink het vakje aan en herstart voor soepeler draaien.</translation>
+        <translation>Dit lijkt de ingebouwde (tragere) grafische chip. Vink het vakje aan en herstart voor soepeler draaien.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>What&apos;s new</source>
-        <translation type="unfinished">Wat is er nieuw</translation>
+        <translation>Wat is er nieuw</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Skip this version</source>
         <extracomment>Update button: do not show this new version again (the next one is shown).</extracomment>
-        <translation type="unfinished">Deze versie overslaan</translation>
+        <translation>Deze versie overslaan</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Check for updates now</source>
-        <translation type="unfinished">Nu controleren op updates</translation>
+        <translation>Nu controleren op updates</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Check for updates automatically (once a day)</source>
-        <translation type="unfinished">Automatisch controleren op updates (één keer per dag)</translation>
+        <translation>Automatisch controleren op updates (één keer per dag)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Only asks GitHub for the newest version number. No personal data or files are sent.</source>
-        <translation type="unfinished">Vraagt GitHub alleen naar het nieuwste versienummer. Er worden geen persoonlijke gegevens of bestanden verzonden.</translation>
+        <translation>Vraagt GitHub alleen naar het nieuwste versienummer. Er worden geen persoonlijke gegevens of bestanden verzonden.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Read more</source>
-        <translation type="unfinished">Meer lezen</translation>
+        <translation>Meer lezen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>This copy of PrintView3D is not the installed Windows version, so updates open the download page.</source>
-        <translation type="unfinished">Deze kopie van PrintView3D is niet de geïnstalleerde Windows-versie, daarom openen updates de downloadpagina.</translation>
+        <translation>Deze kopie van PrintView3D is niet de geïnstalleerde Windows-versie, daarom openen updates de downloadpagina.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>never</source>
-        <translation type="unfinished">nooit</translation>
+        <translation>nooit</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>&lt;b&gt;Version {new} is available&lt;/b&gt; (you have {current})</source>
-        <translation type="unfinished">&lt;b&gt;Versie {new} is beschikbaar&lt;/b&gt; (je hebt {current})</translation>
+        <translation>&lt;b&gt;Versie {new} is beschikbaar&lt;/b&gt; (je hebt {current})</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>You have version {version}</source>
-        <translation type="unfinished">Je hebt versie {version}</translation>
+        <translation>Je hebt versie {version}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Checking…</source>
-        <translation type="unfinished">Controleren…</translation>
+        <translation>Controleren…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Last checked: {when}</source>
-        <translation type="unfinished">Laatst gecontroleerd: {when}</translation>
+        <translation>Laatst gecontroleerd: {when}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>You are up to date · last checked {when}</source>
-        <translation type="unfinished">Je bent up-to-date · laatst gecontroleerd {when}</translation>
+        <translation>Je bent up-to-date · laatst gecontroleerd {when}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Could not check for updates · last tried {when}</source>
-        <translation type="unfinished">Kon niet op updates controleren · laatst geprobeerd {when}</translation>
+        <translation>Kon niet op updates controleren · laatst geprobeerd {when}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Not checked yet.</source>
-        <translation type="unfinished">Nog niet gecontroleerd.</translation>
+        <translation>Nog niet gecontroleerd.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>today {time}</source>
         <extracomment>When the last update check was. {time} is e.g. 14:02.</extracomment>
-        <translation type="unfinished">vandaag {time}</translation>
+        <translation>vandaag {time}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Could not check for updates: {error}</source>
-        <translation type="unfinished">Kan niet controleren op updates: {error}</translation>
+        <translation>Kan niet controleren op updates: {error}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>A lightweight viewer for STL, 3MF and G-code files, with one-click hand-off to your slicer (Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura and others).</source>
-        <translation type="unfinished">Een lichte viewer voor STL-, 3MF- en G-codebestanden, die het bestand met één klik doorgeeft aan je slicer (Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura en andere).</translation>
+        <translation>Een lichte viewer voor STL-, 3MF- en G-codebestanden, die het bestand met één klik doorgeeft aan je slicer (Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura en andere).</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Open source under the MIT License.</source>
-        <translation type="unfinished">Open source onder de MIT-licentie.</translation>
+        <translation>Open source onder de MIT-licentie.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Like PrintView3D? {star} It helps other people find it.</source>
         <extracomment>Settings → About. {star} becomes the link &apos;Give it a star on GitHub.&apos;</extracomment>
-        <translation type="unfinished">Vind je PrintView3D goed? {star} Zo vinden anderen het ook.</translation>
+        <translation>Vind je PrintView3D goed? {star} Zo vinden anderen het ook.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Give it a star on GitHub.</source>
         <extracomment>Link text. A &apos;star&apos; on GitHub is like a &apos;like&apos; or bookmark.</extracomment>
-        <translation type="unfinished">Geef het een ster op GitHub.</translation>
+        <translation>Geef het een ster op GitHub.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Built with Python, Qt (PySide6) and PyVista / VTK.</source>
-        <translation type="unfinished">Gemaakt met Python, Qt (PySide6) en PyVista / VTK.</translation>
+        <translation>Gemaakt met Python, Qt (PySide6) en PyVista / VTK.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Keyboard and mouse</source>
-        <translation type="unfinished">Toetsenbord en muis</translation>
+        <translation>Toetsenbord en muis</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Keyboard</source>
-        <translation type="unfinished">Toetsenbord</translation>
+        <translation>Toetsenbord</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Mouse</source>
-        <translation type="unfinished">Muis</translation>
+        <translation>Muis</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Path to the slicer program</source>
-        <translation type="unfinished">Pad naar het slicerprogramma</translation>
+        <translation>Pad naar het slicerprogramma</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Not found automatically — use Browse… to select it</source>
-        <translation type="unfinished">Niet automatisch gevonden — kies het met Bladeren…</translation>
+        <translation>Niet automatisch gevonden — kies het met Bladeren…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Locate FreeCAD</source>
-        <translation type="unfinished">FreeCAD zoeken</translation>
+        <translation>FreeCAD zoeken</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>FreeCAD found: {where}</source>
-        <translation type="unfinished">FreeCAD gevonden: {where}</translation>
+        <translation>FreeCAD gevonden: {where}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>FreeCAD was not found. Install it from freecad.org (free), or choose its program file with Browse.</source>
-        <translation type="unfinished">FreeCAD is niet gevonden. Installeer het via freecad.org (gratis) of kies het programmabestand met Bladeren.</translation>
+        <translation>FreeCAD is niet gevonden. Installeer het via freecad.org (gratis) of kies het programmabestand met Bladeren.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Not found</source>
-        <translation type="unfinished">Niet gevonden</translation>
+        <translation>Niet gevonden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Use Browse… to select its program file.</source>
-        <translation type="unfinished">Kies het programmabestand met Bladeren….</translation>
+        <translation>Kies het programmabestand met Bladeren….</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>No program selected.</source>
-        <translation type="unfinished">Geen programma gekozen.</translation>
+        <translation>Geen programma gekozen.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>This file does not exist</source>
-        <translation type="unfinished">Dit bestand bestaat niet</translation>
+        <translation>Dit bestand bestaat niet</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Detected automatically</source>
-        <translation type="unfinished">Automatisch gedetecteerd</translation>
+        <translation>Automatisch gedetecteerd</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Found</source>
         <extracomment>Status: the chosen slicer program file exists.</extracomment>
-        <translation type="unfinished">Gevonden</translation>
+        <translation>Gevonden</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Not available</source>
-        <translation type="unfinished">Niet beschikbaar</translation>
+        <translation>Niet beschikbaar</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>File associations are available on Windows and Linux.</source>
-        <translation type="unfinished">Bestandskoppelingen zijn beschikbaar op Windows en Linux.</translation>
+        <translation>Bestandskoppelingen zijn beschikbaar op Windows en Linux.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>You are running from source: registration will point to this Python installation. For everyday use, register from the built PrintView3D program.</source>
-        <translation type="unfinished">Je start vanuit de broncode: de registratie verwijst naar deze Python-installatie. Registreer voor dagelijks gebruik vanuit het gebouwde PrintView3D-programma.</translation>
+        <translation>Je start vanuit de broncode: de registratie verwijst naar deze Python-installatie. Registreer voor dagelijks gebruik vanuit het gebouwde PrintView3D-programma.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>The registration points to a different copy of PrintView3D. Click Register again to point it to this one.</source>
-        <translation type="unfinished">De registratie verwijst naar een andere kopie van PrintView3D. Klik opnieuw op Registreren om naar deze te verwijzen.</translation>
+        <translation>De registratie verwijst naar een andere kopie van PrintView3D. Klik opnieuw op Registreren om naar deze te verwijzen.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Almost done</source>
-        <translation type="unfinished">Bijna klaar</translation>
+        <translation>Bijna klaar</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>PrintView3D will be added to &quot;Open with&quot;.</source>
-        <translation type="unfinished">PrintView3D wordt toegevoegd aan &quot;Openen met&quot;.</translation>
+        <translation>PrintView3D wordt toegevoegd aan &quot;Openen met&quot;.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Windows Settings opens next. Set PrintView3D as the default for .stl, .3mf and .gcode there (click each file type and choose PrintView3D).</source>
-        <translation type="unfinished">Daarna opent Windows Instellingen. Stel daar PrintView3D in als standaard voor .stl, .3mf en .gcode (klik op elk bestandstype en kies PrintView3D).</translation>
+        <translation>Daarna opent Windows Instellingen. Stel daar PrintView3D in als standaard voor .stl, .3mf en .gcode (klik op elk bestandstype en kies PrintView3D).</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Registration failed</source>
-        <translation type="unfinished">Registratie mislukt</translation>
+        <translation>Registratie mislukt</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Done</source>
-        <translation type="unfinished">Klaar</translation>
+        <translation>Klaar</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>PrintView3D is now in your applications menu and opens .stl, .3mf and .gcode files when you double-click them.</source>
-        <translation type="unfinished">PrintView3D staat nu in je programmamenu en opent .stl-, .3mf- en .gcode-bestanden als je erop dubbelklikt.</translation>
+        <translation>PrintView3D staat nu in je programmamenu en opent .stl-, .3mf- en .gcode-bestanden als je erop dubbelklikt.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Remove PrintView3D from &quot;Open with&quot; and default apps?</source>
-        <translation type="unfinished">PrintView3D verwijderen uit &quot;Openen met&quot; en standaardapps?</translation>
+        <translation>PrintView3D verwijderen uit &quot;Openen met&quot; en standaardapps?</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Custom slicer</source>
-        <translation type="unfinished">Aangepaste slicer</translation>
+        <translation>Aangepaste slicer</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Select the program file of your slicer first.</source>
-        <translation type="unfinished">Kies eerst het programmabestand van je slicer.</translation>
+        <translation>Kies eerst het programmabestand van je slicer.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Could not change graphics setting</source>
-        <translation type="unfinished">Kan grafische instelling niet wijzigen</translation>
+        <translation>Kan grafische instelling niet wijzigen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>The new window transparency is used after PrintView3D restarts.</source>
-        <translation type="unfinished">De nieuwe venstertransparantie wordt gebruikt nadat PrintView3D opnieuw is gestart.</translation>
+        <translation>De nieuwe venstertransparantie wordt gebruikt nadat PrintView3D opnieuw is gestart.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>The new graphics card setting is used after PrintView3D restarts.</source>
-        <translation type="unfinished">De nieuwe instelling voor de grafische kaart wordt gebruikt nadat PrintView3D opnieuw is gestart.</translation>
+        <translation>De nieuwe instelling voor de grafische kaart wordt gebruikt nadat PrintView3D opnieuw is gestart.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>The new window transparency and graphics card setting are used after PrintView3D restarts.</source>
-        <translation type="unfinished">De nieuwe venstertransparantie en instelling voor de grafische kaart worden gebruikt nadat PrintView3D opnieuw is gestart.</translation>
+        <translation>De nieuwe venstertransparantie en instelling voor de grafische kaart worden gebruikt nadat PrintView3D opnieuw is gestart.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>The open file opens again after the restart.</source>
-        <translation type="unfinished">Het geopende bestand wordt na de herstart opnieuw geopend.</translation>
+        <translation>Het geopende bestand wordt na de herstart opnieuw geopend.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Restart now</source>
-        <translation type="unfinished">Nu herstarten</translation>
+        <translation>Nu herstarten</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Later</source>
-        <translation type="unfinished">Later</translation>
+        <translation>Later</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>{view} view</source>
-        <translation type="unfinished">Weergave {view}</translation>
+        <translation>Weergave {view}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Open a file</source>
-        <translation type="unfinished">Een bestand openen</translation>
+        <translation>Een bestand openen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Open the file in your slicer</source>
-        <translation type="unfinished">Het bestand openen in je slicer</translation>
+        <translation>Het bestand openen in je slicer</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Export STL (3MF projects)</source>
-        <translation type="unfinished">STL exporteren (3MF-projecten)</translation>
+        <translation>STL exporteren (3MF-projecten)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Next / previous layer (G-code), or file (ZIP)</source>
-        <translation type="unfinished">Volgende / vorige laag (G-code) of bestand (ZIP)</translation>
+        <translation>Volgende / vorige laag (G-code) of bestand (ZIP)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>10 layers up / down</source>
-        <translation type="unfinished">10 lagen omhoog / omlaag</translation>
+        <translation>10 lagen omhoog / omlaag</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>First / last layer</source>
-        <translation type="unfinished">Eerste / laatste laag</translation>
+        <translation>Eerste / laatste laag</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Rotate (around the point you press on the model)</source>
-        <translation type="unfinished">Draaien (rond het punt waar je op het model drukt)</translation>
+        <translation>Draaien (rond het punt waar je op het model drukt)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Left-drag</source>
-        <translation type="unfinished">Slepen met linkermuisknop</translation>
+        <translation>Slepen met linkermuisknop</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Move (pan)</source>
-        <translation type="unfinished">Verplaatsen (pannen)</translation>
+        <translation>Verplaatsen (pannen)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Right-drag</source>
-        <translation type="unfinished">Slepen met rechtermuisknop</translation>
+        <translation>Slepen met rechtermuisknop</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Middle-drag</source>
-        <translation type="unfinished">Slepen met middelste muisknop</translation>
+        <translation>Slepen met middelste muisknop</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Shift + left-drag</source>
-        <translation type="unfinished">Shift + slepen met linkermuisknop</translation>
+        <translation>Shift + slepen met linkermuisknop</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Zoom towards the mouse pointer</source>
-        <translation type="unfinished">Inzoomen naar de muisaanwijzer</translation>
+        <translation>Inzoomen naar de muisaanwijzer</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Mouse wheel</source>
-        <translation type="unfinished">Muiswiel</translation>
+        <translation>Muiswiel</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/theme.py"></location>
         <source>Automatic (system theme)</source>
-        <translation type="unfinished">Automatisch (systeemthema)</translation>
+        <translation>Automatisch (systeemthema)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/theme.py"></location>
         <source>Dark</source>
         <extracomment>Colour theme name.</extracomment>
-        <translation type="unfinished">Donker</translation>
+        <translation>Donker</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/theme.py"></location>
         <source>Gray</source>
         <extracomment>Colour theme name.</extracomment>
-        <translation type="unfinished">Grijs</translation>
+        <translation>Grijs</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/theme.py"></location>
         <source>Graphite</source>
         <extracomment>Colour theme name: a warm, dark brownish charcoal.</extracomment>
-        <translation type="unfinished">Grafiet</translation>
+        <translation>Grafiet</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/theme.py"></location>
         <source>Light</source>
         <extracomment>Colour theme name: light colours (not &apos;not heavy&apos;).</extracomment>
-        <translation type="unfinished">Licht</translation>
+        <translation>Licht</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>What&apos;s new in {version}</source>
-        <translation type="unfinished">Wat is er nieuw in {version}</translation>
+        <translation>Wat is er nieuw in {version}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>PrintView3D {new} is available. You have {current}.</source>
-        <translation type="unfinished">PrintView3D {new} is beschikbaar. Je hebt {current}.</translation>
+        <translation>PrintView3D {new} is beschikbaar. Je hebt {current}.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>No release notes.</source>
-        <translation type="unfinished">Geen releasenotities.</translation>
+        <translation>Geen releasenotities.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>PrintView3D was updated to {version}.</source>
-        <translation type="unfinished">PrintView3D is bijgewerkt naar {version}.</translation>
+        <translation>PrintView3D is bijgewerkt naar {version}.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>All changes</source>
-        <translation type="unfinished">Alle wijzigingen</translation>
+        <translation>Alle wijzigingen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Downloading PrintView3D {version}…</source>
-        <translation type="unfinished">PrintView3D {version} downloaden…</translation>
+        <translation>PrintView3D {version} downloaden…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Cancel</source>
-        <translation type="unfinished">Annuleren</translation>
+        <translation>Annuleren</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Updating PrintView3D</source>
-        <translation type="unfinished">PrintView3D bijwerken</translation>
+        <translation>PrintView3D bijwerken</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Update failed</source>
-        <translation type="unfinished">Bijwerken mislukt</translation>
+        <translation>Bijwerken mislukt</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>The update could not be downloaded: {error}</source>
-        <translation type="unfinished">De update kon niet worden gedownload: {error}</translation>
+        <translation>De update kon niet worden gedownload: {error}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Install update</source>
-        <translation type="unfinished">Update installeren</translation>
+        <translation>Update installeren</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Download update</source>
-        <translation type="unfinished">Update downloaden</translation>
+        <translation>Update downloaden</translation>
     </message>
     <message>
         <source>Next / previous layer (G-code)</source>

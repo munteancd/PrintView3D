@@ -96,7 +96,7 @@ if sys.platform == "darwin":
             "CFBundleDisplayName": "PrintView3D",
             "CFBundleShortVersionString": VERSION,
             "CFBundleVersion": VERSION,
-            "LSMinimumSystemVersion": "12.0",
+            "LSMinimumSystemVersion": "14.4",   # Qt 6.12 needs macOS 14.4 (checked in CI)
             "NSHighResolutionCapable": True,
             "NSRequiresAquaSystemAppearance": False,      # follow Dark Mode
             "CFBundleDocumentTypes": [

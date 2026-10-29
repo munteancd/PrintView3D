@@ -6,7 +6,8 @@
 |---|---|---|
 | **Windows 10 / 11** | `PrintView3D-Setup.exe` (أو النسخة المحمولة `PrintView3D-windows.zip`) | [التعليمات](#windows) |
 | **Linux** (‏64 بت، x86-64) | `PrintView3D-x86_64.AppImage` | [التعليمات](#linux) |
-| **macOS 12+** (‏Apple silicon)، تجريبي | `PrintView3D-macOS-AppleSilicon.dmg` | [التعليمات](#macos) |
+| **macOS 14.4+** (‏Apple silicon: ‏M1 وأحدث)، تجريبي | `PrintView3D-macOS-AppleSilicon.dmg` | [التعليمات](#macos) |
+| **macOS 14.4+** (‏Intel)، تجريبي | `PrintView3D-macOS-Intel.dmg` | [التعليمات](#macos) |
 
 كل التنزيلات موجودة في صفحة **[أحدث إصدار](https://github.com/sevagjb/PrintView3D/releases/latest)**.
 
@@ -102,9 +103,15 @@
 > [أخبرنا كيف تعمل](https://github.com/sevagjb/PrintView3D/issues/new?template=mac_build.md): طراز جهاز
 > Mac، وإصدار macOS، وأي شيء يبدو خاطئًا.
 
-لأجهزة Mac بمعالجات **Apple silicon** ‏(M1 وM2 وM3 وM4 وأحدث) و**macOS 12 أو أحدث**.
+لنظام **macOS 14.4 ‏(Sonoma) أو أحدث**، بنسختين؛ اختر النسخة المناسبة لجهازك
+(قائمة Apple ← **About This Mac**: ‏*Chip* تعني Apple silicon، و*Processor* تعني Intel):
 
-1. من **[أحدث إصدار](https://github.com/sevagjb/PrintView3D/releases/latest)** نزّل **`PrintView3D-macOS-AppleSilicon.dmg`**.
+| جهاز Mac لديك | التنزيل |
+|---|---|
+| **Apple silicon** ‏(M1 وM2 وM3 وM4 وأحدث) | `PrintView3D-macOS-AppleSilicon.dmg` |
+| **Intel** ‏(من 2018 وأحدث، أي الأجهزة التي تعمل بنظام macOS 14) | `PrintView3D-macOS-Intel.dmg` |
+
+1. من **[أحدث إصدار](https://github.com/sevagjb/PrintView3D/releases/latest)** نزّل ملف `.dmg` المناسب لجهازك.
 2. افتحه واسحب **PrintView3D** إلى **Applications**.
 3. شغّل PrintView3D من Applications. **في المرة الأولى** يقول macOS إنه *لا يستطيع التحقق* من التطبيق.
    انقر **Done** (وليس «Move to Trash»).
@@ -125,5 +132,5 @@
 
 **برامج التقطيع** في Applications ‏(Creality Print وOrcaSlicer وBambu Studio وPrusaSlicer وCura و…)
 يُعثَر عليها تلقائيًا. **التحديثات:** يفتح زر *تنزيل التحديث* صفحة الإصدار؛ اسحب الإصدار الجديد إلى
-Applications ليحلّ محل القديم. أجهزة Mac بمعالجات Intel: لا توجد نسخة لها بعد؛
-[اطلبها](https://github.com/sevagjb/PrintView3D/issues/new?template=mac_build.md) إن كنت تحتاجها.
+Applications ليحلّ محل القديم. أجهزة Mac الأقدم التي لا تعمل بنظام macOS 14:
+[أخبرنا](https://github.com/sevagjb/PrintView3D/issues/new?template=mac_build.md) إن كنت تحتاج إلى نسخة لها.

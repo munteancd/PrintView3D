@@ -16,3 +16,6 @@ updates:
     groups:
       python-packages:
         patterns: ["*"]
+    ignore:
+      # PyVista requires one exact version of it; it is updated together with PyVista.
+      - dependency-name: pyvista-validation

@@ -23,7 +23,8 @@
 <p align="center">
   📖 <b>Read the guide on the website:</b>
   <a href="https://sevagjb.github.io/PrintView3D/">English</a> ·
-  <a href="https://sevagjb.github.io/PrintView3D/ar/">العربية</a>
+  <a href="https://sevagjb.github.io/PrintView3D/ar/">العربية</a> ·
+  <a href="https://sevagjb.github.io/PrintView3D/nl/">Nederlands</a>
 </p>
 
 ![PrintView3D showing a sliced vase with the layer slider at 60 %](docs/screenshot-gcode.png)
@@ -85,7 +86,8 @@ You do **not** need Python or anything else to use PrintView3D. Pick your system
 |---|---|---|
 | **Windows 10 / 11** | `PrintView3D-Setup.exe` (or the portable `PrintView3D-windows.zip`) | [Instructions](#windows) |
 | **Linux** (64-bit, x86-64) | `PrintView3D-x86_64.AppImage` | [Instructions](#linux) |
-| **macOS 12+** (Apple silicon), beta | `PrintView3D-macOS-AppleSilicon.dmg` | [Instructions](#macos) |
+| **macOS 14.4+** (Apple silicon: M1 and newer), beta | `PrintView3D-macOS-AppleSilicon.dmg` | [Instructions](#macos) |
+| **macOS 14.4+** (Intel), beta | `PrintView3D-macOS-Intel.dmg` | [Instructions](#macos) |
 
 All downloads are on the **[latest release](../../releases/latest)** page.
 
@@ -183,9 +185,15 @@ distribution's packages, or in `/opt`. Otherwise choose it once with **Browse…
 > on real Macs yet. Please [tell us how it works](../../issues/new?template=mac_build.md): your Mac
 > model, macOS version, and anything that looks wrong.
 
-For Macs with **Apple silicon** (M1, M2, M3, M4 and newer) and **macOS 12 or newer**.
+For **macOS 14.4 (Sonoma) or newer**, in two versions; pick the one for your Mac
+( → **About This Mac**: *Chip* means Apple silicon, *Processor* means Intel):
 
-1. From the **[latest release](../../releases/latest)** download **`PrintView3D-macOS-AppleSilicon.dmg`**.
+| Your Mac | Download |
+|---|---|
+| **Apple silicon** (M1, M2, M3, M4 and newer) | `PrintView3D-macOS-AppleSilicon.dmg` |
+| **Intel** (2018 and newer, the Macs that run macOS 14) | `PrintView3D-macOS-Intel.dmg` |
+
+1. From the **[latest release](../../releases/latest)** download the `.dmg` for your Mac.
 2. Open it and drag **PrintView3D** onto **Applications**.
 3. Start PrintView3D from Applications. **The first time**, macOS says it *cannot verify* the app.
    Click **Done** (not "Move to Trash").
@@ -206,8 +214,8 @@ From then on it opens normally.
 
 **Slicers** in Applications (Creality Print, OrcaSlicer, Bambu Studio, PrusaSlicer, Cura, …) are
 found automatically. **Updates:** *Download update* opens the release page; drag the new version
-into Applications to replace the old one. Intel Macs: not built yet;
-[ask for it](../../issues/new?template=mac_build.md) if you need it.
+into Applications to replace the old one. Older Macs that can't run macOS 14:
+[let us know](../../issues/new?template=mac_build.md) if you need a version for them.
 
 ---
 
@@ -613,7 +621,7 @@ PrintView3D.exe --unregister                       remove file associations
 |---|---|
 | English | Source language |
 | العربية Arabic | Complete, reviewed by a native speaker |
-| Nederlands | Complete, needs review by a native speaker |
+| Nederlands | Complete, reviewed |
 | Deutsch | Complete, needs review by a native speaker |
 | Français | Complete, needs review by a native speaker |
 | Español | Complete, needs review by a native speaker |
@@ -634,8 +642,8 @@ Is your slicer missing? It is usually a single entry in `SLICERS` in
 
 ## Notes and limits
 
-- Windows 10/11 and Linux (x86-64) are packaged and tested. The Mac version (Apple silicon) is in
-  [beta](#macos); Intel Macs are not built yet. ARM Linux (Raspberry Pi etc.) is not packaged yet.
+- Windows 10/11 and Linux (x86-64) are packaged and tested. The Mac versions (Apple silicon and Intel,
+  macOS 14.4+) are in [beta](#macos). ARM Linux (Raspberry Pi etc.) is not packaged yet.
 - A 3MF *project* saved in one brand of slicer may lose its printer/print settings when opened in a
   different brand. The model itself loads fine; that's how the slicers behave.
 - Binary G-code (`.bgcode`) is not supported yet.
