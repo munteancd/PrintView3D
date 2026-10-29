@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.21.0
+- **Home button**: the house icon next to *Open* (also in the menu, `Ctrl+W`) closes the file and
+  goes back to the start page with your recent files. The memory the file used is given back.
+- **New themes: Ember Light and Ember Dark**, in cream, orange and teal.
+- **Choose a theme by picture**: **Settings → Appearance** shows a card with a small picture of
+  PrintView3D in every theme. Click one to see it right away; *OK* keeps it, *Cancel* goes back.
+  The theme menu in the toolbar shows a colour next to each theme, and `Ctrl+T` goes through all six.
+  [Details](README.md#themes).
+
 ## 0.20.0
 - **Export STL from FreeCAD and STEP files**: once FreeCAD has shown the file in 3D, **Export STL**
   (`Ctrl+E`) saves its solids as plain STL files, like it does for 3MF projects: all in one file,
