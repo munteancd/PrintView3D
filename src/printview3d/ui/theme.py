@@ -402,6 +402,22 @@ def _tool_glyph(p: QPainter, kind: str, fg: QColor) -> None:
     if kind == "menu":                           # hamburger
         for y in (18, 32, 46):
             p.drawLine(QPointF(12, y), QPointF(52, y))
+    elif kind == "home":                         # house: roof, walls and a door
+        house = QPainterPath()
+        house.moveTo(8, 30)
+        house.lineTo(32, 9)
+        house.lineTo(56, 30)
+        p.drawPath(house)
+        walls = QPainterPath()
+        walls.moveTo(15, 25)
+        for x, y in ((15, 55), (49, 55), (49, 25)):
+            walls.lineTo(x, y)
+        p.drawPath(walls)
+        door = QPainterPath()
+        door.moveTo(26, 55)
+        for x, y in ((26, 41), (38, 41), (38, 55)):
+            door.lineTo(x, y)
+        p.drawPath(door)
     elif kind == "open":                         # folder
         path = QPainterPath()
         path.moveTo(8, 18)
@@ -497,7 +513,7 @@ def _tool_glyph(p: QPainter, kind: str, fg: QColor) -> None:
         p.drawLine(QPointF(58, 40), QPointF(50, 48))
 
 
-TOOL_ICONS = ("menu", "open", "recent", "screenshot", "theme", "slicer", "freecad", "export",
+TOOL_ICONS = ("menu", "home", "open", "recent", "screenshot", "theme", "slicer", "freecad", "export",
               "settings", "updates", "about")
 
 

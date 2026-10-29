@@ -749,6 +749,7 @@ def shortcut_rows() -> list[tuple[list[str], str]]:
     view = tr("{view} view")
     return [
         ([_key("Ctrl+O")], tr("Open a file")),
+        ([_key("Ctrl+W")], tr("Close the file (back to the start page)")),
         ([_key("Ctrl+P")], tr("Open the file in your slicer")),
         ([_key("Ctrl+E")], tr("Export STL (3MF, FreeCAD and STEP)")),
         ([_key("Ctrl+T")], tr("Next theme")),
