@@ -11,6 +11,13 @@
 </p>
 
 <p align="center">
+  📖 <b>Read the guide on the website:</b>
+  <a href="https://sevagjb.github.io/PrintView3D/">English</a> ·
+  <a href="https://sevagjb.github.io/PrintView3D/ar/">العربية</a> ·
+  <a href="https://sevagjb.github.io/PrintView3D/nl/">Nederlands</a>
+</p>
+
+<p align="center">
   <a href="../../releases/latest"><b>⬇ Download</b></a> ·
   <a href="#windows">Windows</a> ·
   <a href="#linux">Linux</a> ·
@@ -18,13 +25,6 @@
   <a href="#using-printview3d">How to use</a> ·
   <a href="#build-it-yourself">Build it yourself</a> ·
   <a href="CHANGELOG.md">What's new</a>
-</p>
-
-<p align="center">
-  📖 <b>Read the guide on the website:</b>
-  <a href="https://sevagjb.github.io/PrintView3D/">English</a> ·
-  <a href="https://sevagjb.github.io/PrintView3D/ar/">العربية</a> ·
-  <a href="https://sevagjb.github.io/PrintView3D/nl/">Nederlands</a>
 </p>
 
 ![PrintView3D showing a sliced vase with the layer slider at 60 %](docs/screenshot-gcode.png)
