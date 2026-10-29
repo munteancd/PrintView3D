@@ -1178,13 +1178,23 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Appearance</source>
+        <source>Theme</source>
+        <extracomment>Settings: the colour theme of the program (dark, gray, light).</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Theme</source>
-        <extracomment>Settings: the colour theme of the program (dark, gray, light).</extracomment>
+        <source>Automatic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Click a theme to try it right away. OK keeps it, Cancel goes back.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Window transparency</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1204,17 +1214,17 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Window transparency</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Windows 11 only. Takes effect after restarting PrintView3D. Windows shows a plain colour while the window is not active.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Needs Windows 11.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Appearance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1772,6 +1782,16 @@
         <location filename="../src/printview3d/ui/theme.py"></location>
         <source>Light</source>
         <extracomment>Colour theme name: light colours (not &apos;not heavy&apos;).</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/theme.py"></location>
+        <source>Ember Light</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/theme.py"></location>
+        <source>Ember Dark</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

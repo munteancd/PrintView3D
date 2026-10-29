@@ -15,7 +15,7 @@ DEFAULTS = {
     "language": "en",
     "backdrop": "",             # Windows 11 transparency: "off", "mica" or "acrylic" ("" = from "mica")
     "mica": False,              # 0.15: the old on/off switch for Mica (read by win_mica.choice())
-    "theme": "auto",            # "auto" = follow the system; or "dark", "gray", "light"           # "auto" = system language; otherwise a code from i18n.LANGUAGES
+    "theme": "auto",            # "auto" = follow the system; or a key of ui.theme.THEMES           # "auto" = system language; otherwise a code from i18n.LANGUAGES
     "slicer_id": "",            # default slicer; empty = first installed one
     "slicer_paths": {},         # {slicer_id: exe} picked manually in Settings
     "custom_slicer": {},

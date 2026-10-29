@@ -10,11 +10,11 @@ import os
 import sys
 
 from PySide6.QtCore import QDateTime, QLocale, QSize, Qt
-from PySide6.QtGui import QKeySequence
+from PySide6.QtGui import QIcon, QKeySequence
 from PySide6.QtWidgets import (
-    QApplication, QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout,
+    QApplication, QButtonGroup, QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout,
     QFrame, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QMessageBox,
-    QPushButton, QScrollArea, QStackedWidget, QVBoxLayout, QWidget,
+    QPushButton, QScrollArea, QSizePolicy, QStackedWidget, QToolButton, QVBoxLayout, QWidget,
 )
 
 from .. import APP_NAME, __version__, file_assoc, gpu, i18n
@@ -76,18 +76,44 @@ class SettingsDialog(QDialog):
         self._add_page("language", tr("Language"), [g0])
 
         # ---------------- Appearance ----------------
-        ga = QGroupBox(tr("Appearance"))
-        la = QFormLayout(ga)
-        self.theme_combo = QComboBox()
-        for key, name in theme.THEME_NAMES.items():
-            self.theme_combo.addItem(tr(name), key)
-        self.theme_combo.setCurrentIndex(max(0, self.theme_combo.findData(settings.get("theme", "auto"))))
-        # The theme changes live while choosing; Cancel puts back the one from when Settings opened.
+        # Theme cards: a small picture of PrintView3D in each theme. Clicking one switches every
+        # window right away; Cancel puts back the theme from when Settings opened.
+        gt = QGroupBox(tr("Theme"))
+        lt = QVBoxLayout(gt)
+        grid = QGridLayout()
+        grid.setHorizontalSpacing(10)
+        grid.setVerticalSpacing(10)
         self._theme_at_open = settings.get("theme", "auto")
-        self.theme_combo.currentIndexChanged.connect(self._preview_theme)
-        ka = QLabel(tr("Theme"))
-        ka.setObjectName("formKey")
-        la.addRow(ka, self.theme_combo)
+        if self._theme_at_open not in theme.THEME_NAMES:
+            self._theme_at_open = "auto"
+        self._theme_choice = self._theme_at_open
+        self.theme_group = QButtonGroup(self)
+        self.theme_group.setExclusive(True)
+        self.theme_cards: dict[str, QToolButton] = {}
+        for i, key in enumerate(theme.THEME_NAMES):
+            card = QToolButton()
+            card.setObjectName("themeCard")
+            card.setCheckable(True)
+            card.setCursor(Qt.PointingHandCursor)
+            card.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+            card.setIcon(QIcon(theme.theme_preview(key, 112, 70)))
+            card.setIconSize(QSize(112, 70))
+            card.setText(tr("Automatic") if key == "auto" else tr(theme.THEME_NAMES[key]))
+            card.setToolTip(tr(theme.THEME_NAMES[key]))
+            card.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+            card.setChecked(key == self._theme_choice)
+            card.clicked.connect(lambda _=False, k=key: self._choose_theme(k))
+            self.theme_group.addButton(card)
+            self.theme_cards[key] = card
+            grid.addWidget(card, i // 4, i % 4)
+        lt.addLayout(grid)
+        theme_note = QLabel(tr("Click a theme to try it right away. OK keeps it, Cancel goes back."))
+        theme_note.setObjectName("muted")
+        theme_note.setWordWrap(True)
+        lt.addWidget(theme_note)
+
+        ga = QGroupBox(tr("Window transparency"))
+        la = QFormLayout(ga)
         from .. import win_mica
         self.backdrop_combo = QComboBox()
         self.backdrop_combo.addItem(tr("Off"), "off")
@@ -96,16 +122,14 @@ class SettingsDialog(QDialog):
         self.backdrop_combo.setCurrentIndex(
             max(0, self.backdrop_combo.findData(win_mica.choice(settings) if win_mica.supported() else "off")))
         self.backdrop_combo.setEnabled(win_mica.supported())
-        kb = QLabel(tr("Window transparency"))
-        kb.setObjectName("formKey")
-        la.addRow(kb, self.backdrop_combo)
+        la.addRow(self.backdrop_combo)
         mica_note = QLabel(tr("Windows 11 only. Takes effect after restarting PrintView3D. Windows shows a "
                               "plain colour while the window is not active.")
                            if win_mica.supported() else tr("Needs Windows 11."))
         mica_note.setObjectName("muted")
         mica_note.setWordWrap(True)
         la.addRow(mica_note)
-        self._add_page("appearance", tr("Appearance"), [ga])
+        self._add_page("appearance", tr("Appearance"), [gt, ga], keep_titles=True)
 
         # ---------------- Slicer ----------------
         self._paths = dict(settings.get("slicer_paths") or {})
@@ -275,6 +299,7 @@ class SettingsDialog(QDialog):
                        keep_titles=True)
 
         bb = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        bb.button(QDialogButtonBox.Ok).setObjectName("primary")     # in the theme's primary colour
         bb.accepted.connect(self._save)
         bb.rejected.connect(self.reject)
         outer.addWidget(bb)
@@ -412,12 +437,21 @@ class SettingsDialog(QDialog):
             dot = key == "updates" and bool(getattr(self, "_available", None))
             self.nav.item(row).setIcon(theme.nav_icon(key, dot=dot))
 
-    def _preview_theme(self):
-        self._apply_theme_now(self.theme_combo.currentData())
+    def _choose_theme(self, key: str):
+        """A theme card was clicked: show the theme now (OK keeps it, Cancel goes back)."""
+        self.theme_cards[key].setChecked(True)
+        if key != self._theme_choice:
+            self._theme_choice = key
+            self._apply_theme_now(key)
+
+    def theme_choice(self) -> str:
+        """The theme chosen on the Appearance page."""
+        return self._theme_choice
 
     def reject(self):
         """Cancel, Esc or the window's cross: back to the theme from when Settings opened."""
-        if self.theme_combo.currentData() != self._theme_at_open:
+        if self._theme_choice != self._theme_at_open:
+            self._theme_choice = self._theme_at_open
             self._apply_theme_now(self._theme_at_open)
         super().reject()
 
@@ -687,7 +721,7 @@ class SettingsDialog(QDialog):
             self.settings.set("backdrop", backdrop)
             if backdrop != before and backdrop != getattr(parent, "backdrop_at_start", before):
                 restart_for.append("backdrop")
-        choice = self.theme_combo.currentData()
+        choice = self._theme_choice
         if choice != self.settings.get("theme", "auto"):
             self.settings.set("theme", choice)      # already shown live (see _preview_theme)
         if restart_for:

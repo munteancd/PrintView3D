@@ -42,7 +42,7 @@ def test_all_themes_have_the_same_colour_keys():
             assert value.startswith("#") and len(value) == 7
 
 
-@pytest.mark.parametrize("name", ["dark", "gray", "light"])
+@pytest.mark.parametrize("name", ["dark", "gray", "light", "ember", "ember_dark"])
 def test_apply_theme(app, name):
     assert theme.apply_theme(app, name) == name
     assert theme.current() == name
@@ -59,16 +59,17 @@ def test_unknown_value_falls_back_to_auto(app):
     assert theme.setting() == "auto"
 
 
-def test_graphite_is_offered_before_light():
-    assert list(theme.THEME_NAMES) == ["auto", "dark", "gray", "graphite", "light"]
+def test_theme_order():
+    assert list(theme.THEME_NAMES) == ["auto", "dark", "gray", "graphite", "light", "ember", "ember_dark"]
+    assert set(theme.CYCLE) == set(theme.THEMES)
 
 
 def test_next_theme_cycles_through_all():
     seen, t = [], "dark"
-    for _ in range(4):
+    for _ in range(6):
         t = theme.next_theme(t)
         seen.append(t)
-    assert seen == ["gray", "graphite", "light", "dark"]
+    assert seen == ["gray", "graphite", "light", "ember", "ember_dark", "dark"]
     assert theme.next_theme("auto") == "dark"
 
 
@@ -180,3 +181,87 @@ def test_about_page_lists_the_shortcuts(app, tmp_path):
         assert _key(k) in keys, k
     assert len(mouse_rows()) >= 3
     d.deleteLater()
+
+
+# ------------------------------------------------------------------ Ember themes, theme cards
+
+EMBER_ORANGE, EMBER_TEAL, EMBER_CREAM = "#ef791b", "#2cc1b2", "#edebe4"
+
+
+def test_ember_uses_the_exact_colours():
+    """Orange, teal and cream exactly as chosen (sampled from the reference design)."""
+    for name in ("ember", "ember_dark"):
+        t = theme.THEMES[name]
+        assert t["primary"] == EMBER_ORANGE and t["accent"] == EMBER_TEAL, name
+    assert theme.THEMES["ember"]["window"] == EMBER_CREAM
+
+
+def test_light_and_dark_themes():
+    assert not theme.is_dark("light") and not theme.is_dark("ember")
+    for name in ("dark", "gray", "graphite", "ember_dark"):
+        assert theme.is_dark(name), name
+
+
+def test_classic_themes_keep_their_teal():
+    for name in ("dark", "gray", "graphite", "light"):
+        assert theme.THEMES[name]["primary"] == theme.THEMES[name]["accent"] == theme.ACCENT
+
+
+def _contrast(a: str, b: str) -> float:
+    def lum(h):
+        c = [int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+        c = [x / 12.92 if x <= 0.03928 else ((x + 0.055) / 1.055) ** 2.4 for x in c]
+        return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+    hi, lo = sorted((lum(a), lum(b)), reverse=True)
+    return (hi + 0.05) / (lo + 0.05)
+
+
+@pytest.mark.parametrize("name", ["ember", "ember_dark"])
+def test_ember_text_is_readable(name):
+    t = theme.THEMES[name]
+    for fg, bg in (("text", "window"), ("text", "bar"), ("text", "base"), ("muted", "window"), ("link", "window")):
+        assert _contrast(t[fg], t[bg]) >= 4.5, (fg, bg)
+
+
+def test_primary_colour_reaches_the_style_sheet(app):
+    theme.apply_theme(app, "ember")
+    css = app.styleSheet()
+    assert f"QToolButton#slicerButton {{ background: {EMBER_ORANGE}" in css
+    assert f"QSlider::sub-page:horizontal {{ background: {EMBER_TEAL}" in css
+    assert app.palette().highlight().color().name() == EMBER_ORANGE
+    theme.apply_theme(app, "dark")
+
+
+def test_previews_and_swatches_draw(app):
+    for name in theme.THEME_NAMES:
+        pm = theme.theme_preview(name, 112, 70)
+        assert not pm.isNull() and pm.deviceIndependentSize().width() == 112
+        assert not theme.theme_swatch(name).isNull()
+        assert not theme.tool_icon("theme", warm=True).isNull()
+
+
+def test_theme_cards_preview_live_and_cancel_goes_back(app, tmp_path):
+    from printview3d.ui.settings_dialog import SettingsDialog
+    s = Settings(str(tmp_path / "settings.json"))
+    s.set("theme", "dark")
+    theme.apply_theme(app, "dark")
+    d = SettingsDialog(s, page="appearance")
+    assert set(d.theme_cards) == set(theme.THEME_NAMES)
+    assert d.theme_cards["dark"].isChecked()
+    d.theme_cards["ember"].click()
+    assert theme.current() == "ember" and d.theme_choice() == "ember"
+    assert d.theme_cards["ember"].isChecked() and not d.theme_cards["dark"].isChecked()
+    d.reject()
+    assert theme.current() == "dark" and s.get("theme") == "dark"
+
+
+def test_theme_card_ok_saves(app, tmp_path):
+    from printview3d.ui.settings_dialog import SettingsDialog
+    s = Settings(str(tmp_path / "settings.json"))
+    s.set("theme", "dark")
+    theme.apply_theme(app, "dark")
+    d = SettingsDialog(s, page="appearance")
+    d.theme_cards["ember_dark"].click()
+    d._save()
+    assert s.get("theme") == "ember_dark"
+    theme.apply_theme(app, "dark")
