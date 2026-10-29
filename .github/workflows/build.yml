@@ -334,8 +334,10 @@ jobs:
           worst, worst_file, wrong, count = "0.0", "", [], 0
           # PySide6's own Python modules carry the macOS version of the Mac they were compiled on as
           # their "minimum" (6.12.0: macOS 26), although they only use Qt, which needs far less.
-          # They are listed, but the promise is checked against everything else; the start test on
-          # a real macOS 14 below shows they do run there.
+          # They are listed, but the promise is checked against everything else. They only call Qt,
+          # whose own libraries are checked; PySide6 is pinned in requirements-build-lock.txt.
+          # (A start test on a real macOS 14 used to prove this; GitHub retires those Macs on
+          # 2 November 2026, so after a PySide6 upgrade ask a Mac user on macOS 14 to try it.)
           bindings = {}
           for root, _, names in os.walk(app):
               for n in names:
@@ -419,43 +421,8 @@ jobs:
           path: smoke-mac.png
           if-no-files-found: ignore
 
-  macos-14-start:
-    # The oldest macOS we promise, on a real Mac: the Apple silicon app must start there and load
-    # all its libraries (a library that needs a newer macOS stops it with a "dyld" error).
-    needs: macos
-    runs-on: macos-14
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          sparse-checkout: tests/data
-      # After the checkout: checkout empties the folder first.
-      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        with:
-          name: PrintView3D-macos-AppleSilicon
-      - name: Start PrintView3D on macOS 14
-        run: |
-          sw_vers
-          ls -l *.dmg || { echo "::error::The .dmg was not downloaded"; exit 1; }
-          hdiutil attach -nobrowse -readonly PrintView3D-macOS-AppleSilicon.dmg -mountpoint /tmp/pv3d \
-            || { echo "::error::Could not open the .dmg"; exit 1; }
-          app=/tmp/pv3d/PrintView3D.app/Contents/MacOS/PrintView3D
-          "$app" tests/data/cylinder.gcode --screenshot start-mac14.png > out.txt 2> err.txt &
-          pid=$!
-          for i in $(seq 1 90); do kill -0 $pid 2>/dev/null || break; sleep 1; done
-          running=no; kill -0 $pid 2>/dev/null && running=yes && kill $pid
-          code=0; wait $pid || code=$?
-          cat out.txt err.txt
-          if grep -qiE "dyld|Library not loaded|Symbol not found|incompatible|requires macOS" err.txt; then
-            echo "::error::PrintView3D could not load its libraries on macOS 14"; exit 1
-          fi
-          if [ -f start-mac14.png ]; then echo "::notice::Started and rendered on $(sw_vers -productVersion)"
-          elif [ $running = yes ]; then echo "::notice::Started on $(sw_vers -productVersion) (no picture: CI has no GPU)"
-          elif [ $code -ge 128 ]; then echo "::error::PrintView3D crashed on macOS 14 (exit code $code)"; exit 1
-          else echo "::notice::Started on $(sw_vers -productVersion), exit code $code (no picture: CI has no GPU)"
-          fi
-
   release:
-    needs: [windows, linux, macos, macos-14-start]
+    needs: [windows, linux, macos]
     if: github.event_name == 'push'
     runs-on: ubuntu-24.04      # fixed version, so GitHub's move of "latest" to Ubuntu 26 changes nothing
     permissions:
