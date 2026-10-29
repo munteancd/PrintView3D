@@ -335,7 +335,7 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>G-code: already sliced, ready to print</source>
-        <translation>G-code: al gesliced, klaar om te printen</translation>
+        <translation>G-code: al geslicet, klaar om te printen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -519,7 +519,7 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Sliced plates</source>
-        <translation>Gesliced platen</translation>
+        <translation>Geslicete platen</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -559,7 +559,7 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Sliced toolpaths · {plate}</source>
-        <translation>Gesliced printpaden · {plate}</translation>
+        <translation>Geslicete printpaden · {plate}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -720,7 +720,7 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>This project contains sliced G-code.</source>
-        <translation>Dit project bevat gesliced G-code.</translation>
+        <translation>Dit project bevat geslicete G-code.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -820,7 +820,7 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Reading sliced G-code from project…</source>
-        <translation>Gesliced G-code uit het project lezen…</translation>
+        <translation>Geslicete G-code uit het project lezen…</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -1041,7 +1041,7 @@
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>If you like it, please give it a star on GitHub. Stars help other people find PrintView3D and show that the project is alive.</source>
-        <translation>Vind je het goed? Geef het dan een ster op GitHub. Sterren helpen anderen PrintView3D te vinden en laten zien dat het project leeft.</translation>
+        <translation>Bevalt het je? Geef het dan een ster op GitHub. Sterren helpen anderen PrintView3D te vinden en laten zien dat het project leeft.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
@@ -1174,7 +1174,7 @@
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Appearance</source>
-        <translation>Weergave</translation>
+        <translation>Uiterlijk</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1378,7 +1378,7 @@
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>This looks like the built-in (slower) graphics. Tick the box and restart for smoother rotation.</source>
-        <translation>Dit lijkt de ingebouwde (tragere) grafische chip. Vink het vakje aan en herstart voor soepeler draaien.</translation>
+        <translation>Dit lijkt de ingebouwde (tragere) grafische chip te zijn. Vink het vakje aan en herstart voor soepeler draaien.</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1465,7 +1465,7 @@
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Could not check for updates: {error}</source>
-        <translation>Kan niet controleren op updates: {error}</translation>
+        <translation>Kon niet op updates controleren: {error}</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
