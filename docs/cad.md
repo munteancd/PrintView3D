@@ -11,7 +11,9 @@ It is for looking only; nothing in the file is changed.
   objects or datum planes. PrintView3D starts FreeCAD invisibly in the background to convert the
   shapes (a few seconds the first time; then it is remembered until the file changes).
   The big button becomes **Open in FreeCAD**, and the ▾ arrow sends the visible model to
-  your slicer as an STL.
+  your slicer as an STL. **Export STL** (`Ctrl+E`) saves the visible solids as STL files: all in
+  one file, or one file per solid (the same choices as for a 3MF project). This also works for
+  STEP files.
 - **Without FreeCAD** you see the file's preview picture, the FreeCAD version and the visible
   objects, with a button to download FreeCAD.
 

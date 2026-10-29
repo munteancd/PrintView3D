@@ -26,7 +26,7 @@ The same list is in the program under **Settings → About → Keyboard and mous
 |---|---|
 | `Ctrl+O` | Open a file |
 | `Ctrl+P` | Open the file in your default slicer |
-| `Ctrl+E` | Export STL (3MF projects) |
+| `Ctrl+E` | Export STL (3MF projects, FreeCAD and STEP files) |
 | `Ctrl+T` | Next theme (Dark → Gray → Graphite → Light) |
 | `F` · `1` · `2` · `3` · `4` | Fit · Iso · Top · Front · Right view |
 | `↑` / `↓` | Next / previous layer (G-code), or the previous / next file in a ZIP |

@@ -11,6 +11,13 @@
 </p>
 
 <p align="center">
+  📖 <b>Read the guide on the website:</b>
+  <a href="https://sevagjb.github.io/PrintView3D/">English</a> ·
+  <a href="https://sevagjb.github.io/PrintView3D/ar/">العربية</a> ·
+  <a href="https://sevagjb.github.io/PrintView3D/nl/">Nederlands</a>
+</p>
+
+<p align="center">
   <a href="../../releases/latest"><b>⬇ Download</b></a> ·
   <a href="#windows">Windows</a> ·
   <a href="#linux">Linux</a> ·
@@ -18,13 +25,6 @@
   <a href="#using-printview3d">How to use</a> ·
   <a href="#build-it-yourself">Build it yourself</a> ·
   <a href="CHANGELOG.md">What's new</a>
-</p>
-
-<p align="center">
-  📖 <b>Read the guide on the website:</b>
-  <a href="https://sevagjb.github.io/PrintView3D/">English</a> ·
-  <a href="https://sevagjb.github.io/PrintView3D/ar/">العربية</a> ·
-  <a href="https://sevagjb.github.io/PrintView3D/nl/">Nederlands</a>
 </p>
 
 ![PrintView3D showing a sliced vase with the layer slider at 60 %](docs/screenshot-gcode.png)
@@ -247,7 +247,7 @@ The same list is in the program under **Settings → About → Keyboard and mous
 |---|---|
 | `Ctrl+O` | Open a file |
 | `Ctrl+P` | Open the file in your default slicer |
-| `Ctrl+E` | Export STL (3MF projects) |
+| `Ctrl+E` | Export STL (3MF projects, FreeCAD and STEP files) |
 | `Ctrl+T` | Next theme (Dark → Gray → Graphite → Light) |
 | `F` · `1` · `2` · `3` · `4` | Fit · Iso · Top · Front · Right view |
 | `↑` / `↓` | Next / previous layer (G-code), or the previous / next file in a ZIP |
@@ -276,7 +276,9 @@ It is for looking only; nothing in the file is changed.
   objects or datum planes. PrintView3D starts FreeCAD invisibly in the background to convert the
   shapes (a few seconds the first time; then it is remembered until the file changes).
   The big button becomes **Open in FreeCAD**, and the ▾ arrow sends the visible model to
-  your slicer as an STL.
+  your slicer as an STL. **Export STL** (`Ctrl+E`) saves the visible solids as STL files: all in
+  one file, or one file per solid (the same choices as for a 3MF project). This also works for
+  STEP files.
 - **Without FreeCAD** you see the file's preview picture, the FreeCAD version and the visible
   objects, with a button to download FreeCAD.
 

@@ -278,3 +278,40 @@ def test_real_freecad_step(tmp_path, monkeypatch):
     assert all(abs(x - y) < 0.05 for x, y in zip(b, ref))     # exactly where FreeCAD puts it
     assert abs((b[1] - b[0]) - 20) < 0.05 and abs((b[5] - b[4]) - 20) < 0.05   # box + peg sizes
     assert {p.name for p in m.parts} == {"Foot", "Peg"}      # names from the file kept
+
+
+def test_export_stl_from_a_freecad_file(tmp_path, fake_install, monkeypatch):
+    """Export STL is offered for a FreeCAD file shown in 3D, and saves the solids FreeCAD made."""
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication, QFileDialog
+    app = QApplication.instance() or QApplication([])  # noqa: F841
+    from printview3d.loaders import mesh as mesh_loader
+    from printview3d.settings import Settings
+    from printview3d.ui import main_window as mw
+    from printview3d.ui.export_stl import ExportStlDialog
+
+    monkeypatch.setattr(fc, "find_freecad", lambda *a, **k: fake_install)
+    out = tmp_path / "out.stl"
+    monkeypatch.setattr(QFileDialog, "getSaveFileName", staticmethod(lambda *a, **k: (str(out), "")))
+    monkeypatch.setattr(ExportStlDialog, "exec", lambda self: ExportStlDialog.Accepted)   # all ticked
+    monkeypatch.setattr(ExportStlDialog, "per_object", lambda self: False)
+
+    w = mw.MainWindow(Settings(str(tmp_path / "settings.json")))
+    try:
+        w.load_sync(make_fcstd(str(tmp_path / "a.FCStd")))
+        assert w.current_kind == "freecad" and len(w.model.parts) == 2
+        assert w.act_export_stl.isVisible()                               # the action is offered
+        assert "CAD" in w.act_export_stl.toolTip()
+        w.export_stl()
+        assert len(mesh_loader.load_stl(str(out)).parts[0].faces) == 24   # both boxes, 12 each
+    finally:
+        w.close()
+
+    # Without FreeCAD there is no 3D model, so nothing to export: the button stays hidden.
+    monkeypatch.setattr(fc, "find_freecad", lambda *a, **k: None)
+    w = mw.MainWindow(Settings(str(tmp_path / "settings2.json")))
+    try:
+        w.load_sync(make_fcstd(str(tmp_path / "b.FCStd")))
+        assert not w.act_export_stl.isVisible()
+    finally:
+        w.close()

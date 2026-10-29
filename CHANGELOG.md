@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.19.3
+- **Export STL from FreeCAD and STEP files**: with FreeCAD installed, **Export STL** (`Ctrl+E`)
+  saves the visible solids as STL, all in one file or one file per solid, as for 3MF projects.
+
 ## 0.19.2
 - **macOS for Intel Macs** (beta): `PrintView3D-macOS-Intel.dmg`, next to the Apple silicon version.
   Both need **macOS 14.4 (Sonoma) or newer**; the build now checks this for every file in the app,

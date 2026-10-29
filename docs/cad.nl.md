@@ -12,6 +12,8 @@ Het is alleen om te bekijken; er verandert niets in het bestand.
   keer een paar seconden; daarna wordt het onthouden tot het bestand verandert).
   De grote knop wordt **Openen in FreeCAD**, en het pijltje ▾ stuurt het zichtbare model als STL naar je
   slicer.
+  **STL exporteren** (`Ctrl+E`) bewaart de zichtbare solids als STL-bestanden: alles in één bestand, of
+  één bestand per solid (dezelfde keuzes als bij een 3MF-project). Dit werkt ook voor STEP-bestanden.
 - **Zonder FreeCAD** zie je de voorbeeldafbeelding uit het bestand, de FreeCAD-versie en de zichtbare
   objecten, met een knop om FreeCAD te downloaden.
 
