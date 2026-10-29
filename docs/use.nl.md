@@ -26,7 +26,7 @@ Dezelfde lijst staat in het programma onder **Instellingen → Over → Toetsenb
 |---|---|
 | `Ctrl+O` | Een bestand openen |
 | `Ctrl+P` | Het bestand in je standaardslicer openen |
-| `Ctrl+E` | STL exporteren (3MF-projecten) |
+| `Ctrl+E` | STL exporteren (3MF-projecten, FreeCAD- en STEP-bestanden) |
 | `Ctrl+T` | Volgend thema (Donker → Grijs → Grafiet → Licht) |
 | `F` · `1` · `2` · `3` · `4` | Passend · Iso · Boven · Voor · Rechts |
 | `↑` / `↓` | Volgende / vorige laag (G-code), of het vorige / volgende bestand in een ZIP |

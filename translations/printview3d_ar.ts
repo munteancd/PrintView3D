@@ -459,6 +459,11 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Save the objects of this CAD file as STL files (Ctrl+E)</source>
+        <translation type="unfinished">حفظ أجسام ملف CAD هذا كملفات STL ‏(Ctrl+E)</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Save the objects of this 3MF project as STL files (Ctrl+E)</source>
         <translation type="unfinished">حفظ أجسام مشروع 3MF هذا كملفات STL (Ctrl+E)</translation>
     </message>
@@ -1682,8 +1687,8 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Export STL (3MF projects)</source>
-        <translation>تصدير STL (مشاريع 3MF)</translation>
+        <source>Export STL (3MF, FreeCAD and STEP)</source>
+        <translation type="unfinished">تصدير STL ‏(3MF وFreeCAD وSTEP)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
@@ -1828,6 +1833,10 @@
         <location filename="../src/printview3d/ui/update_ui.py"></location>
         <source>Download update</source>
         <translation>تنزيل التحديث</translation>
+    </message>
+    <message>
+        <source>Export STL (3MF projects)</source>
+        <translation type="vanished">تصدير STL (مشاريع 3MF)</translation>
     </message>
     <message>
         <source>Next / previous layer (G-code)</source>

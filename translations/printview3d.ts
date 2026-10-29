@@ -459,6 +459,11 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Save the objects of this CAD file as STL files (Ctrl+E)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Save the objects of this 3MF project as STL files (Ctrl+E)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1682,7 +1687,7 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
-        <source>Export STL (3MF projects)</source>
+        <source>Export STL (3MF, FreeCAD and STEP)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

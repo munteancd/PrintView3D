@@ -348,7 +348,7 @@ class MainWindow(QMainWindow):
         self.slicer_btn.setMenu(self.slicer_menu)
         self.slicer_btn.setPopupMode(QToolButton.MenuButtonPopup)
         tb.addWidget(self.slicer_btn)
-        # 3MF projects only: save the objects as plain STL files.
+        # 3MF projects, FreeCAD and STEP files: save the objects as plain STL files.
         self.act_export_stl = QAction(self, triggered=self.export_stl)
         self.act_export_stl.setShortcut(QKeySequence("Ctrl+E"))
         self.act_export_stl.setVisible(False)
@@ -663,7 +663,9 @@ class MainWindow(QMainWindow):
             act.setText(view_names[view])
             act.setToolTip(tr("{view} view ({key})").format(view=view_names[view], key=key))
         self.act_export_stl.setText(tr("Export STL"))
-        self.act_export_stl.setToolTip(tr("Save the objects of this 3MF project as STL files (Ctrl+E)"))
+        self.act_export_stl.setToolTip(tr("Save the objects of this CAD file as STL files (Ctrl+E)")
+                                       if getattr(self, "current_kind", "") in ("freecad", "step") else
+                                       tr("Save the objects of this 3MF project as STL files (Ctrl+E)"))
         self.act_bed.setText(tr("Plate"))
         self.act_bed.setToolTip(tr("Show / hide the build plate grid"))
         self.act_screenshot.setText(tr("Screenshot"))
@@ -1190,8 +1192,13 @@ class MainWindow(QMainWindow):
         self.scene.set_bed_visible(self.act_bed.isChecked())
         self.scene.set_view("iso")
         self._update_slicer_button()
-        self.act_export_stl.setVisible(kind == "3mf")
+        # 3MF projects; FreeCAD and STEP files once FreeCAD has turned them into 3D (it has parts).
+        cad_parts = kind in ("freecad", "step") and bool(getattr(data, "parts", None))
+        self.act_export_stl.setVisible(kind == "3mf" or cad_parts)
         self.act_export_stl.setEnabled(True)
+        self.act_export_stl.setToolTip(tr("Save the objects of this 3MF project as STL files (Ctrl+E)")
+                                       if kind == "3mf" else
+                                       tr("Save the objects of this CAD file as STL files (Ctrl+E)"))
         self._fill_zip_box()
         msg = tr("Opened {path}").format(path=self.zip.path if self.zip else path)
         if kind in ("freecad", "step") and not getattr(data, "parts", None):
@@ -1646,10 +1653,18 @@ class MainWindow(QMainWindow):
 
     # ------------------------------------------------------------ export STL
     def export_stl(self):
-        """Export STL (3MF projects): read the objects again as raw geometry, then let the
-        user choose which and how. The file is read in the background; big projects take a moment."""
+        """Export STL. 3MF projects: read the objects again as raw geometry (in the background;
+        big projects take a moment). FreeCAD and STEP files: the solids FreeCAD made for the view,
+        which are already the shapes as FreeCAD shows them. Then the user chooses which and how."""
         path = self.current_path
-        if self.current_kind != "3mf" or not path or not self.act_export_stl.isEnabled():
+        if not path or not self.act_export_stl.isEnabled():
+            return
+        if self.current_kind in ("freecad", "step"):
+            parts = list(getattr(self.model, "parts", None) or [])
+            if parts:
+                self._on_export_read(path, parts)
+            return
+        if self.current_kind != "3mf":
             return
         self.act_export_stl.setEnabled(False)
         self.statusBar().showMessage(tr("Reading the objects of {name}…").format(name=os.path.basename(path)))
