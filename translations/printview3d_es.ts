@@ -414,6 +414,18 @@
     </message>
     <message>
         <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Home</source>
+        <extracomment>Toolbar button with a house icon: closes the open file and goes back to the start page.</extracomment>
+        <translation type="unfinished">Inicio</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
+        <source>Close the file and go back to the start page ({key})</source>
+        <extracomment>Tooltip of the Home button. {key} is its keyboard shortcut (Ctrl+W).</extracomment>
+        <translation type="unfinished">Cerrar el archivo y volver a la página de inicio ({key})</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/main_window.py"></location>
         <source>Recent</source>
         <extracomment>Toolbar menu with recently opened files.</extracomment>
         <translation type="unfinished">Recientes</translation>
@@ -1723,6 +1735,11 @@
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>
         <source>Open a file</source>
         <translation type="unfinished">Abrir un archivo</translation>
+    </message>
+    <message>
+        <location filename="../src/printview3d/ui/settings_dialog.py"></location>
+        <source>Close the file (back to the start page)</source>
+        <translation type="unfinished">Cerrar el archivo (volver a la página de inicio)</translation>
     </message>
     <message>
         <location filename="../src/printview3d/ui/settings_dialog.py"></location>

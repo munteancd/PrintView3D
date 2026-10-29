@@ -100,6 +100,14 @@ class Scene:
     def clear(self):
         for name in list(self.p.actors.keys()):
             self.p.remove_actor(name, render=False)
+        # PyVista remembers the last mesh it drew (plotter.mesh / plotter.mapper). Without this,
+        # a big G-code's toolpaths stay in memory after the file is closed or replaced.
+        for attr in ("mesh", "mapper"):
+            if getattr(self.p, attr, None) is not None:
+                try:
+                    setattr(self.p, attr, None)
+                except (AttributeError, TypeError):
+                    pass
         self.model_actors = []
         self.gcode = None
         self._bed_actor_names = []
